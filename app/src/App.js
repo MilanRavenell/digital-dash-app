@@ -9,7 +9,7 @@ import axios from "axios";
 
 const App = () => {
   const [state, setState] = React.useState({
-    user: 'milanravenell@gmail.com',
+    user: null,
     data: null,
     signUpMode: false,
     screen: 'sign-in'
