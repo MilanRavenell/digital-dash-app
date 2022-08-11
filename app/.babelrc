@@ -1,0 +1,19 @@
+{
+    "presets": [
+      [
+        "env",
+        {
+          "exclude": ["transform-regenerator"],
+          "targets": {
+            "node": "10.18"
+          }
+        }
+      ],
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      "transform-async-to-generator",
+      "transform-exponentiation-operator",
+      "transform-object-rest-spread"
+    ]
+}

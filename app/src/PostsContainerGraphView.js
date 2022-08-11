@@ -1,35 +1,35 @@
-import React from 'react';
-import { Bar } from 'react-chartjs-2';
-import { 
-    Chart as ChartJS,
-    BarElement,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend, } from 'chart.js';
+"use strict";
 
-import './styles/PostsContainerGraphView.css'
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-ChartJS.register(
-    BarElement,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
-  )
+var _react = require("react");
 
-const PostsContainerGraphView = ({ graphData }) => {
-    return (
-        <div className="PostsContainerGraphView">
-            <Bar data={graphData} options={{ responsive: true, maintainAspectRatio: false }}/>
-        </div>
-    );
-}
+var _react2 = _interopRequireDefault(_react);
 
-export default PostsContainerGraphView;
+var _reactChartjs = require("react-chartjs-2");
+
+var _chart = require("chart.js");
+
+require("./styles/PostsContainerGraphView.css");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_chart.Chart.register(_chart.BarElement, _chart.CategoryScale, _chart.LinearScale, _chart.PointElement, _chart.LineElement, _chart.Title, _chart.Tooltip, _chart.Legend);
+
+const PostsContainerGraphView = ({
+  graphData
+}) => {
+  return /*#__PURE__*/_react2.default.createElement("div", {
+    className: "PostsContainerGraphView"
+  }, /*#__PURE__*/_react2.default.createElement(_reactChartjs.Bar, {
+    data: graphData,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  }));
+};
+
+exports.default = PostsContainerGraphView;

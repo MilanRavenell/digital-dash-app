@@ -1,38 +1,57 @@
-import React from 'react';
-import { TextField, Button } from '@mui/material';
+"use strict";
 
-import './styles/SignIn.css';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-const SignIn = ({ handleSubmit, handleSignUp }) => {
-    const userRef = React.useRef();
-    const passRef = React.useRef();
+var _react = require("react");
 
-    const onSubmitClick = () => {
-        handleSubmit(userRef.current.value, passRef.current.value);
-    };
+var _react2 = _interopRequireDefault(_react);
 
-    const onSignUpClick = () => {
-        handleSignUp(userRef.current.value, passRef.current.value);
-    };
+var _material = require("@mui/material");
 
-    return (
-        <div className="SignIn">
-            <div className="SignIn-Form">
-                <div className="SignIn-email">
-                    <TextField inputRef={userRef} variant="outlined" label="email"/>
-                </div>
-                <div className="SignIn-password">
-                    <TextField inputRef={passRef} variant="outlined" label="password" type="password"/>
-                </div>
-                <div>
-                    <Button onClick={onSubmitClick}>Sign In</Button>
-                </div>
-                <div>
-                    <Button onClick={onSignUpClick}>Sign Up</Button>
-                </div>
-            </div>
-        </div>
-    );
-}
+require("./styles/SignIn.css");
 
-export default SignIn;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const SignIn = ({
+  handleSubmit,
+  handleSignUp
+}) => {
+  const userRef = _react2.default.useRef();
+
+  const passRef = _react2.default.useRef();
+
+  const onSubmitClick = () => {
+    handleSubmit(userRef.current.value, passRef.current.value);
+  };
+
+  const onSignUpClick = () => {
+    handleSignUp(userRef.current.value, passRef.current.value);
+  };
+
+  return /*#__PURE__*/_react2.default.createElement("div", {
+    className: "SignIn"
+  }, /*#__PURE__*/_react2.default.createElement("div", {
+    className: "SignIn-Form"
+  }, /*#__PURE__*/_react2.default.createElement("div", {
+    className: "SignIn-email"
+  }, /*#__PURE__*/_react2.default.createElement(_material.TextField, {
+    inputRef: userRef,
+    variant: "outlined",
+    label: "email"
+  })), /*#__PURE__*/_react2.default.createElement("div", {
+    className: "SignIn-password"
+  }, /*#__PURE__*/_react2.default.createElement(_material.TextField, {
+    inputRef: passRef,
+    variant: "outlined",
+    label: "password",
+    type: "password"
+  })), /*#__PURE__*/_react2.default.createElement("div", null, /*#__PURE__*/_react2.default.createElement(_material.Button, {
+    onClick: onSubmitClick
+  }, "Sign In")), /*#__PURE__*/_react2.default.createElement("div", null, /*#__PURE__*/_react2.default.createElement(_material.Button, {
+    onClick: onSignUpClick
+  }, "Sign Up"))));
+};
+
+exports.default = SignIn;

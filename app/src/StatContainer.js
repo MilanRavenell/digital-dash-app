@@ -1,24 +1,34 @@
-import React from 'react';
-import './styles/StatContainer.css';
+"use strict";
 
-class StatContainer extends React.Component {
-    render() {
-        return(
-            <div className="StatContainer">
-                {
-                    (this.props.name != null) && (
-                        <div className="StatContainer-inner">
-                            <div className="StatContainer-content">
-                                <div className="StatContainer-title"> { this.props.name } </div>
-                                <div className="StatContainer-value"> { this.props.value } </div>
-                                <div className="StatContainer-footer"/>
-                            </div>
-                        </div>
-                    )
-                }
-            </div>
-        )
-    }
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+require("./styles/StatContainer.css");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+class StatContainer extends _react2.default.Component {
+  render() {
+    return /*#__PURE__*/_react2.default.createElement("div", {
+      className: "StatContainer"
+    }, this.props.name != null && /*#__PURE__*/_react2.default.createElement("div", {
+      className: "StatContainer-inner"
+    }, /*#__PURE__*/_react2.default.createElement("div", {
+      className: "StatContainer-content"
+    }, /*#__PURE__*/_react2.default.createElement("div", {
+      className: "StatContainer-title"
+    }, " ", this.props.name, " "), /*#__PURE__*/_react2.default.createElement("div", {
+      className: "StatContainer-value"
+    }, " ", this.props.value, " "), /*#__PURE__*/_react2.default.createElement("div", {
+      className: "StatContainer-footer"
+    }))));
+  }
+
 }
 
-export default StatContainer;
+exports.default = StatContainer;

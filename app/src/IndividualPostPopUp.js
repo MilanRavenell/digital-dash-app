@@ -1,45 +1,54 @@
-import React from 'react';
-import batchArray from './batch-array';
-import './styles/IndividualPostPopUp.css'
+"use strict";
 
-const IndividualPostPopUp = ({ post, headers }) => {
-    return (
-        <div className="IndividualPostPopUp">
-            <div className="IndividualPostPopUp-details">
-                <div className="IndividualPostPopUp-header">
-                    Post
-                </div>
-                <div className="IndividualPostPopUp-title">
-                    {post['Title']}
-                </div>
-                <div className="IndividualPostPopUp-extra-details">
-                    <div className="IndividualPostPopUp-title-date">{post['Date']}</div>
-                    <div className="IndividualPostPopUp-title-link">
-                        <a href={post['Link']} target="_blank" rel="noreferrer">Link</a>
-                    </div>
-                </div>
-            </div>
-            <div className="IndividualPostPopUp-stats">
-                {
-                    batchArray(headers.filter(header => (header != 'Title' && header != 'Date')), 2).map((batch, batchIndex) => (
-                        <div className="IndividualPostPopUp-stats-row" key={batchIndex}>
-                        {
-                            batch.map((key, keyIndex) => (
-                                <div className="IndividualPostPopUp-stats-stat" key={`${keyIndex}-stat`}>
-                                    <div>{key}{(key != null) ? ':' : ''}</div>
-                                    <div>{post[key]}</div>
-                                </div>
-                            ))
-                        }
-                        </div>
-                    ))
-                }
-            </div>
-            <div className="IndividualPostPopUp-engagements">
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-            </div>
-        </div>
-    );
-}
+var _react = require("react");
 
-export default IndividualPostPopUp;
+var _react2 = _interopRequireDefault(_react);
+
+var _batchArray = require("./batch-array");
+
+var _batchArray2 = _interopRequireDefault(_batchArray);
+
+require("./styles/IndividualPostPopUp.css");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const IndividualPostPopUp = ({
+  post,
+  headers
+}) => {
+  return /*#__PURE__*/_react2.default.createElement("div", {
+    className: "IndividualPostPopUp"
+  }, /*#__PURE__*/_react2.default.createElement("div", {
+    className: "IndividualPostPopUp-details"
+  }, /*#__PURE__*/_react2.default.createElement("div", {
+    className: "IndividualPostPopUp-header"
+  }, "Post"), /*#__PURE__*/_react2.default.createElement("div", {
+    className: "IndividualPostPopUp-title"
+  }, post['Title']), /*#__PURE__*/_react2.default.createElement("div", {
+    className: "IndividualPostPopUp-extra-details"
+  }, /*#__PURE__*/_react2.default.createElement("div", {
+    className: "IndividualPostPopUp-title-date"
+  }, post['Date']), /*#__PURE__*/_react2.default.createElement("div", {
+    className: "IndividualPostPopUp-title-link"
+  }, /*#__PURE__*/_react2.default.createElement("a", {
+    href: post['Link'],
+    target: "_blank",
+    rel: "noreferrer"
+  }, "Link")))), /*#__PURE__*/_react2.default.createElement("div", {
+    className: "IndividualPostPopUp-stats"
+  }, (0, _batchArray2.default)(headers.filter(header => header != 'Title' && header != 'Date'), 2).map((batch, batchIndex) => /*#__PURE__*/_react2.default.createElement("div", {
+    className: "IndividualPostPopUp-stats-row",
+    key: batchIndex
+  }, batch.map((key, keyIndex) => /*#__PURE__*/_react2.default.createElement("div", {
+    className: "IndividualPostPopUp-stats-stat",
+    key: `${keyIndex}-stat`
+  }, /*#__PURE__*/_react2.default.createElement("div", null, key, key != null ? ':' : ''), /*#__PURE__*/_react2.default.createElement("div", null, post[key])))))), /*#__PURE__*/_react2.default.createElement("div", {
+    className: "IndividualPostPopUp-engagements"
+  }));
+};
+
+exports.default = IndividualPostPopUp;

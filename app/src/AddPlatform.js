@@ -1,40 +1,56 @@
-import React from 'react';
-import { TextField, Button } from '@mui/material';
+"use strict";
 
-import './styles/AddPlatform.css';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-const AddPlatform = ({ platform, handleSubmit }) => {
-    const userRef = React.useRef();
+var _react = require("react");
 
-    const onSubmitClick = () => {
-        handleSubmit(userRef.current.value, platform);
-    };
+var _react2 = _interopRequireDefault(_react);
 
-    const onCancelClick = () => {
-        handleSubmit(null, null)
-    }
+var _material = require("@mui/material");
 
-    return (
-        <div className="AddPlatform">
-            <div className="AddPlatform-left">
+require("./styles/AddPlatform.css");
 
-            </div>
-            <div className="AddPlatform-right">
-                <div className="AddPlatform-form">
-                    <div className="AddPlatform-header">
-                        Add {platform} account
-                    </div>
-                    <div className="AddPlatform-username">
-                        <TextField inputRef={userRef} variant="outlined" label="username"/>
-                    </div>
-                    <div className="AddPlatform-buttons">
-                        <Button onClick={onSubmitClick}>Add Account</Button>
-                        <Button onClick={onCancelClick}>Cancel</Button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-export default AddPlatform;
+const AddPlatform = ({
+  platform,
+  handleSubmit
+}) => {
+  const userRef = _react2.default.useRef();
+
+  const onSubmitClick = () => {
+    handleSubmit(userRef.current.value, platform);
+  };
+
+  const onCancelClick = () => {
+    handleSubmit(null, null);
+  };
+
+  return /*#__PURE__*/_react2.default.createElement("div", {
+    className: "AddPlatform"
+  }, /*#__PURE__*/_react2.default.createElement("div", {
+    className: "AddPlatform-left"
+  }), /*#__PURE__*/_react2.default.createElement("div", {
+    className: "AddPlatform-right"
+  }, /*#__PURE__*/_react2.default.createElement("div", {
+    className: "AddPlatform-form"
+  }, /*#__PURE__*/_react2.default.createElement("div", {
+    className: "AddPlatform-header"
+  }, "Add ", platform, " account"), /*#__PURE__*/_react2.default.createElement("div", {
+    className: "AddPlatform-username"
+  }, /*#__PURE__*/_react2.default.createElement(_material.TextField, {
+    inputRef: userRef,
+    variant: "outlined",
+    label: "username"
+  })), /*#__PURE__*/_react2.default.createElement("div", {
+    className: "AddPlatform-buttons"
+  }, /*#__PURE__*/_react2.default.createElement(_material.Button, {
+    onClick: onSubmitClick
+  }, "Add Account"), /*#__PURE__*/_react2.default.createElement(_material.Button, {
+    onClick: onCancelClick
+  }, "Cancel")))));
+};
+
+exports.default = AddPlatform;

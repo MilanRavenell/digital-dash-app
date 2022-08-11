@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/cli": "^7.18.10",
+    "@babel/core": "^7.18.10",
+    "@babel/plugin-transform-async-to-generator": "^7.18.6",
+    "@babel/plugin-transform-exponentiation-operator": "^7.18.6",
+    "@babel/preset-env": "^7.18.10",
+    "@babel/preset-react": "^7.18.6",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@mui/icons-material": "^5.8.4",
@@ -11,6 +17,10 @@
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-exponentiation-operator": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
     "chart.js": "^3.8.2",
     "react": "^18.2.0",
     "react-chartjs-2": "^4.3.1",
@@ -24,7 +34,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start": "yarn run build && (cd server && yarn start)",
-    "get-stats": "node backend/local_df_apis.js"
+    "get-stats": "node backend/local_df_apis.js",
+    "babel": "./node_modules/.bin/babel"
   },
   "eslintConfig": {
     "extends": [

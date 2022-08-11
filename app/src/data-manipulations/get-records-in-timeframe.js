@@ -1,9 +1,11 @@
-function getRecordsInTimeframe(records, partitionDate) {
-    if (partitionDate === null) {
-        return records;
-    }
+"use strict";
 
-    return records.filter(record => (new Date(record['Date']) > new Date(partitionDate)));
+function getRecordsInTimeframe(records, partitionDate) {
+  if (partitionDate === null) {
+    return records;
+  }
+
+  return records.filter(record => new Date(record['Date']) > new Date(partitionDate));
 }
 
-module.exports = getRecordsInTimeframe; 
+module.exports = getRecordsInTimeframe;
