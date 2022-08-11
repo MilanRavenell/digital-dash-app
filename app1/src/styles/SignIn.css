@@ -1,0 +1,14 @@
+.SignIn {
+    border: 1px solid black;
+    border-radius: 4px;
+    width: 23%;
+    height: 50%;
+}
+
+.SignIn-Form {
+    margin-top: 100px;
+}
+
+.SignIn-password {
+    margin-top: 10px;
+}

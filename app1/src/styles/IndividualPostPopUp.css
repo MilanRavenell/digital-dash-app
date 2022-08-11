@@ -1,0 +1,47 @@
+.IndividualPostPopUp {
+    margin: 10px;
+    margin-top: 30px;
+    text-align: left;
+}
+
+.IndividualPostPopUp-header {
+    border-bottom: 1px solid black;
+    padding-bottom: 3px;
+}
+
+.IndividualPostPopUp-title {
+    padding-top: 5px;
+}
+
+.IndividualPostPopUp-details {
+    padding-bottom: 10px;
+    border-bottom: 1px solid black;
+}
+
+.IndividualPostPopUp-extra-details {
+    padding-top: 5px;
+    font-size: small;
+}
+
+.IndividualPostPopUp-stats {
+    padding-top: 20px;
+    border-bottom: 1px solid black;
+}
+
+.IndividualPostPopUp-stats-row {
+    /* border: 1px solid black;
+    border-radius: 4px; */
+    display: flex;
+}
+
+.IndividualPostPopUp-stats-stat {
+    font-size: small;
+    border: 1px solid black;
+    border-radius: 4px;
+    flex: 1;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
