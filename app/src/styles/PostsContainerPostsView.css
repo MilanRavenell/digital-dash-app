@@ -1,0 +1,61 @@
+.PostsContainerPostsView {
+    margin: 10px;
+}
+
+.PostsContainerPostsView-header {
+    display: flex;
+    padding-bottom: 20px;
+    padding-top: 10px;
+}
+
+.PostsContainerPostsView-header-field {
+    flex: 1;
+    font-size: large;
+    text-align: left;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.PostsContainerPostsView-header-field-long {
+    flex: 5;
+}
+
+.PostsContainerPostsView-header-field-short {
+    flex: 1;
+}
+
+.PostsContainerPostsView-post {
+    display: flex;
+    height: 40px;
+    border-top: 1px solid black;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.PostsContainerPostsView-post:hover {
+    box-shadow: 1px gray;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+
+.PostsContainerPostsView-post-field {
+    font-size: small;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+    margin-left: 10px;
+    margin-right: 10px;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.PostsContainerPostsView-post-field-long {
+    flex: 5;
+}
+
+.PostsContainerPostsView-post-field-short {
+    flex: 1;
+}
