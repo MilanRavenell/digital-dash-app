@@ -8,7 +8,7 @@ var _client = require("react-dom/client");
 
 var _client2 = _interopRequireDefault(_client);
 
-require("../styles/index.css");
+require("./styles/index.css");
 
 var _App = require("./App");
 
