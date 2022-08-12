@@ -1,6 +1,6 @@
 import React from 'react';
 import batchArray from './batch-array';
-import '../styles/IndividualPostPopUp.css'
+import './styles/IndividualPostPopUp.css'
 
 const IndividualPostPopUp = ({ post, headers }) => {
     return (

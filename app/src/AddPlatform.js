@@ -10,7 +10,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _material = require("@mui/material");
 
-require("../styles/AddPlatform.css");
+require("./styles/AddPlatform.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

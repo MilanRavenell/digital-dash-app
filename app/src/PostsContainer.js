@@ -22,7 +22,7 @@ var _PostsContainerGraphView2 = _interopRequireDefault(_PostsContainerGraphView)
 
 var _material = require("@mui/material");
 
-require("../styles/PostsContainer.css");
+require("./styles/PostsContainer.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

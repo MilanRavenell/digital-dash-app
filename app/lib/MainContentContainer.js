@@ -12,7 +12,7 @@ import {
     getAggregatedStats,
 } from './data-manipulations';
 
-import '../styles/MainContentContainer.css';
+import './styles/MainContentContainer.css';
 
 const MainContentContainer = ({ data, goToAddPlatformSelection }) => {
     const timeframeNames = data.timeframes.map(timeframe => timeframe.name);

@@ -1,6 +1,6 @@
 import React from 'react';
 import logo from './logo.svg';
-import '../styles/App.css';
+import './styles/App.css';
 import MainContentContainer from './MainContentContainer';
 import SignIn from './SignIn';
 import AddPlatformSelection from './AddPlatformSelection';

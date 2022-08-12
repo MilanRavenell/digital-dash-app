@@ -4,7 +4,7 @@ import PostsContainerPostsView from './PostsContainerPostsView';
 import PostsContainerGraphView from './PostsContainerGraphView';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
-import '../styles/PostsContainer.css'
+import './styles/PostsContainer.css'
 
 const PostsContainer = ({ posts, headers, graphData, openPopUp }) => {
     const views = ['graph', 'posts'];

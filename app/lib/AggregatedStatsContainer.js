@@ -2,7 +2,7 @@
 import React from 'react';
 import StatContainer from './StatContainer';
 import bacthArray from './batch-array';
-import '../styles/AggregatedStatsContainer.css';
+import './styles/AggregatedStatsContainer.css';
 
 const AggregatedStatsContainer = ({ data }) => {
 

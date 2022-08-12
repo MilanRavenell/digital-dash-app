@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, Button } from '@mui/material';
 
-import '../styles/AddPlatform.css';
+import './styles/AddPlatform.css';
 
 const AddPlatform = ({ platform, handleSubmit }) => {
     const userRef = React.useRef();

@@ -28,7 +28,7 @@ var _youtube_logo = require("./youtube_logo.png");
 
 var _youtube_logo2 = _interopRequireDefault(_youtube_logo);
 
-require("../styles/ProfilePicker.css");
+require("./styles/ProfilePicker.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

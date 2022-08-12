@@ -34,7 +34,7 @@ var _iconsMaterial = require("@mui/icons-material");
 
 var _dataManipulations = require("./data-manipulations");
 
-require("../styles/MainContentContainer.css");
+require("./styles/MainContentContainer.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

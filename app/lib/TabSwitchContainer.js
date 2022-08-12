@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/TabSwitchContainer.css'
+import './styles/TabSwitchContainer.css'
 
 const  TabSwitchContainer = ({ tabList, showSelectAll, currentTabs, onChange, children }) => {
     const [state, setState] = React.useState({

@@ -11,7 +11,7 @@ import {
     Tooltip,
     Legend, } from 'chart.js';
 
-import '../styles/PostsContainerGraphView.css'
+import './styles/PostsContainerGraphView.css'
 
 ChartJS.register(
     BarElement,
