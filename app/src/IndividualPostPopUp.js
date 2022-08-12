@@ -12,7 +12,7 @@ var _batchArray = require("./batch-array");
 
 var _batchArray2 = _interopRequireDefault(_batchArray);
 
-require("./styles/IndividualPostPopUp.css");
+require("../styles/IndividualPostPopUp.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

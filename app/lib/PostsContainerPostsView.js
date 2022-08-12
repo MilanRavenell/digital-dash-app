@@ -1,5 +1,5 @@
 import React from 'react';
-import './styles/PostsContainerPostsView.css'
+import '../styles/PostsContainerPostsView.css'
 
 const PostsContainerPostsView = ({ posts, headers, openPopUp }) => {
     return (

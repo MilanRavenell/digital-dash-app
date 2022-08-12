@@ -12,7 +12,7 @@ var _reactChartjs = require("react-chartjs-2");
 
 var _chart = require("chart.js");
 
-require("./styles/PostsContainerGraphView.css");
+require("../styles/PostsContainerGraphView.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

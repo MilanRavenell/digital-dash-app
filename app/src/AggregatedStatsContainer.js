@@ -16,7 +16,7 @@ var _batchArray = require("./batch-array");
 
 var _batchArray2 = _interopRequireDefault(_batchArray);
 
-require("./styles/AggregatedStatsContainer.css");
+require("../styles/AggregatedStatsContainer.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

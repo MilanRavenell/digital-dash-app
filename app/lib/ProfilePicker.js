@@ -7,7 +7,7 @@ import coverPic from './twit_cover.jpeg';
 import twitLogo from './twitter_logo.png';
 import ytLogo from './youtube_logo.png';
 
-import './styles/ProfilePicker.css';
+import '../styles/ProfilePicker.css';
 
 const ProfilePicker = ({ profiles, selectedProfileNames, handleProfileClick, expanded, toggleExpanded, editMode }) => {
 

@@ -4,7 +4,7 @@ import { ButtonBase, Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import ProfilePicker from './ProfilePicker';
 
-import './styles/AddPlatformSelection.css';
+import '../styles/AddPlatformSelection.css';
 
 const AddPlatformSelection = ({ handlePlatformSelected, handleContinue, currentProfiles }) => {
     const platformList = ['twitter', 'youtube', 'tiktok'];

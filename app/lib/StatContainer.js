@@ -1,5 +1,5 @@
 import React from 'react';
-import './styles/StatContainer.css';
+import '../styles/StatContainer.css';
 
 class StatContainer extends React.Component {
     render() {

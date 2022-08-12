@@ -12,7 +12,7 @@ var _logo = require("./logo.svg");
 
 var _logo2 = _interopRequireDefault(_logo);
 
-require("./styles/App.css");
+require("../styles/App.css");
 
 var _MainContentContainer = require("./MainContentContainer");
 

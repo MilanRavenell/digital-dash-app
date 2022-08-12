@@ -20,7 +20,7 @@ var _ProfilePicker = require("./ProfilePicker");
 
 var _ProfilePicker2 = _interopRequireDefault(_ProfilePicker);
 
-require("./styles/AddPlatformSelection.css");
+require("../styles/AddPlatformSelection.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

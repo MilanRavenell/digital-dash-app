@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, Button } from '@mui/material';
 
-import './styles/SignIn.css';
+import '../styles/SignIn.css';
 
 const SignIn = ({ handleSubmit, handleSignUp }) => {
     const userRef = React.useRef();
