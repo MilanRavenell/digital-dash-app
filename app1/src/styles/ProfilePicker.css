@@ -1,0 +1,134 @@
+.ProfilePicker-expand {
+    /* border: 1px solid black; */
+    border-radius: 10px;
+    overflow: auto;
+    height: 100%;
+    width: 17vw;
+    background-color: white;
+    box-shadow: 5px 5px lightgray;
+}
+
+.ProfilePicker-expanded-header {
+    display: flex;
+    margin-top: 4%;
+}
+
+.ProfilePicker-expanded-header-text {
+    display: flex;
+    margin-left: 10px;
+    flex: 1;
+}
+
+.ProfilePicker-expand-header-minimize {
+    display: flex;
+    justify-content: right;
+    margin-right: 3%;
+    flex: 1;
+}
+
+.ProfilePicker-expand-profile-container {
+    margin-bottom: 10px;
+}
+
+.ProfilePicker-expand-profile {
+    border: 1px solid lightgray;
+    border-radius: 30px;
+    display: flex;
+    margin: 5px;
+    overflow: hidden;
+    height: 8vh;
+    background-color: white;
+    /* box-shadow: 3px 3px lightgray; */
+}
+
+.ProfilePicker-expand-profile:hover {
+    background-color: lightblue;
+}
+
+.ProfilePicker-expand-profile-platform {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.ProfilePicker-expand-profile-platform-logo {
+    height: 50%;
+    width: 100%;
+}
+
+.ProfilePicker-expand-profile-details {
+    /* border: 1px solid black; */
+    flex: 4;
+    position: relative;
+}
+
+.ProfilePicker-expand-profile-pic-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+}
+
+.ProfilePicker-expand-profile-pic {
+    position: absolute;
+    height: 3vw;
+    width: 3vw;
+    border-radius: 50%;
+    margin-left: 10%;
+    /* background-image: url('../../public/twit_prof_pic.jpeg'); */
+}
+
+.ProfilePicker-expand-profile-cover {
+    height: 50%;
+    background-color: blue;
+}
+
+.ProfilePicker-expand-profile-username {
+    height: 50%;
+    text-align: right;
+    padding-top: 2%;
+    font-size: large;
+    padding-right: 4%;
+}
+
+.ProfilePicker-expand-profile-delete {
+    height: 2vh;
+    display: flex;
+    justify-content: right;
+}
+
+.ProfilePicker-minimize {
+    /* border: 1px solid black; */
+    border-radius: 40px;
+    overflow: auto;
+    height: 100%;
+    margin-right: 5px;
+    width: 3vw;
+    background-color: white;
+    box-shadow: 5px 5px lightgray;
+    margin-top: 10px;
+}
+
+.ProfilePicker-minimize-expand {
+    margin-top: 4%;
+}
+
+.ProfilePicker-minimize-profile {
+    height: 7%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.ProfilePicker-minimize-profile-pic {
+    height: 2vw;
+    width: 2vw;
+    border-radius: 50%;
+    background-color: green;
+}

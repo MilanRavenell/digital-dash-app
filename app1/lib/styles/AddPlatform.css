@@ -1,0 +1,41 @@
+.AddPlatform {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.AddPlatform-left {
+    flex: 1;
+}
+
+.AddPlatform-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-left: 1px solid lightgrey;
+}
+
+.AddPlatform-form {
+    height: 60%;
+    width: 40%;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 5px 5px lightgray;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+}
+
+.AddPlatform-header {
+    margin-top: 30%;
+}
+
+.AddPlatform-username {
+    margin-top: 20%;
+}
+
+.AddPlatform-buttons {
+    margin-top: 5%;
+}
