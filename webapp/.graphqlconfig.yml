@@ -1,0 +1,16 @@
+projects:
+  digitaldashappwebapp:
+    schemaPath: src/graphql/schema.json
+    includes:
+      - app/graphql/**/*.js
+    excludes:
+      - ./amplify/**
+    extensions:
+      amplify:
+        codeGenTarget: javascript
+        generatedFileName: ''
+        docsFilePath: app/graphql
+        maxDepth: 2
+extensions:
+  amplify:
+    version: 3

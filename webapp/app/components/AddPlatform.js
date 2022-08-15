@@ -3,7 +3,7 @@ import { TextField, Button } from '@mui/material';
 
 import '../styles/AddPlatform.css';
 
-const AddPlatform = ({ platform, handleSubmit }) => {
+const AddPlatform = ({ platform, handleSubmit, cancel }) => {
     const userRef = React.useRef();
 
     const onSubmitClick = () => {
@@ -11,7 +11,7 @@ const AddPlatform = ({ platform, handleSubmit }) => {
     };
 
     const onCancelClick = () => {
-        handleSubmit(null, null)
+        cancel()
     }
 
     return (

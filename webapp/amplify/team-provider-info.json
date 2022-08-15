@@ -1,0 +1,26 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amplify36cf6a1d3b6e4-staging-162021-authRole",
+      "UnauthRoleArn": "arn:aws:iam::125288872271:role/amplify-amplify36cf6a1d3b6e4-staging-162021-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::125288872271:role/amplify-amplify36cf6a1d3b6e4-staging-162021-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-amplify36cf6a1d3b6e4-staging-162021-deployment",
+      "UnauthRoleName": "amplify-amplify36cf6a1d3b6e4-staging-162021-unauthRole",
+      "StackName": "amplify-amplify36cf6a1d3b6e4-staging-162021",
+      "StackId": "arn:aws:cloudformation:us-west-2:125288872271:stack/amplify-amplify36cf6a1d3b6e4-staging-162021/a9cfcc60-1a5a-11ed-aa06-0618555e4e23",
+      "AmplifyAppId": "djcj6w6idgy88"
+    },
+    "categories": {
+      "auth": {
+        "digitaldashappwebapp27a2f2b0": {}
+      },
+      "function": {
+        "digitalDashAppResolver": {
+          "deploymentBucketName": "amplify-amplify36cf6a1d3b6e4-staging-162021-deployment",
+          "s3Key": "amplify-builds/digitalDashAppResolver-3852456b4b4d615a4536-build.zip"
+        }
+      }
+    }
+  }
+}

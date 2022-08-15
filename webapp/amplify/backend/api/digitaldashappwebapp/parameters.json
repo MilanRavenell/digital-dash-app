@@ -1,0 +1,6 @@
+{
+  "AppSyncApiName": "digitaldashappwebapp",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthModeLastUpdated": "2022-08-12T22:19:47.345Z"
+}

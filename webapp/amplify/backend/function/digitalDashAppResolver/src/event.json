@@ -1,0 +1,9 @@
+{
+  "typeName": "Mutation",
+  "fieldName": "testPopulateYoutubePosts",
+  "arguments": {
+    "input": {
+      "username": "milanravenell@gmail.com"
+    }
+  }
+}

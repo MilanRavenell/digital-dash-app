@@ -4,7 +4,7 @@ function getGraphData(records, partitions) {
 
     let partitionIndex = 0;
     records.every((record) => {
-        while (new Date(record['Date']) < new Date(partitions[partitionIndex])) {
+        while (new Date(record.datePosted) < new Date(partitions[partitionIndex])) {
             ++partitionIndex;
             if (partitionIndex >= partitions.length) {
                 return false;
@@ -12,8 +12,8 @@ function getGraphData(records, partitions) {
         }
 
         const partition = partitions[partitionIndex];
-        viewsPartitoned[partition] += parseInt(record['Views']);
-        engagementPartitioned[partition] += parseInt(record['Total Engagement']);
+        viewsPartitoned[partition] += parseInt(record.viewCount);
+        engagementPartitioned[partition] += parseInt(record.engagementCount);
         return true;
     });
 

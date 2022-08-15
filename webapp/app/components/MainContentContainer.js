@@ -14,9 +14,9 @@ import {
 
 import '../styles/MainContentContainer.css';
 
-const MainContentContainer = ({ data, goToAddPlatformSelection }) => {
+const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
     const timeframeNames = data.timeframes.map(timeframe => timeframe.name);
-    const profileNames = data.profiles.map(profile => profile.username);
+    const profileNames = data.profiles.map(profile => profile.profileName);
 
     const [state, setState] = React.useState({
         profiles: profileNames,
@@ -78,14 +78,14 @@ const MainContentContainer = ({ data, goToAddPlatformSelection }) => {
     }
 
     const filterRecordsByTimeframeAndUsername = () => {
-        const profileRecords = data.records.filter(record => state.profiles.includes(record.username));
+        const profileRecords = data.records.filter(record => state.profiles.includes(record.profileName));
         const partitionDate = state.timeframe.partitionDate;
 
         if (partitionDate === null) {
             return profileRecords;
         }
     
-        return profileRecords.filter(record => (new Date(record['Date']) > new Date(partitionDate)));
+        return profileRecords.filter(record => (new Date(record.datePosted) > new Date(partitionDate)));
     }
 
     const filteredRecords = filterRecordsByTimeframeAndUsername();
@@ -93,10 +93,16 @@ const MainContentContainer = ({ data, goToAddPlatformSelection }) => {
     const graphData = getGraphData(filteredRecords, [...state.timeframe.graphPartitions]);
 
     const getPostHeaders = () => {
-        const selectedProfiles = data.profiles.filter(profile => (state.profiles.includes(profile.username)));
-        return (new Set(selectedProfiles.map(profile => profile.platform)).size > 1 || state.profiles.length === 0)
-            ? data.postHeaders['global']
-            : data.postHeaders[data.profiles[data.profiles.findIndex(profile => (profile.username === state.profiles[0]))].platform]
+        const selectedProfiles = data.profiles.filter(profile => (state.profiles.includes(profile.profileName)));
+        let platform = null;
+
+        if (new Set(selectedProfiles.map(profile => profile.platform)).size > 1 || state.profiles.length === 0) {
+            platform = 'global'
+        } else {
+            platform = data.profiles.find(profile => (profile.profileName === state.profiles[0])).platform;
+        }
+        
+        return data.postHeaders.find((postHeader => postHeader.platform === platform)).metrics;
     };
 
     return (
@@ -122,7 +128,7 @@ const MainContentContainer = ({ data, goToAddPlatformSelection }) => {
                             open={state.settingsAnchorEl !== null}
                             onClose={closeSettingsMenu}>
                             <MenuItem onClick={goToAddPlatformSelection}>Add/Remove Accounts</MenuItem>
-                            <MenuItem>Sign Out</MenuItem>
+                            <MenuItem onClick={signOut}>Sign Out</MenuItem>
                         </Menu>
                     </div>
                 </div>

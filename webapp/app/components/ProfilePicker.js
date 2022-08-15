@@ -17,7 +17,7 @@ const ProfilePicker = ({ profiles, selectedProfileNames, handleProfileClick, exp
         }
 
         if (profile === 'select-all') {
-            handleProfileClick(profiles.map(profile => profile.username));
+            handleProfileClick(profiles.map(profile => profile.profileName));
             return;
         }
 
@@ -80,8 +80,8 @@ const ProfilePicker = ({ profiles, selectedProfileNames, handleProfileClick, exp
                     <div className="ProfilePicker-expand-profile-container">
                         <div className="ProfilePicker-expand-profile"
                             key={index}
-                            onClick={() => {onProfileClick(profile.username)}}
-                            style={selectedStyle(profile.username)}>
+                            onClick={() => {onProfileClick(profile.profileName)}}
+                            style={selectedStyle(profile.profileName)}>
                             <div className="ProfilePicker-expand-profile-platform">
                                 <div className="ProfilePicker-expand-profile-platform-logo" style={{
                                     backgroundImage: `url(${profile.platform === 'twitter' ? twitLogo : ytLogo })`,
@@ -97,7 +97,7 @@ const ProfilePicker = ({ profiles, selectedProfileNames, handleProfileClick, exp
                                         backgroundImage: `url(${coverPic})`,
                                     }}/>
                                 <div className="ProfilePicker-expand-profile-username">
-                                    {profile.username}
+                                    {profile.profileName}
                                 </div>
                             </div>
                         </div>
@@ -125,7 +125,7 @@ const ProfilePicker = ({ profiles, selectedProfileNames, handleProfileClick, exp
                 profiles.map((profile, index) => (
                     <div className="ProfilePicker-minimize-profile" key={index}>
                         <div className="ProfilePicker-minimize-profile-pic" style={{ 
-                            ...selectedStyle(profile.username),
+                            ...selectedStyle(profile.profileName),
                             backgroundImage: `url(${profPic})`,
                         }}/>
                     </div>

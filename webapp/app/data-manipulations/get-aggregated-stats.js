@@ -7,7 +7,7 @@ function getAggregatedStats(records, metrics) {
 
 function getTotalAndAverageFromRecords(records, metrics) {
     const calculations = metrics.reduce((acc, metric) => {
-        acc[`Total ${metric}`] = 0
+        acc[`Total ${metric.displayName}`] = 0
         return acc
     }, {});
 
@@ -15,12 +15,12 @@ function getTotalAndAverageFromRecords(records, metrics) {
 
     for (const record of records) {
         metrics.forEach((metric) => {
-            calculations[`Total ${metric}`] += parseFloat((record[metric]));
+            calculations[`Total ${metric.displayName}`] += parseFloat((record[metric.field]));
         });
     }
 
     metrics.forEach((metric) => {
-        calculations[`Average ${metric}`] = (len === 0) ? 0 : calculations[`Total ${metric}`] / len
+        calculations[`Average ${metric.displayName}`] = (len === 0) ? 0 : calculations[`Total ${metric.displayName}`] / len
     });
 
     return calculations;

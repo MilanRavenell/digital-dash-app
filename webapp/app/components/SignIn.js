@@ -1,11 +1,23 @@
 import React from 'react';
 import { TextField, Button } from '@mui/material';
+import "@aws-amplify/ui-react/styles.css";
+import {
+  withAuthenticator,
+} from "@aws-amplify/ui-react";
+
+import { Auth } from 'aws-amplify';
 
 import '../styles/SignIn.css';
 
 const SignIn = ({ handleSubmit, handleSignUp }) => {
     const userRef = React.useRef();
     const passRef = React.useRef();
+
+    React.useEffect(() => {
+        Auth.currentAuthenticatedUser().then((user) => {
+            console.log('hi ' + user.attributes.email)
+        })
+    })
 
     const onSubmitClick = () => {
         handleSubmit(userRef.current.value, passRef.current.value);
@@ -35,4 +47,4 @@ const SignIn = ({ handleSubmit, handleSignUp }) => {
     );
 }
 
-export default SignIn;
+export default withAuthenticator(SignIn);
