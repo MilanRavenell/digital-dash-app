@@ -10,10 +10,10 @@ const IndividualPostPopUp = ({ post, headers }) => {
                     Post
                 </div>
                 <div className="IndividualPostPopUp-title">
-                    {post['Title']}
+                    {post.caption}
                 </div>
                 <div className="IndividualPostPopUp-extra-details">
-                    <div className="IndividualPostPopUp-title-date">{post['Date']}</div>
+                    <div className="IndividualPostPopUp-title-date">{post.datePosted}</div>
                     <div className="IndividualPostPopUp-title-link">
                         <a href={post['Link']} target="_blank" rel="noreferrer">Link</a>
                     </div>
@@ -21,13 +21,19 @@ const IndividualPostPopUp = ({ post, headers }) => {
             </div>
             <div className="IndividualPostPopUp-stats">
                 {
-                    batchArray(headers.filter(header => (header != 'Title' && header != 'Date')), 2).map((batch, batchIndex) => (
+                    batchArray(headers.filter(({ displayName }) => (displayName != 'Caption' && displayName != 'Date')), 2).map((batch, batchIndex) => (
                         <div className="IndividualPostPopUp-stats-row" key={batchIndex}>
                         {
-                            batch.map((key, keyIndex) => (
+                            batch.map((header, keyIndex) => (
                                 <div className="IndividualPostPopUp-stats-stat" key={`${keyIndex}-stat`}>
-                                    <div>{key}{(key != null) ? ':' : ''}</div>
-                                    <div>{post[key]}</div>
+                                    {
+                                        header && (
+                                            <div className="IndividualPostPopUp-stats-stat-content">
+                                                <div>{header.displayName}:</div>
+                                                <div>{post[header.field]}</div>
+                                            </div>
+                                        )
+                                    }
                                 </div>
                             ))
                         }

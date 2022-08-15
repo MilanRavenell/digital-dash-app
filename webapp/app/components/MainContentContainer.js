@@ -171,6 +171,7 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
                         <PostsContainer
                             posts={filteredRecords}
                             headers={getPostHeaders()}
+                            profiles={data.profiles}
                             graphData={graphData}
                             openPopUp={setPopUpPost}/>
                     </div>
@@ -180,7 +181,7 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
                 (state.popUpPost !== null) && [
                     (<div className="MainContentContainer-popup-background" onClick={clearPopUpPost}/>),
                     (<div className="MainContentContainer-popup">
-                        <IndividualPostPopUp post={state.popUpPost} headers={data.postHeaders[state.popUpPost.platform]}/>
+                        <IndividualPostPopUp post={state.popUpPost} headers={data.postHeaders.find(header => (header.platform === data.profiles.find(profile => (profile.profileName === state.popUpPost.profileName)).platform)).metrics}/>
                     </div>)
                 ]
             }

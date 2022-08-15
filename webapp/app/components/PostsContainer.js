@@ -6,7 +6,7 @@ import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
 import '../styles/PostsContainer.css'
 
-const PostsContainer = ({ posts, headers, graphData, openPopUp }) => {
+const PostsContainer = ({ posts, headers, profiles, graphData, openPopUp }) => {
     const views = ['graph', 'posts'];
 
     const [state, setState] = React.useState({
@@ -42,6 +42,7 @@ const PostsContainer = ({ posts, headers, graphData, openPopUp }) => {
                     ? <PostsContainerPostsView
                         posts={posts}
                         headers={headers}
+                        profiles={profiles}
                         openPopUp={openPopUp}/>
                     : <PostsContainerGraphView graphData={graphData}/>
             }
