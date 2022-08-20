@@ -1,0 +1,12 @@
+.container {
+    /* min-height: 48vh; */
+    margin-left: 1%;
+    border-radius: 10px;
+    /* margin-top: 1%; */
+    background-color: white;
+    box-shadow: 5px 5px lightgray;;
+}
+.dropdown {
+    display: flex;
+    justify-content: end;
+}

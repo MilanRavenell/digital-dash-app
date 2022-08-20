@@ -1,6 +1,7 @@
 const platformTableMap = Object.freeze({
     'twitter': 'TwitterPost',
     'youtube': 'YoutubePost',
+    'instagram': 'InstagramPost',
 });
 
 // Must be reverse ordered chronologically
@@ -62,6 +63,18 @@ async function getData(ctx) {
                         { displayName: 'Views', field: 'viewCount'},
                         { displayName: 'Likes', field: 'likeCount'},
                         { displayName: 'Comments', field: 'commentCount'},
+                        { displayName: 'Date', field: 'datePosted'},
+                    ]
+                },
+                {
+                    platform: 'instagram',
+                    metrics: [
+                        { displayName: 'Caption', field: 'caption'},
+                        { displayName: 'Views', field: 'viewCount'},
+                        { displayName: 'Likes', field: 'likeCount'},
+                        { displayName: 'Comments', field: 'commentCount'},
+                        { displayName: 'Saves', field: 'saveCount'},
+                        { displayName: 'Reach', field: 'reachCount'},
                         { displayName: 'Date', field: 'datePosted'},
                     ]
                 },
@@ -175,6 +188,17 @@ function formatRecord(record) {
         case 'youtube':
             return {
                 'Platform': 'youtube',
+                'Link': `https://www.youtube.com${record.id}`,
+                'Views': record.viewCount,
+                'Total Engagement': record.likeCount + record.commentCount,
+                'Likes': record.likeCount,
+                'Comments': record.commentCount,
+                'Date': record.datePosted,
+                'Caption': record.caption || '',
+            };
+        case 'instagram':
+            return {
+                'Platform': 'instagram',
                 'Link': `https://www.youtube.com${record.id}`,
                 'Views': record.viewCount,
                 'Total Engagement': record.likeCount + record.commentCount,

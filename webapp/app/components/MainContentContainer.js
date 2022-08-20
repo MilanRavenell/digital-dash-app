@@ -101,6 +101,9 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
         } else {
             platform = data.profiles.find(profile => (profile.profileName === state.profiles[0])).platform;
         }
+
+        console.log('platform', platform)
+        console.log('state', state)
         
         return data.postHeaders.find((postHeader => postHeader.platform === platform)).metrics;
     };

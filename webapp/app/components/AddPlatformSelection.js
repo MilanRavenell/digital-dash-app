@@ -6,8 +6,8 @@ import ProfilePicker from './ProfilePicker';
 
 import '../styles/AddPlatformSelection.css';
 
-const AddPlatformSelection = ({ handlePlatformSelected, handleContinue, currentProfiles }) => {
-    const platformList = ['twitter', 'youtube', 'tiktok'];
+const AddPlatformSelection = ({ handlePlatformSelected, handleContinue, currentProfiles, handleProfileDelete }) => {
+    const platformList = ['twitter', 'youtube', 'instagram'];
 
     return (
         <div className="AddPlatformSelection">
@@ -15,6 +15,7 @@ const AddPlatformSelection = ({ handlePlatformSelected, handleContinue, currentP
                 <div className="AddPlatformSelection-left-picker">
                     <ProfilePicker
                         profiles={currentProfiles}
+                        handleProfileDelete={handleProfileDelete}
                         editMode
                     />
                 </div>

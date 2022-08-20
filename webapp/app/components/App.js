@@ -3,11 +3,11 @@ import '../styles/App.css';
 import MainContentContainer from './MainContentContainer';
 import SignIn from './SignIn';
 import AddPlatformSelection from './AddPlatformSelection';
-import AddPlatform from './AddPlatform';
+import AddProfile from './AddProfile';
 import axios from "axios";
 import { API } from 'aws-amplify';
 import { getUser } from '../graphql/queries';
-import { createUser, createUserProfile } from '../graphql/mutations';
+import { createUser, createUserProfile, deleteUserProfile } from '../graphql/mutations';
 import { getData } from '../custom-gql'
 
 const App = ({ signOut, authUser }) => {
@@ -19,6 +19,7 @@ const App = ({ signOut, authUser }) => {
   });
 
   React.useEffect(() => {
+    console.log(FB)
     if (state.user === null) {
       handleLogIn();
     }
@@ -75,32 +76,7 @@ const App = ({ signOut, authUser }) => {
       console.error('Failed to fetch user', err);
       throw new Error();
     }
-    
   }
-
-  const attemptSignIn = React.useCallback((username, password) => {
-    axios.get(`http://localhost:8000/verify-user?username=${username}&pass=${password}`).then((response) => {
-      if (response.data) {
-        setState((prevState) => ({
-          ...prevState,
-          user: username,
-          screen: 'loading',
-        }));
-      }
-    });
-  }, []);
-
-  const initUser = React.useCallback((username, password) => {
-    axios.get(`http://localhost:8000/init-user?username=${username}&pass=${password}`).then((response) => {
-      if (response.data) {
-        setState((prevState) => ({
-          ...prevState,
-          screen: 'add-platform-selection',
-          user: username,
-        }));
-      }
-    });
-  }, []);
 
   const goToAddPlatformSelection = React.useCallback(() => {
     setState((prevState) => ({
@@ -117,16 +93,27 @@ const App = ({ signOut, authUser }) => {
     }));
   }, []);
 
-  const addPlatformAccount = React.useCallback((username, platform) => {
+  const addPlatformAccount = React.useCallback((profiles, platform) => {
     try {
-      API.graphql({ query: createUserProfile, variables: { input: {
-        user: state.user.email,
-        platform,
-        profileName: username,
-      } }}).then((response) => {
+      Promise.all(profiles.map(profile => API.graphql({
+        query: createUserProfile,
+        variables: {
+          input: {
+            user: state.user.email,
+            platform,
+            profileName: profile.profileName,
+            meta: profile.meta,
+          }
+        }
+      }))).then((response) => {
+        console.log(response)
         setState((prevState) => ({
           ...prevState,
           screen: 'add-platform-selection',
+          data: {
+            ...prevState.data,
+            profiles: prevState.data.profiles.concat(response.map(({ data }) => data.createUserProfile)),
+          }
         }));
       });
     } catch (err) {
@@ -135,6 +122,42 @@ const App = ({ signOut, authUser }) => {
     
 
   }, [state]);
+
+  const deleteProfile = React.useCallback((profileIndex) => {
+    try {
+      API.graphql({
+        query: deleteUserProfile,
+        variables: {
+          input: {
+            user: state.user.email,
+            profileName: state.data.profiles[profileIndex].profileName,
+          }
+        }
+      }).then((response) => {
+        const newProfiles = [...state.data.profiles]
+        newProfiles.splice(profileIndex, 1);
+
+
+        // If there are no more signed in instagram profiles, log the user out of facebook
+        if (newProfiles.findIndex(profile => (profile.platform === 'instagram')) === -1) {
+          FB.logout((response) => {
+            console.log('logging out fb')
+            console.log(response);
+          });
+        }
+        
+        setState((prevState) => ({
+          ...prevState,
+          data: {
+            ...prevState.data,
+            profiles: newProfiles,
+          }
+        }));
+      })
+    } catch (err) {
+      console.log(`Failed to delete profile ${profile.profileName}`)
+    }
+  });
 
   const finishSignUp = React.useCallback(() => {
     // axios.get(`http://localhost:8000/run-scrapers?username=${state.user}`)
@@ -148,9 +171,17 @@ const App = ({ signOut, authUser }) => {
   const getContent = () => {
     switch(state.screen) {
       case 'add-platform-selection':
-        return (<AddPlatformSelection handlePlatformSelected={goToAddPlatform} handleContinue={finishSignUp} currentProfiles={ state.data !== null ? state.data.profiles : [] }/>);
+        return (
+          <AddPlatformSelection 
+            handlePlatformSelected={goToAddPlatform}
+            handleContinue={finishSignUp}
+            currentProfiles={ state.data !== null ? state.data.profiles : [] }
+            handleProfileDelete={deleteProfile}
+          />
+        );
       case 'add-platform':
-        return (<AddPlatform platform={state.addPlatform} handleSubmit={addPlatformAccount} cancel={goToAddPlatformSelection}/>);
+        console.log('addprofile', AddProfile)
+        return (<AddProfile platform={state.addPlatform} handleSubmit={addPlatformAccount} cancel={goToAddPlatformSelection}/>);
       case 'loading':
         return 'Loading';
       case 'main-content':

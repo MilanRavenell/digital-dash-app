@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import './styles/index.css';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
@@ -12,7 +12,7 @@ import config from './aws-exports';
 Amplify.configure(config);
 
 (async function() {
-  // const root = ReactDOM.createRoot(document.getElementById('root'));
+  const root = ReactDOM.createRoot(document.getElementById('app'));
 
   const authenticatorFormFields = {
     signUp: {
@@ -36,15 +36,14 @@ Amplify.configure(config);
     },
   };
 
-  ReactDOM.render(
+  root.render(
     <React.StrictMode>
       <Authenticator formFields={authenticatorFormFields}>
         {({ signOut, user }) =>(
           <App signOut={signOut} authUser={user}/>
         )}
       </Authenticator>
-    </React.StrictMode>,
-    document.getElementById("app")
+    </React.StrictMode>
   );
 
   // If you want to start measuring performance in your app, pass a function

@@ -9,7 +9,15 @@ import ytLogo from './youtube_logo.png';
 
 import '../styles/ProfilePicker.css';
 
-const ProfilePicker = ({ profiles, selectedProfileNames, handleProfileClick, expanded, toggleExpanded, editMode }) => {
+const ProfilePicker = ({
+    profiles,
+    selectedProfileNames,
+    handleProfileClick,
+    expanded,
+    toggleExpanded,
+    editMode,
+    handleProfileDelete
+}) => {
 
     const onProfileClick = (profile) => {
         if (editMode) {
@@ -104,7 +112,7 @@ const ProfilePicker = ({ profiles, selectedProfileNames, handleProfileClick, exp
                         {
                             editMode && (
                                 <div className="ProfilePicker-expand-profile-delete">
-                                    <Button>Delete</Button>
+                                    <Button onClick={()=>{handleProfileDelete(index)}}>Delete</Button>
                                 </div>
                             )
                         }

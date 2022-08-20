@@ -8,6 +8,17 @@ export const getData = /* GraphQL */ `
     }
   }
 `;
+export const findProfiles = /* GraphQL */ `
+  query FindProfiles($input: FindProfilesInput!) {
+    findProfiles(input: $input) {
+      success
+      profiles {
+        profileName
+        meta
+      }
+    }
+  }
+`;
 export const getUser = /* GraphQL */ `
   query GetUser($email: String!) {
     getUser(email: $email) {
@@ -46,11 +57,12 @@ export const listUsers = /* GraphQL */ `
   }
 `;
 export const getUserProfile = /* GraphQL */ `
-  query GetUserProfile($user: String!, $platform: String!) {
-    getUserProfile(user: $user, platform: $platform) {
+  query GetUserProfile($user: String!, $profileName: String!) {
+    getUserProfile(user: $user, profileName: $profileName) {
       user
       platform
       profileName
+      meta
       createdAt
       updatedAt
     }
@@ -59,7 +71,7 @@ export const getUserProfile = /* GraphQL */ `
 export const listUserProfiles = /* GraphQL */ `
   query ListUserProfiles(
     $user: String
-    $platform: ModelStringKeyConditionInput
+    $profileName: ModelStringKeyConditionInput
     $filter: ModelUserProfileFilterInput
     $limit: Int
     $nextToken: String
@@ -67,7 +79,7 @@ export const listUserProfiles = /* GraphQL */ `
   ) {
     listUserProfiles(
       user: $user
-      platform: $platform
+      profileName: $profileName
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -77,6 +89,7 @@ export const listUserProfiles = /* GraphQL */ `
         user
         platform
         profileName
+        meta
         createdAt
         updatedAt
       }
@@ -92,6 +105,7 @@ export const getTwitterPost = /* GraphQL */ `
       profileName
       datePosted
       caption
+      link
       viewCount
       engagementCount
       profileClickCount
@@ -99,6 +113,7 @@ export const getTwitterPost = /* GraphQL */ `
       detailExpandCount
       mediaEngagementCount
       replyCount
+      retweetCount
       updatedAt
     }
   }
@@ -126,6 +141,7 @@ export const listTwitterPosts = /* GraphQL */ `
         profileName
         datePosted
         caption
+        link
         viewCount
         engagementCount
         profileClickCount
@@ -133,6 +149,7 @@ export const listTwitterPosts = /* GraphQL */ `
         detailExpandCount
         mediaEngagementCount
         replyCount
+        retweetCount
         updatedAt
       }
       nextToken
@@ -147,6 +164,7 @@ export const getYoutubePost = /* GraphQL */ `
       profileName
       datePosted
       caption
+      link
       viewCount
       engagementCount
       likeCount
@@ -178,10 +196,95 @@ export const listYoutubePosts = /* GraphQL */ `
         profileName
         datePosted
         caption
+        link
         viewCount
         engagementCount
         likeCount
         commentCount
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getInstagramPost = /* GraphQL */ `
+  query GetInstagramPost($id: String!, $createdAt: String!) {
+    getInstagramPost(id: $id, createdAt: $createdAt) {
+      id
+      createdAt
+      profileName
+      datePosted
+      caption
+      link
+      viewCount
+      engagementCount
+      likeCount
+      commentCount
+      saveCount
+      reachCount
+      updatedAt
+    }
+  }
+`;
+export const listInstagramPosts = /* GraphQL */ `
+  query ListInstagramPosts(
+    $id: String
+    $createdAt: ModelStringKeyConditionInput
+    $filter: ModelInstagramPostFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listInstagramPosts(
+      id: $id
+      createdAt: $createdAt
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        createdAt
+        profileName
+        datePosted
+        caption
+        link
+        viewCount
+        engagementCount
+        likeCount
+        commentCount
+        saveCount
+        reachCount
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const userProfilesByUserAndPlatform = /* GraphQL */ `
+  query UserProfilesByUserAndPlatform(
+    $user: String!
+    $platform: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserProfileFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userProfilesByUserAndPlatform(
+      user: $user
+      platform: $platform
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        user
+        platform
+        profileName
+        meta
+        createdAt
         updatedAt
       }
       nextToken
@@ -211,6 +314,7 @@ export const twitterPostsByProfileName = /* GraphQL */ `
         profileName
         datePosted
         caption
+        link
         viewCount
         engagementCount
         profileClickCount
@@ -218,6 +322,7 @@ export const twitterPostsByProfileName = /* GraphQL */ `
         detailExpandCount
         mediaEngagementCount
         replyCount
+        retweetCount
         updatedAt
       }
       nextToken
@@ -247,10 +352,47 @@ export const youtubePostsByProfileName = /* GraphQL */ `
         profileName
         datePosted
         caption
+        link
         viewCount
         engagementCount
         likeCount
         commentCount
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const igPostsByProfileName = /* GraphQL */ `
+  query IgPostsByProfileName(
+    $profileName: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelInstagramPostFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    igPostsByProfileName(
+      profileName: $profileName
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        createdAt
+        profileName
+        datePosted
+        caption
+        link
+        viewCount
+        engagementCount
+        likeCount
+        commentCount
+        saveCount
+        reachCount
         updatedAt
       }
       nextToken

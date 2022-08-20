@@ -9,6 +9,9 @@
   },
   "dependencies": {
     "aws-sdk": "^2.1194.0",
-    "csv-parse": "^5.3.0"
+    "axios": "^0.27.2",
+    "csv-parse": "^5.3.0",
+    "login-with-twitter": "^1.2.4",
+    "twitter-lite": "^1.1.0"
   }
 }

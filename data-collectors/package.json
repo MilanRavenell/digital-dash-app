@@ -1,0 +1,12 @@
+{
+    "name": "digital-dash-data-collectors",
+    "version": "1.0.0",
+    "description": "data collector functionality for digital-dash-app",
+    "main": "index.js",
+    "scripts": {},
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "^0.27.2"
+    }
+}

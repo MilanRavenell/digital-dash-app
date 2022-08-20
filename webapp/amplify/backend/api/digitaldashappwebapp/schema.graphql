@@ -9,9 +9,10 @@ type User @model {
 }
 
 type UserProfile @model {
-  user: String! @primaryKey(sortKeyFields: ["platform"])
+  user: String! @primaryKey(sortKeyFields: ["profileName"]) @index(name: "ByUserAndPlatform", sortKeyFields: ["platform"], queryField: "userProfilesByUserAndPlatform")
   platform: String!
   profileName: String!
+  meta: String
 }
 
 type TwitterPost @model
@@ -22,13 +23,15 @@ type TwitterPost @model
   profileName: String! @index(name: "ByProfileName", sortKeyFields: ["createdAt"], queryField: "twitterPostsByProfileName")
   datePosted: String!
   caption: String!
-  viewCount: Int!
-  engagementCount: Int!
-  profileClickCount: Int!
-  likeCount: Int!
-  detailExpandCount: Int!
-  mediaEngagementCount: Int!
-  replyCount: Int!
+  link: String!
+  viewCount: Int
+  engagementCount: Int
+  profileClickCount: Int
+  likeCount: Int
+  detailExpandCount: Int
+  mediaEngagementCount: Int
+  replyCount: Int
+  retweetCount: Int
 }
 
 type YoutubePost @model
@@ -38,10 +41,29 @@ type YoutubePost @model
   profileName: String! @index(name: "ByProfileName", sortKeyFields: ["createdAt"], queryField: "youtubePostsByProfileName")
   datePosted: String!
   caption: String!
-  viewCount: Int!
-  engagementCount: Int!
-  likeCount: Int!
-  commentCount: Int!
+  link: String!
+  viewCount: Int
+  engagementCount: Int
+  likeCount: Int
+  commentCount: Int
+  dislikeCount: Int
+  favoriteCount: Int
+}
+
+type InstagramPost @model
+{
+  id: String! @primaryKey(sortKeyFields: ["createdAt"])
+  createdAt: String!
+  profileName: String! @index(name: "ByProfileName", sortKeyFields: ["createdAt"], queryField: "igPostsByProfileName")
+  datePosted: String!
+  caption: String!
+  link: String!
+  viewCount: Int
+  engagementCount: Int
+  likeCount: Int
+  commentCount: Int
+  saveCount: Int
+  reachCount: Int
 }
 
 input GetDataInput {
@@ -64,7 +86,7 @@ type GetDataDataPostHeader {
   metrics: [GetDataDataMetric!]!
 }
 
-union GetDataDataRecord = TwitterPost | YoutubePost
+union GetDataDataRecord = TwitterPost | YoutubePost | InstagramPost
 
 type getDataData {
   profiles: [UserProfile!]
@@ -79,6 +101,22 @@ type GetDataResponse {
   success: Boolean!
 }
 
+input FindProfilesInput {
+  platform: String!
+  accessToken: String
+}
+
+type FindProfileResponseProfile {
+  profileName: String!
+  meta: String
+}
+
+type FindProfilesResponse {
+  success: Boolean!
+  profiles: [FindProfileResponseProfile!]!
+}
+
 type Query {
   getData(input: GetDataInput!): GetDataResponse! @function(name: "digitalDashAppResolver", region: "us-west-2")
+  findProfiles(input: FindProfilesInput!): FindProfilesResponse!  @function(name: "digitalDashAppResolver", region: "us-west-2")
 }

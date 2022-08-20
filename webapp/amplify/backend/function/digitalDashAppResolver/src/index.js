@@ -5,8 +5,14 @@ const { promises: fs } = require('fs');
 const { parse } = require('csv-parse/sync');
 
 const {
-  getData
+  getData,
+  findInstagramProfiles,
 } = require('./queries');
+
+const {
+  fetchAnalytics,
+} = require('./mutations');
+
 
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
@@ -14,9 +20,23 @@ const {
 
 const functions = {
   Query: {
-    getData
+    getData,
+    findProfiles: async (ctx) => {
+      const { platform } = ctx.arguments.input;
+      switch (platform) {
+        case 'instagram':
+          return findInstagramProfiles(ctx);
+        default:
+          console.error(`platform ${platform} is not supported`);
+          return {
+            success: false,
+            profiles: [],
+          };
+      }
+    },
   },
   Mutation: {
+    fetchAnalytics,
     testPopulateTwitterPosts: async () => {
       const csvData = await fs.readFile('/Users/milanravenell/Documents/digital_dash/backend/data/twitter/MillyTheYounger.csv', 'utf8');
       const data = parse(csvData, {columns: true, trim: true});
@@ -52,6 +72,7 @@ const functions = {
               createdAt: now,
               updatedAt: now,
               __typename: 'TwitterPost',
+              link: `https://twitter.com/MillyTheYounger/status/${id}`
             }
           }).promise();
         } catch (err) {
@@ -86,6 +107,7 @@ const functions = {
               commentCount: comments,
               createdAt: now,
               updatedAt: now,
+              link: `https://youtube.com${id}`,
               __typename: 'YoutubePost'
             }
           }).promise();

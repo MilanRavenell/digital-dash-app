@@ -18,7 +18,7 @@
       "function": {
         "digitalDashAppResolver": {
           "deploymentBucketName": "amplify-amplify36cf6a1d3b6e4-staging-162021-deployment",
-          "s3Key": "amplify-builds/digitalDashAppResolver-3852456b4b4d615a4536-build.zip"
+          "s3Key": "amplify-builds/digitalDashAppResolver-2b446a2b732b6b796933-build.zip"
         }
       }
     }

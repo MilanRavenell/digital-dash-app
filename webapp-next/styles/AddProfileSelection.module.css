@@ -1,0 +1,91 @@
+.container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+
+.left {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.leftPicker {
+    height: 70%;
+    width: 30%;
+}
+
+.right {
+    height: 100%;
+    flex: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rightContentContainer {
+    height: 60%;
+    width: 80%;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 5px 5px lightgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rightContent {
+    height: 30%;
+    width: 80%;
+}
+
+.platforms {
+    display: flex;
+    height: 90%;
+    width: 100%;
+}
+
+.platform {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 60%;
+    height: 100%;
+    flex: 1;
+    border-radius: 4px;
+}
+
+.platformInner {
+    margin: 5%;
+    border-radius: 10px;
+    height: 90%;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+.platformLogoName {
+    display: flex;
+    width: 40%;
+    margin-top: 10%;
+}
+
+.platformLogo {
+    flex: 1;
+}
+
+.platformName {
+    flex: 5;
+    padding-left: 5%;
+    font-size: large;
+}
+
+.platformPlus {
+    padding-top: 10%;
+}
+
+.button {
+    height: 10%;
+    margin-top: 5%;
+}

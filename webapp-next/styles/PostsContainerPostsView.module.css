@@ -1,0 +1,70 @@
+.container {
+    margin: 10px;
+}
+
+.header {
+    display: flex;
+    padding-bottom: 20px;
+    padding-top: 10px;
+}
+
+.headerFieldLong {
+    flex: 1;
+    font-size: large;
+    text-align: left;
+    margin-left: 10px;
+    margin-right: 10px;
+    flex: 5;
+}
+
+.headerFieldShort {
+    flex: 1;
+    font-size: large;
+    text-align: left;
+    margin-left: 10px;
+    margin-right: 10px;
+    flex: 1;
+}
+
+.post {
+    display: flex;
+    height: 40px;
+    border-top: 1px solid black;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.post:hover {
+    box-shadow: 1px gray;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+
+
+.postFieldLong {
+    font-size: small;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+    margin-left: 10px;
+    margin-right: 10px;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    flex: 5;
+}
+
+.postFieldShort {
+    font-size: small;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+    margin-left: 10px;
+    margin-right: 10px;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}

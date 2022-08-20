@@ -42,6 +42,7 @@ export const onCreateUserProfile = /* GraphQL */ `
       user
       platform
       profileName
+      meta
       createdAt
       updatedAt
     }
@@ -55,6 +56,7 @@ export const onUpdateUserProfile = /* GraphQL */ `
       user
       platform
       profileName
+      meta
       createdAt
       updatedAt
     }
@@ -68,6 +70,7 @@ export const onDeleteUserProfile = /* GraphQL */ `
       user
       platform
       profileName
+      meta
       createdAt
       updatedAt
     }
@@ -83,6 +86,7 @@ export const onCreateTwitterPost = /* GraphQL */ `
       profileName
       datePosted
       caption
+      link
       viewCount
       engagementCount
       profileClickCount
@@ -90,6 +94,7 @@ export const onCreateTwitterPost = /* GraphQL */ `
       detailExpandCount
       mediaEngagementCount
       replyCount
+      retweetCount
       updatedAt
     }
   }
@@ -104,6 +109,7 @@ export const onUpdateTwitterPost = /* GraphQL */ `
       profileName
       datePosted
       caption
+      link
       viewCount
       engagementCount
       profileClickCount
@@ -111,6 +117,7 @@ export const onUpdateTwitterPost = /* GraphQL */ `
       detailExpandCount
       mediaEngagementCount
       replyCount
+      retweetCount
       updatedAt
     }
   }
@@ -125,6 +132,7 @@ export const onDeleteTwitterPost = /* GraphQL */ `
       profileName
       datePosted
       caption
+      link
       viewCount
       engagementCount
       profileClickCount
@@ -132,6 +140,7 @@ export const onDeleteTwitterPost = /* GraphQL */ `
       detailExpandCount
       mediaEngagementCount
       replyCount
+      retweetCount
       updatedAt
     }
   }
@@ -146,6 +155,7 @@ export const onCreateYoutubePost = /* GraphQL */ `
       profileName
       datePosted
       caption
+      link
       viewCount
       engagementCount
       likeCount
@@ -164,6 +174,7 @@ export const onUpdateYoutubePost = /* GraphQL */ `
       profileName
       datePosted
       caption
+      link
       viewCount
       engagementCount
       likeCount
@@ -182,10 +193,74 @@ export const onDeleteYoutubePost = /* GraphQL */ `
       profileName
       datePosted
       caption
+      link
       viewCount
       engagementCount
       likeCount
       commentCount
+      updatedAt
+    }
+  }
+`;
+export const onCreateInstagramPost = /* GraphQL */ `
+  subscription OnCreateInstagramPost(
+    $filter: ModelSubscriptionInstagramPostFilterInput
+  ) {
+    onCreateInstagramPost(filter: $filter) {
+      id
+      createdAt
+      profileName
+      datePosted
+      caption
+      link
+      viewCount
+      engagementCount
+      likeCount
+      commentCount
+      saveCount
+      reachCount
+      updatedAt
+    }
+  }
+`;
+export const onUpdateInstagramPost = /* GraphQL */ `
+  subscription OnUpdateInstagramPost(
+    $filter: ModelSubscriptionInstagramPostFilterInput
+  ) {
+    onUpdateInstagramPost(filter: $filter) {
+      id
+      createdAt
+      profileName
+      datePosted
+      caption
+      link
+      viewCount
+      engagementCount
+      likeCount
+      commentCount
+      saveCount
+      reachCount
+      updatedAt
+    }
+  }
+`;
+export const onDeleteInstagramPost = /* GraphQL */ `
+  subscription OnDeleteInstagramPost(
+    $filter: ModelSubscriptionInstagramPostFilterInput
+  ) {
+    onDeleteInstagramPost(filter: $filter) {
+      id
+      createdAt
+      profileName
+      datePosted
+      caption
+      link
+      viewCount
+      engagementCount
+      likeCount
+      commentCount
+      saveCount
+      reachCount
       updatedAt
     }
   }

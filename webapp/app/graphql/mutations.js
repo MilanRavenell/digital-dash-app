@@ -52,6 +52,7 @@ export const createUserProfile = /* GraphQL */ `
       user
       platform
       profileName
+      meta
       createdAt
       updatedAt
     }
@@ -66,6 +67,7 @@ export const updateUserProfile = /* GraphQL */ `
       user
       platform
       profileName
+      meta
       createdAt
       updatedAt
     }
@@ -80,6 +82,7 @@ export const deleteUserProfile = /* GraphQL */ `
       user
       platform
       profileName
+      meta
       createdAt
       updatedAt
     }
@@ -96,6 +99,7 @@ export const createTwitterPost = /* GraphQL */ `
       profileName
       datePosted
       caption
+      link
       viewCount
       engagementCount
       profileClickCount
@@ -103,6 +107,7 @@ export const createTwitterPost = /* GraphQL */ `
       detailExpandCount
       mediaEngagementCount
       replyCount
+      retweetCount
       updatedAt
     }
   }
@@ -118,6 +123,7 @@ export const updateTwitterPost = /* GraphQL */ `
       profileName
       datePosted
       caption
+      link
       viewCount
       engagementCount
       profileClickCount
@@ -125,6 +131,7 @@ export const updateTwitterPost = /* GraphQL */ `
       detailExpandCount
       mediaEngagementCount
       replyCount
+      retweetCount
       updatedAt
     }
   }
@@ -140,6 +147,7 @@ export const deleteTwitterPost = /* GraphQL */ `
       profileName
       datePosted
       caption
+      link
       viewCount
       engagementCount
       profileClickCount
@@ -147,6 +155,7 @@ export const deleteTwitterPost = /* GraphQL */ `
       detailExpandCount
       mediaEngagementCount
       replyCount
+      retweetCount
       updatedAt
     }
   }
@@ -162,6 +171,7 @@ export const createYoutubePost = /* GraphQL */ `
       profileName
       datePosted
       caption
+      link
       viewCount
       engagementCount
       likeCount
@@ -181,6 +191,7 @@ export const updateYoutubePost = /* GraphQL */ `
       profileName
       datePosted
       caption
+      link
       viewCount
       engagementCount
       likeCount
@@ -200,10 +211,77 @@ export const deleteYoutubePost = /* GraphQL */ `
       profileName
       datePosted
       caption
+      link
       viewCount
       engagementCount
       likeCount
       commentCount
+      updatedAt
+    }
+  }
+`;
+export const createInstagramPost = /* GraphQL */ `
+  mutation CreateInstagramPost(
+    $input: CreateInstagramPostInput!
+    $condition: ModelInstagramPostConditionInput
+  ) {
+    createInstagramPost(input: $input, condition: $condition) {
+      id
+      createdAt
+      profileName
+      datePosted
+      caption
+      link
+      viewCount
+      engagementCount
+      likeCount
+      commentCount
+      saveCount
+      reachCount
+      updatedAt
+    }
+  }
+`;
+export const updateInstagramPost = /* GraphQL */ `
+  mutation UpdateInstagramPost(
+    $input: UpdateInstagramPostInput!
+    $condition: ModelInstagramPostConditionInput
+  ) {
+    updateInstagramPost(input: $input, condition: $condition) {
+      id
+      createdAt
+      profileName
+      datePosted
+      caption
+      link
+      viewCount
+      engagementCount
+      likeCount
+      commentCount
+      saveCount
+      reachCount
+      updatedAt
+    }
+  }
+`;
+export const deleteInstagramPost = /* GraphQL */ `
+  mutation DeleteInstagramPost(
+    $input: DeleteInstagramPostInput!
+    $condition: ModelInstagramPostConditionInput
+  ) {
+    deleteInstagramPost(input: $input, condition: $condition) {
+      id
+      createdAt
+      profileName
+      datePosted
+      caption
+      link
+      viewCount
+      engagementCount
+      likeCount
+      commentCount
+      saveCount
+      reachCount
       updatedAt
     }
   }
