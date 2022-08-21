@@ -8,6 +8,7 @@ import {
   import { API } from 'aws-amplify';
   import { createUserProfile } from '../../graphql/mutations';
   import AppContext from '../../components/AppContext';
+  import { platformLoginHandlers, platformLoginCallbackHandlers } from '../../helpers';
 
 const AddProfile = () => {
     const router = useRouter();
@@ -77,6 +78,8 @@ const AddProfile = () => {
                       user={user.attributes}
                       currentProfiles={context.userProfiles}
                       platform={platform}
+                      loginHandler={platformLoginHandlers[platform]}
+                      loginCallbackHandler={platformLoginCallbackHandlers[platform]}
                       handleSubmit={handleSubmit}
                       cancel={cancel}
                   />

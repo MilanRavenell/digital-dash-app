@@ -1,0 +1,11 @@
+{
+  "typeName": "Mutation",
+  "fieldName": "fetchAnalytics",
+  "arguments": {
+    "input": {
+      "platform": "instagram",
+      "accessToken": "EAApFdlyGMG4BAO48fx8ZBTCVrCI8vZCSTf6ZAnPoxpu7FRMFfiqSMNaAayWQZCFM4onldAZCZBcXkvgITYpRIfZCyXzZCznGxb4gogHCnE5A83Bvx1277B6NWG50wZCZBvvsEJRxPNSNBdg6TvnGiKm8dLGAKx92YL09oeO8rV8AWMbYYZBMuJZCB1BXZC0U4EdvcEioZCLXcPEGOuAwZDZD",
+      "username": "milanravenell@gmail.com"
+    }
+  }
+}

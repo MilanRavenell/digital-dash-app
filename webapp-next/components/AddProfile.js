@@ -1,30 +1,59 @@
 import React from 'react';
 import { Button } from '@mui/material';
-import { signIn, signOut, useSession, } from 'next-auth/react';
+import { useSession, } from 'next-auth/react';
 
-import styles from '../../styles/AddProfile.module.css';
+import styles from '../styles/AddProfile.module.css';
 
-const AddTwitterProfile = ({ screen, cancel, profiles, findProfiles, onSubmitClick }) => {
+const AddProfile = ({
+    user,
+    currentProfiles,
+    platform,
+    loginHandler,
+    loginCallbackHandler,
+    handleSubmit,
+    cancel
+}) => {
     const session = useSession();
 
+    const [state, setState] = React.useState({
+        screen: 'sign-in',
+        profiles: [],
+    });
+
+    const setProfiles = (profiles) => {
+        setState((prevState) => ({
+            ...prevState,
+            screen: 'verify',
+            profiles,
+        }));
+    }
+
     React.useEffect(() => {
-        if (session && session.status === 'authenticated' && profiles.length === 0) {
-            console.log(session)
-            findProfiles(session.data)
+        if (loginCallbackHandler) {
+            if (session && session.status === 'authenticated' && state.profiles.length === 0) {
+                loginCallbackHandler(session.data, currentProfiles, setProfiles);
+            }
         }
     });
 
+    const onSubmitClick = () => {
+        handleSubmit(user, state.profiles, platform);
+    };
+
+    const login = () => {
+        loginHandler(currentProfiles, setProfiles)
+    };
+
     const getContent = () => {
-        switch(screen) {
+        switch(state.screen) {
             case 'sign-in':
                 return (
                     <div className={styles.form}>
                         <div className={styles.header}>
-                            Add Twitter account
+                            Add {platform} account
                         </div>
                         <div className={styles.buttons}>
-                            <Button onClick={signIn}>Log into twitter</Button>
-                            <Button onClick={signOut}>Log out twitter</Button>
+                            <Button onClick={login}>Log into {platform}</Button>
                             <Button onClick={cancel}>Cancel</Button>
                         </div>
                     </div>
@@ -37,7 +66,7 @@ const AddTwitterProfile = ({ screen, cancel, profiles, findProfiles, onSubmitCli
                         </div>
                         <div className={styles.profiles}>
                         {
-                            profiles.map((profile, index) => (
+                            state.profiles.map((profile, index) => (
                                 <div className={styles.profile} key={index}>
                                     { profile.profileName }
                                 </div>
@@ -47,7 +76,6 @@ const AddTwitterProfile = ({ screen, cancel, profiles, findProfiles, onSubmitCli
                         <div className={styles.buttons}>
                             <Button onClick={onSubmitClick}>Confirm</Button>
                             <Button onClick={cancel}>Cancel</Button>
-                            <Button onClick={signOut}>Log out twitter</Button>
                         </div>
                     </div>
                 );
@@ -56,7 +84,16 @@ const AddTwitterProfile = ({ screen, cancel, profiles, findProfiles, onSubmitCli
         }
     }
 
-    return getContent();
+    return (
+        <div className={styles.container}>
+            <div className={styles.left}>
+
+            </div>
+            <div className={styles.right}>
+               { getContent() }
+            </div>
+        </div>
+    );
 }
 
-export default AddTwitterProfile;
+export default AddProfile;

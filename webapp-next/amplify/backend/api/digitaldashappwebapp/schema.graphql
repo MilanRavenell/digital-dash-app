@@ -1,0 +1,122 @@
+# This "input" configures a global authorization rule to enable public access to
+# all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
+input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
+
+type User @model {
+  email: String! @primaryKey
+  firstName: String!
+  lastName: String!
+}
+
+type UserProfile @model {
+  user: String! @primaryKey(sortKeyFields: ["profileName"]) @index(name: "ByUserAndPlatform", sortKeyFields: ["platform"], queryField: "userProfilesByUserAndPlatform")
+  platform: String!
+  profileName: String!
+  meta: String
+}
+
+type TwitterPost @model
+{
+
+  id: String! @primaryKey(sortKeyFields: ["createdAt"])
+  createdAt: String!
+  profileName: String! @index(name: "ByProfileName", sortKeyFields: ["createdAt"], queryField: "twitterPostsByProfileName")
+  datePosted: String!
+  caption: String!
+  link: String!
+  viewCount: Int
+  engagementCount: Int
+  profileClickCount: Int
+  likeCount: Int
+  detailExpandCount: Int
+  mediaEngagementCount: Int
+  replyCount: Int
+  retweetCount: Int
+}
+
+type YoutubePost @model
+{
+  id: String! @primaryKey(sortKeyFields: ["createdAt"])
+  createdAt: String!
+  profileName: String! @index(name: "ByProfileName", sortKeyFields: ["createdAt"], queryField: "youtubePostsByProfileName")
+  datePosted: String!
+  caption: String!
+  link: String!
+  viewCount: Int
+  engagementCount: Int
+  likeCount: Int
+  commentCount: Int
+  dislikeCount: Int
+  favoriteCount: Int
+}
+
+type InstagramPost @model
+{
+  id: String! @primaryKey(sortKeyFields: ["createdAt"])
+  createdAt: String!
+  profileName: String! @index(name: "ByProfileName", sortKeyFields: ["createdAt"], queryField: "igPostsByProfileName")
+  datePosted: String!
+  caption: String!
+  link: String!
+  viewCount: Int
+  engagementCount: Int
+  likeCount: Int
+  commentCount: Int
+  saveCount: Int
+  reachCount: Int
+}
+
+input GetDataInput {
+  username: String!
+}
+
+type GetDataDataTimeframe {
+  name: String!
+  partitionDate: String
+  graphPartitions: [String!]!
+}
+
+type GetDataDataMetric {
+  displayName: String!
+  field: String!
+}
+
+type GetDataDataPostHeader {
+  platform: String!
+  metrics: [GetDataDataMetric!]!
+}
+
+union GetDataDataRecord = TwitterPost | YoutubePost | InstagramPost
+
+type getDataData {
+  profiles: [UserProfile!]
+  timeframes: [GetDataDataTimeframe!]
+  metrics: [GetDataDataMetric!]
+  records: [GetDataDataRecord!]
+  postHeaders: [GetDataDataPostHeader!]!
+}
+
+type GetDataResponse {
+  data: getDataData!
+  success: Boolean!
+}
+
+input FindProfilesInput {
+  platform: String!
+  accessToken: String
+}
+
+type FindProfileResponseProfile {
+  profileName: String!
+  meta: String
+}
+
+type FindProfilesResponse {
+  success: Boolean!
+  profiles: [FindProfileResponseProfile!]!
+}
+
+type Query {
+  getData(input: GetDataInput!): GetDataResponse! @function(name: "digitalDashAppResolver", region: "us-west-2")
+  findProfiles(input: FindProfilesInput!): FindProfilesResponse!  @function(name: "digitalDashAppResolver", region: "us-west-2")
+}
