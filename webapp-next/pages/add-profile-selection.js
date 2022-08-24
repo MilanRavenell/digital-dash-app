@@ -6,10 +6,11 @@ import {
     Authenticator
 } from "@aws-amplify/ui-react";
 import { API, googleSignInButton } from 'aws-amplify';
-import { listUserProfiles } from '../graphql/queries';
-import { deleteUserProfile } from '../graphql/mutations';
+import { deleteUserProfile } from '../aws/graphql/mutations';
 import AppContext from '../components/AppContext';
 import { Google } from '@mui/icons-material';
+import axios from "axios";
+import { signOut } from 'next-auth/react';
 
 export default function Home() {
   const router = useRouter();
@@ -61,6 +62,11 @@ export default function Home() {
 
       if (profiles[profileIndex].platform === 'youtube') {
         google.accounts.oauth2.revoke(JSON.parse(profiles[profileIndex].meta).accessToken)
+      }
+
+      if (profiles[profileIndex].platform === 'twitter') {
+        signOut({ redirect: false })
+        await axios.get(`/api/auth/sign-out-twitter?accessToken=${JSON.parse(profiles[profileIndex].meta).accessToken}`);
       }
 
       context.setUserProfiles(newProfiles);

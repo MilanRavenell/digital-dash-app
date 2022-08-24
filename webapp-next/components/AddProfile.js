@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@mui/material';
-import { useSession, } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 import styles from '../styles/AddProfile.module.css';
 
@@ -14,6 +15,7 @@ const AddProfile = ({
     cancel
 }) => {
     const session = useSession();
+    const router = useRouter();
 
     const [state, setState] = React.useState({
         screen: 'sign-in',
@@ -41,7 +43,11 @@ const AddProfile = ({
     };
 
     const login = () => {
-        loginHandler(currentProfiles, setProfiles)
+        loginHandler({
+            currentProfiles,
+            setProfiles,
+            router,
+        });
     };
 
     const getContent = () => {
@@ -75,6 +81,7 @@ const AddProfile = ({
                         </div>
                         <div className={styles.buttons}>
                             <Button onClick={onSubmitClick}>Confirm</Button>
+                            <Button onClick={signOut}>Log iout o {platform}</Button>
                             <Button onClick={cancel}>Cancel</Button>
                         </div>
                     </div>

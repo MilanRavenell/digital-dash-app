@@ -1,5 +1,4 @@
 import React from 'react';
-import TabSwitchContainer from './TabSwitchContainer';
 import AggregatedStatsContainer from './AggregatedStatsContainer';
 import PostsContainer from './PostsContainer';
 import IndividualPostPopUp from './IndividualPostPopUp';
@@ -16,7 +15,7 @@ import styles from '../styles/MainContentContainer.module.css';
 
 const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
     const timeframeNames = data.timeframes.map(timeframe => timeframe.name);
-    const profileNames = data.profiles.map(profile => profile.profileName);
+    const profileNames = data.profiles === null ? [] : data.profiles.map(profile => profile.profileName);
 
     const [state, setState] = React.useState({
         profiles: profileNames,
@@ -93,6 +92,10 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
     const graphData = getGraphData(filteredRecords, [...state.timeframe.graphPartitions]);
 
     const getPostHeaders = () => {
+        if (data.profiles === null) {
+            return []
+        }
+
         const selectedProfiles = data.profiles.filter(profile => (state.profiles.includes(profile.profileName)));
         let platform = null;
 

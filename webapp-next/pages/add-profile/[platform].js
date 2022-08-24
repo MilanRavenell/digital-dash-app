@@ -6,7 +6,7 @@ import {
     Authenticator
   } from "@aws-amplify/ui-react";
   import { API } from 'aws-amplify';
-  import { createUserProfile } from '../../graphql/mutations';
+  import { createUserProfile } from '../../aws/graphql/mutations';
   import AppContext from '../../components/AppContext';
   import { platformLoginHandlers, platformLoginCallbackHandlers } from '../../helpers';
 

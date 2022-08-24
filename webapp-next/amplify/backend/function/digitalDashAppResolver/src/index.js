@@ -7,6 +7,7 @@ const { parse } = require('csv-parse/sync');
 const {
   getData,
   findInstagramProfiles,
+  getBeefedUserProfiles,
 } = require('./queries');
 
 const {
@@ -21,6 +22,7 @@ const {
 const functions = {
   Query: {
     getData,
+    getBeefedUserProfiles,
     findProfiles: async (ctx) => {
       const { platform } = ctx.arguments.input;
       switch (platform) {

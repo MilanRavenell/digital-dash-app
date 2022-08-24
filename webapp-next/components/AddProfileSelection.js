@@ -1,9 +1,9 @@
 import React from 'react';
-import TabSwitchContainer from './TabSwitchContainer';
-import { ButtonBase, Button } from '@mui/material';
+import { Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import ProfilePicker from './ProfilePicker';
-
+import { platformToLogoUrlMap } from '../helpers';
+import Image from 'next/image'
 
 import styles from '../styles/AddProfileSelection.module.css';
 
@@ -43,7 +43,12 @@ const AddProfileSelection = ({
                                             key={platform}>
                                                 <div className={styles.platformLogoName}>
                                                     <div className={styles.platformLogo}>
-                                                        hi
+                                                        <Image
+                                                            src={platformToLogoUrlMap[platform].url}
+                                                            layout="responsive"
+                                                            width={platformToLogoUrlMap[platform].width}
+                                                            height={platformToLogoUrlMap[platform].height}
+                                                        />
                                                     </div>
                                                     <div className={styles.platformName}>
                                                         { platform }

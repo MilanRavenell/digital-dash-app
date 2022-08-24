@@ -14,12 +14,14 @@ export const getData = /* GraphQL */ `
           platform
         }
         profiles {
-          createdAt
           platform
           profileName
-          updatedAt
           user
-          meta
+          profilePic {
+            url
+            width
+            height
+          }
         }
         records {
           __typename

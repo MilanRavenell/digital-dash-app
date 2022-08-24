@@ -1,13 +1,11 @@
 import React from 'react';
 import MainContentContainer from './MainContentContainer';
-import SignIn from './SignIn';
 import AddPlatformSelection from './AddProfileSelection';
 import AddProfile from './AddProfile';
-import axios from "axios";
 import { API } from 'aws-amplify';
 import { getUser } from '../graphql/queries';
-import { createUser, createUserProfile, deleteUserProfile } from '../graphql/mutations';
-import { getData } from '../custom-gql';
+import { createUser, createUserProfile } from '../aws/graphql/mutations';
+import { getData } from '../aws/custom-gql';
 import { useRouter } from 'next/router';
 
 import styles from '../styles/App.module.css';
@@ -64,6 +62,8 @@ const App = ({ signOut, authUser }) => {
           username: user.email
         }
       })).data.getData;
+
+      console.log(response)
 
       console.log(response.data)
 

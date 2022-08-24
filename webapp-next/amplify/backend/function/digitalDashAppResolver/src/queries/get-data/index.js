@@ -1,3 +1,5 @@
+const { getBeefedUserProfiles } = require('../shared');
+
 const platformTableMap = Object.freeze({
     'twitter': 'TwitterPost',
     'youtube': 'YoutubePost',
@@ -20,8 +22,9 @@ const metrics = [
 async function getData(ctx) {
     const { username } = ctx.arguments.input;
 
-    const { records, profiles } = await getRecords(ctx, username);
-
+    const profiles = await getBeefedUserProfiles(ctx, username);
+    const records = await getRecords(ctx, profiles);
+    
     return {
         data: {
             profiles,
@@ -84,21 +87,8 @@ async function getData(ctx) {
     };
 }
 
-async function getRecords(ctx, username) {
+async function getRecords(ctx, profiles) {
     const { ddbClient } = ctx.resources;
-
-    const profiles = [];
-    try {
-        profiles.push(...(await ddbClient.query({
-            TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
-            KeyConditionExpression: '#user = :user',
-            ExpressionAttributeValues: { ':user': username },
-            ExpressionAttributeNames: { '#user': 'user' }
-        }).promise())
-            .Items);
-    } catch (err) {
-        console.error(`Failed to fetch profiles for user ${username}`, err);
-    }
     
     const records = [];
     try {
@@ -116,14 +106,14 @@ async function getRecords(ctx, username) {
         })))
             .flat())
     } catch (err) {
-        console.error(`Failed to fetch records for user ${username}`, err);
+        console.error(`Failed to fetch records for user`, err);
     }
 
     records.sort((a, b) => {
         return (new Date(b.datePosted) - new Date(a.datePosted))
     });
 
-    return { records, profiles };
+    return records;
 }
 
 function getGraphPartitionsFromTimeframe(timeframe) {
@@ -167,47 +157,6 @@ function getDatePartitions(nDays) {
     const date = new Date();
     date.setDate(date.getDate() - nDays);
     return date;
-}
-
-function formatRecord(record) {
-    switch(record.platform) {
-        case 'twitter':
-            return {
-                'Platform': 'twitter',
-                'Link': `https://www.twitter.com/${record.profileName}/status/${record.id}`,
-                'Views': record.viewCount || 0,
-                'Total Engagement': record.profileClickCount + record.likeCount + record.detailExpandCount + record.mediaEngagementCount + record.replyCount,
-                'Profile Clicks': record.profileClickCount || 0,
-                'Likes': record.likeCount || 0,
-                'Detail Expands': record.detailExpandCount || 0,
-                'Media Engagements': record.mediaEngagementCount || 0,
-                'Replies': record.replyCount || 0,
-                'Date': record.datePosted || 0,
-                'Caption': record.caption || '',
-            };
-        case 'youtube':
-            return {
-                'Platform': 'youtube',
-                'Link': `https://www.youtube.com${record.id}`,
-                'Views': record.viewCount,
-                'Total Engagement': record.likeCount + record.commentCount,
-                'Likes': record.likeCount,
-                'Comments': record.commentCount,
-                'Date': record.datePosted,
-                'Caption': record.caption || '',
-            };
-        case 'instagram':
-            return {
-                'Platform': 'instagram',
-                'Link': `https://www.youtube.com${record.id}`,
-                'Views': record.viewCount,
-                'Total Engagement': record.likeCount + record.commentCount,
-                'Likes': record.likeCount,
-                'Comments': record.commentCount,
-                'Date': record.datePosted,
-                'Caption': record.caption || '',
-            };
-    }
 }
 
 module.exports = getData;

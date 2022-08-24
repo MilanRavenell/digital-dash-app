@@ -8,8 +8,8 @@
   "javascript": {
     "framework": "react",
     "config": {
-      "SourceDir": "pages",
-      "DistributionDir": "pages",
+      "SourceDir": "aws",
+      "DistributionDir": ".next",
       "BuildCommand": "next build",
       "StartCommand": "next start"
     }

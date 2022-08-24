@@ -2,12 +2,12 @@ import { SessionProvider } from 'next-auth/react';
 import { useState, useCallback, useEffect } from 'react';
 import AppContext from '../components/AppContext';
 import { API } from 'aws-amplify';
-import { listUserProfiles } from '../graphql/queries';
+import { listUserProfiles } from '../aws/graphql/queries';
 import Head from 'next/head';
 import Script from 'next/script';
 
 import Amplify from 'aws-amplify';
-import config from '../aws-exports';
+import config from '../aws/aws-exports';
 Amplify.configure(config);
 
 import '../styles/global.css';
@@ -31,8 +31,6 @@ function MyApp({ Component, pageProps }) {
     }
 
     useEffect(async () => {
-        console.log('user')
-        console.log(user)
         if (user === null || userProfiles) {
             return;
         }

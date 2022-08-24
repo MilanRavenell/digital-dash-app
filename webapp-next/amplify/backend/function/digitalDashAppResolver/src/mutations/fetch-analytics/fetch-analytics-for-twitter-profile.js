@@ -3,15 +3,14 @@ const Twitter = require('twitter-lite');
 
 async function fetchAnalyticsForTwitterProfile(ctx, profile) {
     const { ddbClient } = ctx.resources;
-    const { id, oauthToken, oauthTokenSecret } = JSON.parse(profile.meta);
+    const { id, accessToken } = JSON.parse(profile.meta);
 
     console.log(profile.profileName)
 
     const client = new Twitter({
-        consumer_key: 'sI94z3djqk8RKpRjstXo9O11f',
+        consumer_key: 'dTAwRDBqOFl3ZmpkOGw4RmpIT1c6MTpjaQ',
         consumer_secret: 'FaIS5ICp0qvbrRO30zSvngjZLyVU8VEY4V0lsklrsvu0CkK384',
-        access_token_key: oauthToken,
-        access_token_secret: oauthTokenSecret,
+        bearer_token: accessToken,
         version: '2',
         extension: false,
     });

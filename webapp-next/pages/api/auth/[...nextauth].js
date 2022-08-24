@@ -6,23 +6,31 @@ export default NextAuth({
     TwitterProvider({
       clientId: process.env.TWITTER_CONSUMER_KEY,
       clientSecret: process.env.TWITTER_CONSUMER_SECRET,
+      version: "2.0",
     })
   ],
   callbacks: {
     async jwt({ token, user, account, profile, isNewUser }) {
+      // console.log(token)
+      // console.log(user)
+      // console.log(account)
+      // console.log(profile)
+
       if (account !== undefined) {
-        token.oauth_token = account.oauth_token;
-        token.oauth_token_secret = account.oauth_token_secret;
-        token.profileName = profile.screen_name;
-        token.id = profile.id;
+        token.accessToken = account.access_token;
+        token.refreshToken = account.refresh_token;
+        token.expires = new Date(new Date().getTime() + (1000 * account.expires_in)).toISOString(),
+        token.profileName = profile.data.username;
+        token.id = profile.data.id;
       }
       
       return token;
     },
     async session({ session, token, user }) {
       // Send properties to the client, like an access_token from a provider.
-      session.oauth_token = token.oauth_token;
-      session.oauth_token_secret = token.oauth_token_secret;
+      session.accessToken = token.accessToken;
+      session.refreshToken = token.refreshToken;
+      session.expires = token.expires,
       session.profileName = token.profileName;
       session.id = token.id;
       return session;

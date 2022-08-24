@@ -23,10 +23,8 @@ async function fetchAnalytics(ctx) {
         const results = await Promise.all(profiles.map(async (profile) => {
             switch(profile.platform) {
                 case 'instagram':
-                    return;
                     return await fetchAnalyticsForIgProfile(ctx, profile);
                 case 'twitter':
-                    return;
                     return await fetchAnalyticsForTwitterProfile(ctx, profile);
                 case 'youtube':
                     return await fetchAnalyticsForYtProfile(ctx, profile);

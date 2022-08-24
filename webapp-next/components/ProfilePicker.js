@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button, IconButton } from '@mui/material';
 import { ArrowForwardIos, ArrowBackIos } from '@mui/icons-material';
+import Image from 'next/image'
+import { platformToLogoUrlMap } from '../helpers';
 
 import profPic from './twit_prof_pic.jpeg';
 import coverPic from './twit_cover.jpeg';
@@ -84,39 +86,60 @@ const ProfilePicker = ({
                 )
             }
             {
-                (profiles || []).map((profile, index) => (
-                    <div className={styles.profileContainerExpanded} key={index}>
-                        <div className={styles.profileExpanded}
-                            onClick={() => {onProfileClick(profile.profileName)}}
-                            style={selectedStyle(profile.profileName)}>
-                            <div className={styles.profilePlatformExpanded}>
-                                <div className={styles.profilePlatformLogoExpanded} style={{
-                                    backgroundImage: `url(${profile.platform === 'twitter' ? twitLogo : ytLogo })`,
-                                }}/>
-                            </div>
-                            <div className={styles.profileDetailsExpanded}>
-                                <div className={styles.profilePicOverlayExpanded}>
-                                    <div className={styles.profilePicExpanded} style={{
-                                        backgroundImage: `url(${profPic})`,
-                                    }}/>
+                (profiles || []).map((profile, index) => {
+                    const profilePic = (profile.profilePic !== null && profile.profilePic !== undefined) ? profile.profilePic : {
+                        url: '/',
+                        width: 50,
+                        height: 50,
+                    }
+                    return (
+                        <div className={styles.profileContainerExpanded} key={index}>
+                            <div className={styles.profileExpanded}
+                                onClick={() => {onProfileClick(profile.profileName)}}
+                                style={selectedStyle(profile.profileName)}>
+                                <div className={styles.profilePlatformExpanded}>
+                                    <div className={styles.profilePicExpanded}>
+                                        <img
+                                            src={profilePic.url}
+                                            alt='profile pic'
+                                            style={{
+                                                height: '100%',
+                                                width: '100%',
+                                                objectFit: 'contain',
+                                            }}
+                                            referrerpolicy="no-referrer"
+                                        />
+                                    </div>
                                 </div>
-                                <div className={styles.profileCoverExpanded} style={{
-                                        backgroundImage: `url(${coverPic})`,
-                                    }}/>
-                                <div className={styles.profileUsernameExpanded}>
-                                    {profile.profileName}
+                                <div className={styles.profileDetailsExpanded}>
+                                    <div className={styles.profilePicOverlayExpanded}>
+                                        
+                                    </div>
+                                    <div className={styles.profileCoverExpanded}>
+                                        <div className={styles.platformLogoExpanded}>
+                                            <Image
+                                                src={platformToLogoUrlMap[profile.platform].url}
+                                                layout="responsive"
+                                                width={platformToLogoUrlMap[profile.platform].width}
+                                                height={platformToLogoUrlMap[profile.platform].height}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className={styles.profileUsernameExpanded}>
+                                        {profile.profileName}
+                                    </div>
                                 </div>
                             </div>
+                            {
+                                editMode && (
+                                    <div className={styles.profileDeleteExpanded}>
+                                        <Button onClick={()=>{handleProfileDelete(user, profiles, index)}}>Delete</Button>
+                                    </div>
+                                )
+                            }
                         </div>
-                        {
-                            editMode && (
-                                <div className={styles.profileDeleteExpanded}>
-                                    <Button onClick={()=>{handleProfileDelete(user, profiles, index)}}>Delete</Button>
-                                </div>
-                            )
-                        }
-                    </div>
-                ))
+                    )
+                })
             }
         </div>
     );

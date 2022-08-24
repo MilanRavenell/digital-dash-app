@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
+import Twitter from 'twitter-lite';
 
-async function igLoginHandler(currentProfiles, setProfiles) {
+async function igLoginHandler({ setProfiles }) {
     const onSignIn = async (accessToken) => {
         const pages = [];
         try {
@@ -42,12 +43,14 @@ async function igLoginHandler(currentProfiles, setProfiles) {
     }, { scope: 'instagram_basic,pages_show_list,instagram_manage_insights,pages_read_engagement,pages_show_list,business_management'})
 }
 
-async function twitterLoginHandler() {
-    signIn();
+async function twitterLoginHandler({ router }) {
+    signIn('twitter')
 }
 
-async function youtubeLoginHandler(currentProfiles, setProfiles) {
+async function youtubeLoginHandler({ currentProfiles, setProfiles }) {
     const onSignIn = async (response) => {
+        console.log('HIIIIIIIIIIIII')
+        console.log(response)
         const accessToken = response.access_token;
         const getChannelsResponse = await axios.get(`https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet,contentDetails&mine=true&access_token=${accessToken}`);
 
@@ -56,7 +59,8 @@ async function youtubeLoginHandler(currentProfiles, setProfiles) {
             const profiles = channels.map((channel) => ({
                 profileName: channel.snippet.title,
                 meta: JSON.stringify({
-                    id: channel.contentDetails.relatedPlaylists.uploads,
+                    id: channel.id,
+                    uploadsId: channel.contentDetails.relatedPlaylists.uploads,
                     accessToken,
                 })
             }));
@@ -77,6 +81,7 @@ async function youtubeLoginHandler(currentProfiles, setProfiles) {
     const client = google.accounts.oauth2.initTokenClient({
         client_id: '581336452597-6c80lf8ijdvhlmi00odvrqsj1iah9lad.apps.googleusercontent.com',
         scope: 'https://www.googleapis.com/auth/youtube.readonly',
+        access_type: 'offline', 
         callback: onSignIn,
     });
 

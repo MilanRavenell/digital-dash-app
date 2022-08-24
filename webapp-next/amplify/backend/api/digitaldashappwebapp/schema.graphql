@@ -70,6 +70,13 @@ input GetDataInput {
   username: String!
 }
 
+type BeefedUserProfile {
+  user: String!
+  platform: String!
+  profileName: String!
+  profilePicUrl: String!
+}
+
 type GetDataDataTimeframe {
   name: String!
   partitionDate: String
@@ -89,7 +96,7 @@ type GetDataDataPostHeader {
 union GetDataDataRecord = TwitterPost | YoutubePost | InstagramPost
 
 type getDataData {
-  profiles: [UserProfile!]
+  profiles: [BeefedUserProfile!]
   timeframes: [GetDataDataTimeframe!]
   metrics: [GetDataDataMetric!]
   records: [GetDataDataRecord!]
@@ -116,7 +123,16 @@ type FindProfilesResponse {
   profiles: [FindProfileResponseProfile!]!
 }
 
+input GetBeefedUserProfilesInput {
+  username: String!
+}
+
+type GetBeefedUserProfilesResponse {
+  profiles: [BeefedUserProfile]!
+}
+
 type Query {
   getData(input: GetDataInput!): GetDataResponse! @function(name: "digitalDashAppResolver", region: "us-west-2")
   findProfiles(input: FindProfilesInput!): FindProfilesResponse!  @function(name: "digitalDashAppResolver", region: "us-west-2")
+  getBeefedUserProfiles(input: GetBeefedUserProfilesInput!): GetBeefedUserProfilesResponse!  @function(name: "digitalDashAppResolver", region: "us-west-2")
 }

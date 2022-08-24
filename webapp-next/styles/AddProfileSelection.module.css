@@ -67,7 +67,7 @@
 
 .platformLogoName {
     display: flex;
-    width: 40%;
+    width: 70%;
     margin-top: 10%;
 }
 
@@ -76,7 +76,7 @@
 }
 
 .platformName {
-    flex: 5;
+    flex: 3;
     padding-left: 5%;
     font-size: large;
 }

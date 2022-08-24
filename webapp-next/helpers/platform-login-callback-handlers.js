@@ -1,11 +1,14 @@
+const Twitter = require('twitter-lite');
+
 async function twitterLoginCallbackHandler(sessionData, currentProfiles, setProfiles) {
     const profile = {
         profileName: sessionData.profileName,
         meta: JSON.stringify({
             id: sessionData.id,
-            oauthToken: sessionData.oauth_token,
-            oauthTokenSecret: sessionData.oauth_token_secret,
-        })
+            accessToken: sessionData.accessToken,
+            refreshToken: sessionData.refreshToken,
+            expires: sessionData.expires,
+        }),
     };
 
     if (currentProfiles === null || currentProfiles.map(profile => profile.profileName).includes(profile.profileName)) {
