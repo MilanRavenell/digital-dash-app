@@ -2,7 +2,7 @@ import { SessionProvider } from 'next-auth/react';
 import { useState, useCallback, useEffect } from 'react';
 import AppContext from '../components/AppContext';
 import { API } from 'aws-amplify';
-import { listUserProfiles } from '../aws/graphql/queries';
+import { getBeefedUserProfiles } from '../aws/graphql/queries';
 import Head from 'next/head';
 import Script from 'next/script';
 
@@ -18,16 +18,16 @@ function MyApp({ Component, pageProps }) {
 
     const getUserProfiles = async (user) => {
         const profiles = (await API.graphql({
-            query: listUserProfiles,
+            query: getBeefedUserProfiles,
             variables: {
-              user: user.email
+              input: { username: user.email },
             }
-        })).data.listUserProfiles;
+        })).data.getBeefedUserProfiles;
       
         console.log('profiles')
         console.log(profiles)
 
-        return profiles.items;
+        return profiles.profiles;
     }
 
     useEffect(async () => {
@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }) {
             return;
         }
 
-        setUserProfiles(await getUserProfiles(user));
+        setUserProfiles(await getUserProfiles(user.attributes));
     });
 
     const setUserCallback = useCallback((inputUser) => {
@@ -83,6 +83,8 @@ function MyApp({ Component, pageProps }) {
                     gapi.load('client', start);`
                 }
             </Script>
+            {/* This is so that youtube profile pictures load properly, sometimes get a 403 error when fetching image in img tag */}
+            <meta name="referrer" content="no-referrer"></meta>
             <SessionProvider session={pageProps.session}>
                 <Component {...pageProps} />
             </SessionProvider>

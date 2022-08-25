@@ -1,8 +1,14 @@
 const axios = require("axios");
+const { getAccessToken } = require('../../shared');
 
 async function fetchAnalyticsForYtProfile(ctx, profile) {
     const { ddbClient } = ctx.resources;
-    const { id, accessToken } = JSON.parse(profile.meta);
+    const { id } = JSON.parse(profile.meta);
+
+    const accessToken = await getAccessToken(ctx, profile);
+    if (accessToken === null) {
+        return;
+    } 
 
     const videos = [];
     let playlistItemUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=${id}&access_token=${accessToken}`;

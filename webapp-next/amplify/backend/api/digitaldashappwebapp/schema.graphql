@@ -74,7 +74,7 @@ type BeefedUserProfile {
   user: String!
   platform: String!
   profileName: String!
-  profilePicUrl: String!
+  profilePicUrl: String
 }
 
 type GetDataDataTimeframe {

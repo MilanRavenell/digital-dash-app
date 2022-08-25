@@ -17,11 +17,7 @@ export const getData = /* GraphQL */ `
           platform
           profileName
           user
-          profilePic {
-            url
-            width
-            height
-          }
+          profilePicUrl
         }
         records {
           __typename

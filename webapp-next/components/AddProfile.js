@@ -72,6 +72,7 @@ const AddProfile = ({
                         </div>
                         <div className={styles.profiles}>
                         {
+                            (state.profiles !== null && state.profiles !== undefined) && 
                             state.profiles.map((profile, index) => (
                                 <div className={styles.profile} key={index}>
                                     { profile.profileName }

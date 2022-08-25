@@ -1,11 +1,15 @@
 const axios = require("axios");
 const Twitter = require('twitter-lite');
+const { getAccessToken } = require('../../shared');
 
 async function fetchAnalyticsForTwitterProfile(ctx, profile) {
     const { ddbClient } = ctx.resources;
-    const { id, accessToken } = JSON.parse(profile.meta);
+    const { id } = JSON.parse(profile.meta);
 
-    console.log(profile.profileName)
+    const accessToken = await getAccessToken(ctx, profile);
+    if (accessToken === null) {
+        return;
+    } 
 
     const client = new Twitter({
         consumer_key: 'dTAwRDBqOFl3ZmpkOGw4RmpIT1c6MTpjaQ',

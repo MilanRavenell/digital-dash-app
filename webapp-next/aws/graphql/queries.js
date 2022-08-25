@@ -19,6 +19,18 @@ export const findProfiles = /* GraphQL */ `
     }
   }
 `;
+export const getBeefedUserProfiles = /* GraphQL */ `
+  query GetBeefedUserProfiles($input: GetBeefedUserProfilesInput!) {
+    getBeefedUserProfiles(input: $input) {
+      profiles {
+        user
+        platform
+        profileName
+        profilePicUrl
+      }
+    }
+  }
+`;
 export const getUser = /* GraphQL */ `
   query GetUser($email: String!) {
     getUser(email: $email) {

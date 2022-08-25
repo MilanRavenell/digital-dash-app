@@ -1,8 +1,14 @@
 const axios = require("axios");
+const { getAccessToken } = require('../../shared');
 
 async function fetchAnalyticsForIgProfile (ctx, profile) {
     const { ddbClient } = ctx.resources;
-    const { account_id: accountId, access_token: accessToken } = JSON.parse(profile.meta);
+    const { account_id: accountId } = JSON.parse(profile.meta);
+
+    const accessToken = await getAccessToken(ctx, profile);
+    if (accessToken === null) {
+        return;
+    } 
 
     const mediaObjects = [];
     let url = `https://graph.facebook.com/v14.0/${accountId}/media?access_token=${accessToken}`;

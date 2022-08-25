@@ -3,16 +3,19 @@ import { signIn } from 'next-auth/react';
 import Twitter from 'twitter-lite';
 
 async function igLoginHandler({ setProfiles }) {
-    const onSignIn = async (accessToken) => {
+    const onSignIn = async (shortTermToken) => {
+        const accessToken = (await axios.get(`/api/auth/get-fb-long-lived-token?shortTermToken=${shortTermToken}`)).data;
+
         const pages = [];
-        try {
+        try {    
             const response = await axios.get(`https://graph.facebook.com/v14.0/me/accounts?access_token=${accessToken}`);
             pages.push(...response.data.data);
         } catch (err) {
             console.error('Failed to get users pages', err);
-            return FAILURE_RESPONSE;
+            return;
         }
     
+
         // get profiles
         const profiles = await Promise.all(pages.map(async (page) => {
             try {
@@ -28,7 +31,7 @@ async function igLoginHandler({ setProfiles }) {
                 }
             } catch (err) {
                 console.error('Failed to get user accounts', err);
-                return FAILURE_RESPONSE;
+                return;
             }
         }));
 
@@ -49,9 +52,10 @@ async function twitterLoginHandler({ router }) {
 
 async function youtubeLoginHandler({ currentProfiles, setProfiles }) {
     const onSignIn = async (response) => {
-        console.log('HIIIIIIIIIIIII')
-        console.log(response)
-        const accessToken = response.access_token;
+        const tokenResponse = await axios.get(`/api/auth/get-google-tokens?code=${response.code}`);
+
+        const { access_token: accessToken, refresh_token: refreshToken, expiry_date } = tokenResponse.data;
+
         const getChannelsResponse = await axios.get(`https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet,contentDetails&mine=true&access_token=${accessToken}`);
 
         if (getChannelsResponse.status === 200) {
@@ -62,6 +66,8 @@ async function youtubeLoginHandler({ currentProfiles, setProfiles }) {
                     id: channel.id,
                     uploadsId: channel.contentDetails.relatedPlaylists.uploads,
                     accessToken,
+                    refreshToken,
+                    expires: new Date(expiry_date),
                 })
             }));
     
@@ -78,14 +84,14 @@ async function youtubeLoginHandler({ currentProfiles, setProfiles }) {
         }
     }
 
-    const client = google.accounts.oauth2.initTokenClient({
+    const client = google.accounts.oauth2.initCodeClient({
         client_id: '581336452597-6c80lf8ijdvhlmi00odvrqsj1iah9lad.apps.googleusercontent.com',
         scope: 'https://www.googleapis.com/auth/youtube.readonly',
-        access_type: 'offline', 
+        ux_mode: 'popup',
         callback: onSignIn,
     });
 
-    client.requestAccessToken()
+    client.requestCode();
 }
 
 const platformLoginHandlers = Object.freeze({

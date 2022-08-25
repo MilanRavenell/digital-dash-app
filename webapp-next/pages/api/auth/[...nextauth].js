@@ -19,7 +19,7 @@ export default NextAuth({
       if (account !== undefined) {
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
-        token.expires = new Date(new Date().getTime() + (1000 * account.expires_in)).toISOString(),
+        token.expires = new Date(account.expires_at),
         token.profileName = profile.data.username;
         token.id = profile.data.id;
       }

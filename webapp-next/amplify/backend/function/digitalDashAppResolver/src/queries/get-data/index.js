@@ -1,4 +1,4 @@
-const { getBeefedUserProfiles } = require('../shared');
+const { getBeefedUserProfiles } = require('../../shared');
 
 const platformTableMap = Object.freeze({
     'twitter': 'TwitterPost',

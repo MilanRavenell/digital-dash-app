@@ -87,11 +87,10 @@ const ProfilePicker = ({
             }
             {
                 (profiles || []).map((profile, index) => {
-                    const profilePic = (profile.profilePic !== null && profile.profilePic !== undefined) ? profile.profilePic : {
-                        url: '/',
-                        width: 50,
-                        height: 50,
-                    }
+                    const profilePicUrl = (profile.profilePicUrl !== null && profile.profilePicUrl !== undefined) ? profile.profilePicUrl : '/';
+                    console.log('PROFIELLLELEL')
+                    console.log(profile)
+                    console.log(profilePicUrl)
                     return (
                         <div className={styles.profileContainerExpanded} key={index}>
                             <div className={styles.profileExpanded}
@@ -100,14 +99,14 @@ const ProfilePicker = ({
                                 <div className={styles.profilePlatformExpanded}>
                                     <div className={styles.profilePicExpanded}>
                                         <img
-                                            src={profilePic.url}
+                                            src={profilePicUrl}
                                             alt='profile pic'
                                             style={{
                                                 height: '100%',
                                                 width: '100%',
                                                 objectFit: 'contain',
                                             }}
-                                            referrerpolicy="no-referrer"
+                                            referrerPolicy="no-referrer"
                                         />
                                     </div>
                                 </div>

@@ -1,6 +1,6 @@
 {
   "typeName": "Query",
-  "fieldName": "getData",
+  "fieldName": "getBeefedUserProfiles",
   "arguments": {
     "input": {
       "platform": "instagram",
