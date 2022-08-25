@@ -38,7 +38,7 @@ export default function Home() {
 
   const handleProfileDelete = React.useCallback(async (user, profiles, profileIndex) => {
     try {
-      await API.graphql({
+      const response = await API.graphql({
         query: deleteUserProfile,
         variables: {
           input: {
@@ -47,6 +47,8 @@ export default function Home() {
           }
         }
       });
+
+      const deletedProfile = response.data.deleteUserProfile;
 
       const newProfiles = [...profiles];
       newProfiles.splice(profileIndex, 1);
@@ -60,18 +62,18 @@ export default function Home() {
         });
       }
 
-      if (profiles[profileIndex].platform === 'youtube') {
-        google.accounts.oauth2.revoke(JSON.parse(profiles[profileIndex].meta).accessToken)
+      if (deletedProfile.platform === 'youtube') {
+        google.accounts.oauth2.revoke(JSON.parse(deletedProfile.meta).accessToken)
       }
 
-      if (profiles[profileIndex].platform === 'twitter') {
+      if (deletedProfile.platform === 'twitter') {
         signOut({ redirect: false })
-        await axios.get(`/api/auth/sign-out-twitter?accessToken=${JSON.parse(profiles[profileIndex].meta).accessToken}`);
+        await axios.get(`/api/auth/sign-out-twitter?accessToken=${JSON.parse(deletedProfile.meta).accessToken}`);
       }
 
       context.setUserProfiles(newProfiles);
     } catch (err) {
-      console.log(`Failed to delete profile ${profiles[profileIndex].profileName}`, err)
+      console.log(`Failed to delete profile ${deletedProfile.profileName}`, err)
     }
   });
 
