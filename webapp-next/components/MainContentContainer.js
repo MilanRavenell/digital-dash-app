@@ -96,19 +96,23 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
             return []
         }
 
+        const globalHeaders = data.postHeaders.find((postHeader => postHeader.platform === 'global')).metrics;
+        const platformHeaders = [];
+
         const selectedProfiles = data.profiles.filter(profile => (state.profiles.includes(profile.profileName)));
-        let platform = null;
+        const hasSinglePlatform = (new Set(selectedProfiles.map(profile => profile.platform)).size === 1);
 
-        if (new Set(selectedProfiles.map(profile => profile.platform)).size > 1 || state.profiles.length === 0) {
-            platform = 'global'
-        } else {
-            platform = data.profiles.find(profile => (profile.profileName === state.profiles[0])).platform;
+        if (hasSinglePlatform) {
+            const platform = data.profiles.find(profile => (profile.profileName === state.profiles[0])).platform;
+            platformHeaders.push(
+                ...data.postHeaders.find((postHeader => postHeader.platform === platform)).metrics
+            );
         }
-
-        console.log('platform', platform)
-        console.log('state', state)
         
-        return data.postHeaders.find((postHeader => postHeader.platform === platform)).metrics;
+        return {
+            globalHeaders,
+            platformHeaders,
+        };
     };
 
     return (
@@ -152,22 +156,20 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
                 </div>
                 <div className={styles.contentRight}>
                     <div className={styles.dropdown}>
-                        <div className={styles.dropdownBtn}>
-                            <FormControl sx={{ m: 1, minWidth: 120 }}>
-                                <InputLabel>Timeframe</InputLabel>
-                                <Select
-                                    label="Timeframe"
-                                    value={state.timeframe.name}
-                                    onChange={handleTimeFrameChange}
-                                >
-                                {
-                                    data.timeframes.map((timeframe, index) => (
-                                        <MenuItem value={timeframe.name} key={index}>{timeframe.name}</MenuItem>
-                                    ))
-                                }
-                                </Select>
-                            </FormControl>
-                        </div>
+                        <FormControl sx={{ m: 1, minWidth: 120, height: '100%' }}>
+                            <InputLabel>Timeframe</InputLabel>
+                            <Select
+                                label="Timeframe"
+                                value={state.timeframe.name}
+                                onChange={handleTimeFrameChange}
+                            >
+                            {
+                                data.timeframes.map((timeframe, index) => (
+                                    <MenuItem value={timeframe.name} key={index}>{timeframe.name}</MenuItem>
+                                ))
+                            }
+                            </Select>
+                        </FormControl>
                     </div>
                     <div className={styles.contentTop}>
                         <AggregatedStatsContainer

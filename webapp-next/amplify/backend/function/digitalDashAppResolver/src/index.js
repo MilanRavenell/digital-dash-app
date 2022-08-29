@@ -11,7 +11,7 @@ const {
 } = require('./queries');
 
 const {
-  fetchAnalytics,
+  populateAnalytics,
 } = require('./mutations');
 
 
@@ -38,7 +38,7 @@ const functions = {
     },
   },
   Mutation: {
-    fetchAnalytics,
+    populateAnalytics,
     testPopulateTwitterPosts: async () => {
       const csvData = await fs.readFile('/Users/milanravenell/Documents/digital_dash/backend/data/twitter/MillyTheYounger.csv', 'utf8');
       const data = parse(csvData, {columns: true, trim: true});

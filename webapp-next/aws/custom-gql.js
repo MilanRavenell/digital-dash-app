@@ -36,6 +36,10 @@ export const getData = /* GraphQL */ `
             updatedAt
             viewCount
             link
+            media {
+              thumbnailUrl
+              type
+            }
           }
           ... on YoutubePost {
             id
@@ -49,6 +53,10 @@ export const getData = /* GraphQL */ `
             updatedAt
             viewCount
             link
+            media {
+              thumbnailUrl
+              type
+            }
           }
           ... on InstagramPost {
             id
@@ -64,6 +72,10 @@ export const getData = /* GraphQL */ `
             saveCount
             updatedAt
             viewCount
+            media {
+              thumbnailUrl
+              type
+            }
           }
         }
         timeframes {

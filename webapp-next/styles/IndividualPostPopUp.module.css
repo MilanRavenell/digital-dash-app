@@ -1,22 +1,35 @@
 .container {
-    margin: 10px;
+    margin: 2%;
     margin-top: 30px;
     text-align: left;
-    background-color: white;
+    width: 96%;
 }
 
 .header {
-    border-bottom: 1px solid black;
     padding-bottom: 3px;
+}
+
+.logo {
+    height: 100%;
+    width: 10%;
 }
 
 .title {
     padding-top: 5px;
+    width: 100%;
+}
+
+.titleCaption {
+    padding-top: 10px;
+    width: 100%;
 }
 
 .details {
-    padding-bottom: 10px;
-    border-bottom: 1px solid black;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 5px 5px lightgray;
+    padding: 2%;
+    width: 100%;
 }
 
 .extraDetails {
@@ -24,9 +37,42 @@
     font-size: small;
 }
 
-.stats {
-    padding-top: 20px;
+.separator {
     border-bottom: 1px solid black;
+    width: 100%;
+}
+
+.stats {
+    margin-top: 20px;
+    background-color: white;
+    box-shadow: 5px 5px lightgray;
+    border-radius: 10px;
+    padding: 2%;
+}
+
+.stat {
+    display: flex;
+    height: 5vh;
+}
+
+.statName {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.statValue {
+    flex: 1;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.media {
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+    width: 100%;
 }
 
 .statsRow {

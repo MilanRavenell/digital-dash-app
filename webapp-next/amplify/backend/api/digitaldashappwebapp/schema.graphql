@@ -18,12 +18,13 @@ type UserProfile @model {
 type TwitterPost @model
 {
 
-  id: String! @primaryKey(sortKeyFields: ["createdAt"])
+  id: String! @primaryKey
   createdAt: String!
   profileName: String! @index(name: "ByProfileName", sortKeyFields: ["createdAt"], queryField: "twitterPostsByProfileName")
   datePosted: String!
   caption: String!
   link: String!
+  media: [PostMedia!]!
   viewCount: Int
   engagementCount: Int
   profileClickCount: Int
@@ -36,12 +37,13 @@ type TwitterPost @model
 
 type YoutubePost @model
 {
-  id: String! @primaryKey(sortKeyFields: ["createdAt"])
+  id: String! @primaryKey
   createdAt: String!
   profileName: String! @index(name: "ByProfileName", sortKeyFields: ["createdAt"], queryField: "youtubePostsByProfileName")
   datePosted: String!
   caption: String!
   link: String!
+  media: [PostMedia!]!
   viewCount: Int
   engagementCount: Int
   likeCount: Int
@@ -52,18 +54,24 @@ type YoutubePost @model
 
 type InstagramPost @model
 {
-  id: String! @primaryKey(sortKeyFields: ["createdAt"])
+  id: String! @primaryKey
   createdAt: String!
   profileName: String! @index(name: "ByProfileName", sortKeyFields: ["createdAt"], queryField: "igPostsByProfileName")
   datePosted: String!
   caption: String!
   link: String!
+  media: [PostMedia!]!
   viewCount: Int
   engagementCount: Int
   likeCount: Int
   commentCount: Int
   saveCount: Int
   reachCount: Int
+}
+
+type PostMedia {
+  thumbnailUrl: String!
+  type: String!
 }
 
 input GetDataInput {
@@ -93,13 +101,13 @@ type GetDataDataPostHeader {
   metrics: [GetDataDataMetric!]!
 }
 
-union GetDataDataRecord = TwitterPost | YoutubePost | InstagramPost
+union Post = TwitterPost | YoutubePost | InstagramPost
 
 type getDataData {
   profiles: [BeefedUserProfile!]
   timeframes: [GetDataDataTimeframe!]
   metrics: [GetDataDataMetric!]
-  records: [GetDataDataRecord!]
+  records: [Post!]
   postHeaders: [GetDataDataPostHeader!]!
 }
 
@@ -129,6 +137,19 @@ input GetBeefedUserProfilesInput {
 
 type GetBeefedUserProfilesResponse {
   profiles: [BeefedUserProfile]!
+}
+
+input PopulateAnalyticsInput {
+  username: String!
+}
+
+type PopulateAnalyticsResponse {
+  data: [Post!]!
+  success: Boolean!
+}
+
+type Mutation {
+  populateAnalytics(input: PopulateAnalyticsInput!): PopulateAnalyticsResponse! @function(name: "digitalDashAppResolver", region: "us-west-2")
 }
 
 type Query {

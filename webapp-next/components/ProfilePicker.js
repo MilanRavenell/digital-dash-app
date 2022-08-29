@@ -1,13 +1,10 @@
 import React from 'react';
 import { Button, IconButton } from '@mui/material';
 import { ArrowForwardIos, ArrowBackIos } from '@mui/icons-material';
-import Image from 'next/image'
+import Image from 'next/image';
 import { platformToLogoUrlMap } from '../helpers';
 
 import profPic from './twit_prof_pic.jpeg';
-import coverPic from './twit_cover.jpeg';
-import twitLogo from './twitter_logo.png';
-import ytLogo from './youtube_logo.png';
 
 import styles from '../styles/ProfilePicker.module.css';
 
@@ -56,7 +53,7 @@ const ProfilePicker = ({
         if (selectedProfileNames.includes(profile)) {
             return {
                 color: 'blue',
-                border: '1px solid blue',
+                border: '2px solid blue',
             }
         }
     }
@@ -88,9 +85,6 @@ const ProfilePicker = ({
             {
                 (profiles || []).map((profile, index) => {
                     const profilePicUrl = (profile.profilePicUrl !== null && profile.profilePicUrl !== undefined) ? profile.profilePicUrl : '/';
-                    console.log('PROFIELLLELEL')
-                    console.log(profile)
-                    console.log(profilePicUrl)
                     return (
                         <div className={styles.profileContainerExpanded} key={index}>
                             <div className={styles.profileExpanded}
@@ -151,14 +145,25 @@ const ProfilePicker = ({
                 </IconButton>
             </div>
             {
-                profiles.map((profile, index) => (
-                    <div className={styles.profileMinimized} key={index}>
-                        <div className={styles.profilePicMinimized} style={{ 
-                            ...selectedStyle(profile.profileName),
-                            backgroundImage: `url(${profPic})`,
-                        }}/>
-                    </div>
-                ))
+                profiles.map((profile, index) => {
+                    const profilePicUrl = (profile.profilePicUrl !== null && profile.profilePicUrl !== undefined) ? profile.profilePicUrl : '/';
+                    return (
+                        <div className={styles.profileMinimized} key={index}>
+                            <div className={styles.profilePicMinimized}>
+                                <img
+                                    src={profilePicUrl}
+                                    alt='profile pic'
+                                    style={{
+                                        height: '100%',
+                                        width: '100%',
+                                        objectFit: 'contain',
+                                    }}
+                                    referrerPolicy="no-referrer"
+                                />
+                            </div>
+                        </div>
+                    )
+                })
             }
         </div>
     );

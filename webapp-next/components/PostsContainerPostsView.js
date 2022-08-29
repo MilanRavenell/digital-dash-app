@@ -1,13 +1,17 @@
 import React from 'react';
+import { platformToLogoUrlMap } from '../helpers';
+import Image from 'next/image';
 
 import styles from '../styles/PostsContainerPostsView.module.css';
 
 const PostsContainerPostsView = ({ posts, headers, profiles, openPopUp }) => {
+    const totalHeaders = [...headers.globalHeaders, ...headers.platformHeaders];
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
                 {
-                    headers.map(({ displayName }, keyIndex) => {
+                    totalHeaders.map(({ displayName }, keyIndex) => {
                         const style = displayName === 'Platform' ? styles.headerFieldShort : styles.headerFieldLong
                         return (
                             <div className={style} key={keyIndex}>
@@ -22,15 +26,25 @@ const PostsContainerPostsView = ({ posts, headers, profiles, openPopUp }) => {
                     return (
                         <div className={styles.post} key={postIndex} onClick={() => {openPopUp(post)}}>
                             {
-                                headers.map(({ field, displayName }, keyIndex) => {
+                                totalHeaders.map(({ field, displayName }, keyIndex) => {
                                     const style = displayName === 'Platform' ? styles.postFieldShort : styles.postFieldLong;
+                                    const platform = profiles.find((profile => (profile.profileName === post.profileName))).platform;
                                     return (
                                         <div className={style} key={keyIndex}>
                                             {
                                                 (() => {
                                                     switch(displayName) {
                                                     case 'Platform':
-                                                        return profiles.find((profile => (profile.profileName === post.profileName))).platform;
+                                                        return (
+                                                            <div className={styles.logo}>
+                                                                <Image
+                                                                    src={platformToLogoUrlMap[platform].url}
+                                                                    layout="responsive"
+                                                                    width={platformToLogoUrlMap[platform].width}
+                                                                    height={platformToLogoUrlMap[platform].height}
+                                                                />
+                                                            </div>
+                                                        );
                                                     case 'Caption':
                                                         return (<a href={post['Link']} target="_blank" rel="noreferrer">{post[field]}</a>);
                                                     default:

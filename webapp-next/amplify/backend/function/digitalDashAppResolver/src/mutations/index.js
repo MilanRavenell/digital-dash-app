@@ -1,3 +1,3 @@
 module.exports = {
-    fetchAnalytics: require('./fetch-analytics'),
+    populateAnalytics: require('./populate-analytics'),
 };

@@ -1,44 +1,109 @@
 import React from 'react';
-import { batchArray } from '../helpers';
+import Image from 'next/image';
+import { platformToLogoUrlMap } from '../helpers';
+import TextField from '@mui/material/TextField';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
 
 import styles from '../styles/IndividualPostPopUp.module.css'
 
+const Stat = ({ name, value, smallFont }) => {
+    const style = smallFont ? { fontSize: 'small'} : { fontSize: 'large' };
+    return (
+        <div className={styles.stat}>
+            <div className={styles.statName} style={style}>
+                { name }
+            </div>
+            <div className={styles.statValue} style={style}>
+                { value }
+            </div>
+        </div>
+    )
+}
+
+const Media = ({ mediaList }) => {
+    return (
+        <div className={styles.media}>
+            <ImageList cols={4} sx={{
+                margin: '10px',
+            }}>
+            {
+                mediaList.map((media, index) => (
+                    <ImageListItem key={index} sx={{
+                        borderRadius: '10px',
+                    }}>
+                        <img
+                            src={media.thumbnailUrl}
+                            alt={'media'}
+                            loading='lazy'
+                            referrerPolicy="no-referrer"
+                            style={{
+                                height: '100%',
+                                width: '100%',
+                                objectFit: 'contain',
+                            }}
+                        />
+                    </ImageListItem>
+                ))
+            }
+            </ImageList>
+        </div>
+    )
+}
+
 const IndividualPostPopUp = ({ post, headers }) => {
+    const platform = post.__typename.split('Post')[0].toLowerCase();
+
     return (
         <div className={styles.container}>
             <div className={styles.details}>
                 <div className={styles.header}>
-                    Post
+                    <div className={styles.logo}>
+                        <Image
+                            src={platformToLogoUrlMap[platform].url}
+                            layout="responsive"
+                            width={platformToLogoUrlMap[platform].width}
+                            height={platformToLogoUrlMap[platform].height}
+                        />
+                    </div>
                 </div>
                 <div className={styles.title}>
-                    {post.caption}
+                    {
+                        (post.media.length > 0) && (
+                            <Media mediaList={post.media}/>
+                        )
+                    }
+                    <div className={styles.titleCaption}>
+                        {
+                            (post.caption !== '') &&
+                                <TextField
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
+                                    id="outlined-disabled"
+                                    label="Caption"
+                                    defaultValue={post.caption}
+                                    fullWidth
+                                    multiline
+                                />
+                        }
+                    </div>
                 </div>
                 <div className={styles.extraDetails}>
+                    <div className={styles.titleDate}>{post.profileName}</div>
                     <div className={styles.titleDate}>{post.datePosted}</div>
                     <div className={styles.titleLink}>
-                        <a href={post['Link']} target="_blank" rel="noreferrer">Link</a>
+                        <a href={post.link} target="_blank" rel="noreferrer">Link</a>
                     </div>
                 </div>
             </div>
             <div className={styles.stats}>
+                <Stat name='Views' value={post.viewCount}/>
+                <Stat name='Total Engagement' value={post.engagementCount}/>
+                <div className={styles.separator}/>
                 {
-                    batchArray(headers.filter(({ displayName }) => (displayName != 'Caption' && displayName != 'Date')), 2).map((batch, batchIndex) => (
-                        <div className={styles.statsRow} key={batchIndex}>
-                        {
-                            batch.map((header, keyIndex) => (
-                                <div className={styles.statsStat} key={`${keyIndex}-stat`}>
-                                    {
-                                        header && (
-                                            <div className={styles.statsStatContent}>
-                                                <div>{header.displayName}:</div>
-                                                <div>{post[header.field]}</div>
-                                            </div>
-                                        )
-                                    }
-                                </div>
-                            ))
-                        }
-                        </div>
+                    headers.map((header, index) => (
+                        <Stat name={header.displayName} value={post[header.field]} smallFont={true} key={index}/>
                     ))
                 }
             </div>

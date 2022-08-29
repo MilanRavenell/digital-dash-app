@@ -110,14 +110,18 @@ export const listUserProfiles = /* GraphQL */ `
   }
 `;
 export const getTwitterPost = /* GraphQL */ `
-  query GetTwitterPost($id: String!, $createdAt: String!) {
-    getTwitterPost(id: $id, createdAt: $createdAt) {
+  query GetTwitterPost($id: String!) {
+    getTwitterPost(id: $id) {
       id
       createdAt
       profileName
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       profileClickCount
@@ -133,7 +137,6 @@ export const getTwitterPost = /* GraphQL */ `
 export const listTwitterPosts = /* GraphQL */ `
   query ListTwitterPosts(
     $id: String
-    $createdAt: ModelStringKeyConditionInput
     $filter: ModelTwitterPostFilterInput
     $limit: Int
     $nextToken: String
@@ -141,7 +144,6 @@ export const listTwitterPosts = /* GraphQL */ `
   ) {
     listTwitterPosts(
       id: $id
-      createdAt: $createdAt
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -169,14 +171,18 @@ export const listTwitterPosts = /* GraphQL */ `
   }
 `;
 export const getYoutubePost = /* GraphQL */ `
-  query GetYoutubePost($id: String!, $createdAt: String!) {
-    getYoutubePost(id: $id, createdAt: $createdAt) {
+  query GetYoutubePost($id: String!) {
+    getYoutubePost(id: $id) {
       id
       createdAt
       profileName
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       likeCount
@@ -190,7 +196,6 @@ export const getYoutubePost = /* GraphQL */ `
 export const listYoutubePosts = /* GraphQL */ `
   query ListYoutubePosts(
     $id: String
-    $createdAt: ModelStringKeyConditionInput
     $filter: ModelYoutubePostFilterInput
     $limit: Int
     $nextToken: String
@@ -198,7 +203,6 @@ export const listYoutubePosts = /* GraphQL */ `
   ) {
     listYoutubePosts(
       id: $id
-      createdAt: $createdAt
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -224,14 +228,18 @@ export const listYoutubePosts = /* GraphQL */ `
   }
 `;
 export const getInstagramPost = /* GraphQL */ `
-  query GetInstagramPost($id: String!, $createdAt: String!) {
-    getInstagramPost(id: $id, createdAt: $createdAt) {
+  query GetInstagramPost($id: String!) {
+    getInstagramPost(id: $id) {
       id
       createdAt
       profileName
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       likeCount
@@ -245,7 +253,6 @@ export const getInstagramPost = /* GraphQL */ `
 export const listInstagramPosts = /* GraphQL */ `
   query ListInstagramPosts(
     $id: String
-    $createdAt: ModelStringKeyConditionInput
     $filter: ModelInstagramPostFilterInput
     $limit: Int
     $nextToken: String
@@ -253,7 +260,6 @@ export const listInstagramPosts = /* GraphQL */ `
   ) {
     listInstagramPosts(
       id: $id
-      createdAt: $createdAt
       filter: $filter
       limit: $limit
       nextToken: $nextToken

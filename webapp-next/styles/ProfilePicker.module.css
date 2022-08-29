@@ -139,5 +139,5 @@
     height: 2vw;
     width: 2vw;
     border-radius: 50%;
-    background-color: green;
+    overflow: hidden;
 }

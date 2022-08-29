@@ -87,6 +87,10 @@ export const onCreateTwitterPost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       profileClickCount
@@ -110,6 +114,10 @@ export const onUpdateTwitterPost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       profileClickCount
@@ -133,6 +141,10 @@ export const onDeleteTwitterPost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       profileClickCount
@@ -156,6 +168,10 @@ export const onCreateYoutubePost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       likeCount
@@ -177,6 +193,10 @@ export const onUpdateYoutubePost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       likeCount
@@ -198,6 +218,10 @@ export const onDeleteYoutubePost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       likeCount
@@ -219,6 +243,10 @@ export const onCreateInstagramPost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       likeCount
@@ -240,6 +268,10 @@ export const onUpdateInstagramPost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       likeCount
@@ -261,6 +293,10 @@ export const onDeleteInstagramPost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       likeCount

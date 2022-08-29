@@ -1,6 +1,62 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const populateAnalytics = /* GraphQL */ `
+  mutation PopulateAnalytics($input: PopulateAnalyticsInput!) {
+    populateAnalytics(input: $input) {
+      data {
+        ... on TwitterPost {
+          id
+          createdAt
+          profileName
+          datePosted
+          caption
+          link
+          viewCount
+          engagementCount
+          profileClickCount
+          likeCount
+          detailExpandCount
+          mediaEngagementCount
+          replyCount
+          retweetCount
+          updatedAt
+        }
+        ... on YoutubePost {
+          id
+          createdAt
+          profileName
+          datePosted
+          caption
+          link
+          viewCount
+          engagementCount
+          likeCount
+          commentCount
+          dislikeCount
+          favoriteCount
+          updatedAt
+        }
+        ... on InstagramPost {
+          id
+          createdAt
+          profileName
+          datePosted
+          caption
+          link
+          viewCount
+          engagementCount
+          likeCount
+          commentCount
+          saveCount
+          reachCount
+          updatedAt
+        }
+      }
+      success
+    }
+  }
+`;
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!
@@ -100,6 +156,10 @@ export const createTwitterPost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       profileClickCount
@@ -124,6 +184,10 @@ export const updateTwitterPost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       profileClickCount
@@ -148,6 +212,10 @@ export const deleteTwitterPost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       profileClickCount
@@ -172,6 +240,10 @@ export const createYoutubePost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       likeCount
@@ -194,6 +266,10 @@ export const updateYoutubePost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       likeCount
@@ -216,6 +292,10 @@ export const deleteYoutubePost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       likeCount
@@ -238,6 +318,10 @@ export const createInstagramPost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       likeCount
@@ -260,6 +344,10 @@ export const updateInstagramPost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       likeCount
@@ -282,6 +370,10 @@ export const deleteInstagramPost = /* GraphQL */ `
       datePosted
       caption
       link
+      media {
+        thumbnailUrl
+        type
+      }
       viewCount
       engagementCount
       likeCount

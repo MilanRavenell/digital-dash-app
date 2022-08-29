@@ -48,6 +48,7 @@ export default function Home() {
         }
       });
 
+      console.log(response);
       const deletedProfile = response.data.deleteUserProfile;
 
       const newProfiles = [...profiles];
@@ -55,11 +56,9 @@ export default function Home() {
       console.log(newProfiles)
 
       // If there are no more signed in instagram profiles, log the user out of facebook
-      if (newProfiles.findIndex(profile => (profile.platform === 'instagram')) === -1) {
-        FB.logout((response) => {
-          console.log('logging out fb')
-          console.log(response);
-        });
+      if (deletedProfile.platform === 'instagram') {
+        const { account_id, access_token } = JSON.parse(deletedProfile.meta);
+        await axios.get(`/api/auth/sign-out-instagram?id=${account_id}&accessToken=${access_token}`);
       }
 
       if (deletedProfile.platform === 'youtube') {
@@ -73,7 +72,7 @@ export default function Home() {
 
       context.setUserProfiles(newProfiles);
     } catch (err) {
-      console.log(`Failed to delete profile ${deletedProfile.profileName}`, err)
+      console.log(`Failed to delete profile ${profiles[profileIndex].profileName}`, err)
     }
   });
 

@@ -40,45 +40,36 @@ async function getData(ctx) {
                     platform: 'global',
                     metrics: [
                         { displayName: 'Platform', field: '__typename'},
+                        { displayName: 'Profile', field: 'profileName'},
+                        { displayName: 'Date', field: 'datePosted'},
                         { displayName: 'Caption', field: 'caption'},
                         { displayName: 'Views', field: 'viewCount'},
                         { displayName: 'Total Engagement', field: 'engagementCount'},
-                        { displayName: 'Date', field: 'datePosted'},
                     ],
                 },
                 {
                     platform: 'twitter',
                     metrics: [
-                        { displayName: 'Caption', field: 'caption'},
-                        { displayName: 'Views', field: 'viewCount'},
                         { displayName: 'Profile Clicks', field: 'profileClickCount'},
                         { displayName: 'Likes', field: 'likeCount'},
-                        { displayName: 'Detail Expands', field: 'detailExpandCount'},
-                        { displayName: 'Media Engagements', field: 'mediaEngagementCount'},
                         { displayName: 'Replies', field: 'replyCount'},
-                        { displayName: 'Date', field: 'datePosted'},
+                        { displayName: 'Retweets', field: 'retweetCount'},
                     ],
                 },
                 {
                     platform: 'youtube',
                     metrics: [
-                        { displayName: 'Caption', field: 'caption'},
-                        { displayName: 'Views', field: 'viewCount'},
                         { displayName: 'Likes', field: 'likeCount'},
                         { displayName: 'Comments', field: 'commentCount'},
-                        { displayName: 'Date', field: 'datePosted'},
                     ]
                 },
                 {
                     platform: 'instagram',
                     metrics: [
-                        { displayName: 'Caption', field: 'caption'},
-                        { displayName: 'Views', field: 'viewCount'},
                         { displayName: 'Likes', field: 'likeCount'},
                         { displayName: 'Comments', field: 'commentCount'},
                         { displayName: 'Saves', field: 'saveCount'},
                         { displayName: 'Reach', field: 'reachCount'},
-                        { displayName: 'Date', field: 'datePosted'},
                     ]
                 },
             ]
