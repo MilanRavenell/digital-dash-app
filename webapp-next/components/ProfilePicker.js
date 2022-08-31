@@ -110,11 +110,15 @@ const ProfilePicker = ({
                                     </div>
                                     <div className={styles.profileCoverExpanded}>
                                         <div className={styles.platformLogoExpanded}>
-                                            <Image
+                                            <img
                                                 src={platformToLogoUrlMap[profile.platform].url}
-                                                layout="responsive"
-                                                width={platformToLogoUrlMap[profile.platform].width}
-                                                height={platformToLogoUrlMap[profile.platform].height}
+                                                alt='profile pic'
+                                                style={{
+                                                    height: '100%',
+                                                    width: '100%',
+                                                    objectFit: 'contain',
+                                                }}
+                                                referrerPolicy="no-referrer"
                                             />
                                         </div>
                                     </div>

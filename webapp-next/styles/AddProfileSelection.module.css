@@ -65,20 +65,25 @@
     flex-direction: column;
 }
 
+.platformLogoNameContainer {
+    display: flex;
+    justify-content: center;
+}
+
 .platformLogoName {
     display: flex;
-    width: 70%;
     margin-top: 10%;
 }
 
 .platformLogo {
-    flex: 1;
+    width: 30%;
 }
 
 .platformName {
-    flex: 3;
     padding-left: 5%;
     font-size: large;
+    display: flex;
+    align-items: center;
 }
 
 .platformPlus {

@@ -103,11 +103,15 @@ const AddProfile = ({
                 <div className={styles.content}>
                     <div className={styles.header}>
                         <div className={styles.logo}>
-                            <Image
+                            <img
                                 src={platformToLogoUrlMap[platform].url}
-                                layout="responsive"
-                                width={platformToLogoUrlMap[platform].width}
-                                height={platformToLogoUrlMap[platform].height}
+                                alt='profile pic'
+                                style={{
+                                    height: '100%',
+                                    width: '100%',
+                                    objectFit: 'contain',
+                                }}
+                                referrerPolicy="no-referrer"
                             />
                         </div>
                         <div className={styles.title}>

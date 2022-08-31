@@ -41,17 +41,23 @@ const AddProfileSelection = ({
                                             variant="outlined"
                                             onClick={() => {handlePlatformClick(platform)}}
                                             key={platform}>
-                                                <div className={styles.platformLogoName}>
-                                                    <div className={styles.platformLogo}>
-                                                        <Image
-                                                            src={platformToLogoUrlMap[platform].url}
-                                                            layout="responsive"
-                                                            width={platformToLogoUrlMap[platform].width}
-                                                            height={platformToLogoUrlMap[platform].height}
-                                                        />
-                                                    </div>
-                                                    <div className={styles.platformName}>
-                                                        { platform }
+                                                <div className={styles.platformLogoNameContainer}>
+                                                    <div className={styles.platformLogoName}>
+                                                        <div className={styles.platformLogo}>
+                                                            <img
+                                                                src={platformToLogoUrlMap[platform].url}
+                                                                alt='profile pic'
+                                                                style={{
+                                                                    height: '100%',
+                                                                    width: '100%',
+                                                                    objectFit: 'contain',
+                                                                }}
+                                                                referrerPolicy="no-referrer"
+                                                            />
+                                                        </div>
+                                                        <div className={styles.platformName}>
+                                                            { platform }
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div className={styles.platformPlus}>

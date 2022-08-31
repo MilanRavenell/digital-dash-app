@@ -37,11 +37,15 @@ const PostsContainerPostsView = ({ posts, headers, profiles, openPopUp }) => {
                                                     case 'Platform':
                                                         return (
                                                             <div className={styles.logo}>
-                                                                <Image
+                                                                <img
                                                                     src={platformToLogoUrlMap[platform].url}
-                                                                    layout="responsive"
-                                                                    width={platformToLogoUrlMap[platform].width}
-                                                                    height={platformToLogoUrlMap[platform].height}
+                                                                    alt='profile pic'
+                                                                    style={{
+                                                                        height: '100%',
+                                                                        width: '100%',
+                                                                        objectFit: 'contain',
+                                                                    }}
+                                                                    referrerPolicy="no-referrer"
                                                                 />
                                                             </div>
                                                         );
