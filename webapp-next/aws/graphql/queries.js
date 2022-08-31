@@ -27,6 +27,7 @@ export const getBeefedUserProfiles = /* GraphQL */ `
         platform
         profileName
         profilePicUrl
+        followerCount
       }
     }
   }
@@ -37,6 +38,7 @@ export const getUser = /* GraphQL */ `
       email
       firstName
       lastName
+      postsLastPopulated
       createdAt
       updatedAt
     }
@@ -61,6 +63,7 @@ export const listUsers = /* GraphQL */ `
         email
         firstName
         lastName
+        postsLastPopulated
         createdAt
         updatedAt
       }

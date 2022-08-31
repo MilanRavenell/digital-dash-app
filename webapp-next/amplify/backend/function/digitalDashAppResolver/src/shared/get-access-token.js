@@ -72,7 +72,7 @@ async function refreshTwitterTokens(ctx, profile) {
 }
 
 async function refreshYoutubeTokens(ctx, profile) {
-    const { id, refreshToken } = JSON.parse(profile.meta);
+    const { id, refreshToken, uploadsId } = JSON.parse(profile.meta);
     const { ddbClient } = ctx.resources;
 
     const params = new URLSearchParams();
@@ -92,13 +92,14 @@ async function refreshYoutubeTokens(ctx, profile) {
         }
     )
 
-    const { access_token, expires_in } = response.data;
+    const { access_token, expires_in, } = response.data;
     const expires = new Date(new Date().getTime() + (1000 * expires_in)).toISOString();
 
     const newMeta = JSON.stringify({
         id,
         accessToken: access_token,
-        refreshToken: refreshToken,
+        refreshToken,
+        uploadsId,
         expires,
     });
 

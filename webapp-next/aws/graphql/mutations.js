@@ -53,6 +53,7 @@ export const populateAnalytics = /* GraphQL */ `
           updatedAt
         }
       }
+      dataUpdated
       success
     }
   }
@@ -66,6 +67,7 @@ export const createUser = /* GraphQL */ `
       email
       firstName
       lastName
+      postsLastPopulated
       createdAt
       updatedAt
     }
@@ -80,6 +82,7 @@ export const updateUser = /* GraphQL */ `
       email
       firstName
       lastName
+      postsLastPopulated
       createdAt
       updatedAt
     }
@@ -94,6 +97,7 @@ export const deleteUser = /* GraphQL */ `
       email
       firstName
       lastName
+      postsLastPopulated
       createdAt
       updatedAt
     }

@@ -5,32 +5,37 @@ import AddProfile from './AddProfile';
 import { API } from 'aws-amplify';
 import { getUser } from '../graphql/queries';
 import { createUser, createUserProfile } from '../aws/graphql/mutations';
-import { getData } from '../aws/custom-gql';
+import { getData, populateAnalytics } from '../aws/custom-gql';
 import { useRouter } from 'next/router';
-
-import styles from '../styles/App.module.css';
 
 const App = ({ signOut, authUser }) => {
   const [state, setState] = React.useState({
     user: null,
     data: null,
     signUpMode: false,
-    screen: 'loading'
+    screen: 'loading',
+    fetchRecentData: false,
   });
 
   const router = useRouter();
 
-  React.useEffect(() => {
+  React.useEffect(async () => {
     if (state.user === null) {
-      handleLogIn();
+      await handleLogIn();
+      return;
     }
     
     if (state.screen === 'loading' && state.data !== null) {
-      console.log('fuck')
       setState({
         ...state,
         screen: 'main-content',
       });
+      return;
+    }
+
+    if (state.screen === 'main-content' && state.fetchRecentData) {
+      await fetchMostRecentPostData();
+      return;
     }
   });
 
@@ -63,8 +68,6 @@ const App = ({ signOut, authUser }) => {
         }
       })).data.getData;
 
-      console.log(response)
-
       console.log(response.data)
 
       if (response.success) {
@@ -73,11 +76,40 @@ const App = ({ signOut, authUser }) => {
           user,
           data: response.data,
           screen: 'main-content',
+          fetchRecentData: true,
         });
       }
     } catch (err) {
-      console.error('Failed to fetch user', err);
+      console.error('Failed to initialize user', err);
       throw new Error();
+    }
+  }
+
+  const fetchMostRecentPostData = async () => {
+    console.log('fetching data')
+    try {
+      const response = (await API.graphql({
+        query: populateAnalytics,
+        variables: {
+          username: state.user.email
+        }
+      })).data.populateAnalytics;
+      
+      console.log('done fetching');
+      console.log(response)
+
+      if (response.success) {
+        setState((prevState) => ({
+          ...prevState,
+          data: {
+            ...prevState.data,
+            records: response.dataUpdated ? response.data : prevState.data.records,
+          },
+          fetchRecentData: false,
+        }));
+      }
+    } catch (err) {
+      console.error('Failed to fetch most recent post data', err);
     }
   }
 

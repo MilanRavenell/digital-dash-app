@@ -87,8 +87,9 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
         return profileRecords.filter(record => (new Date(record.datePosted) > new Date(partitionDate)));
     }
 
+    const selectedProfiles = data.profiles.filter(profile => (state.profiles.includes(profile.profileName)));
     const filteredRecords = filterRecordsByTimeframeAndUsername();
-    const aggregatedData = getAggregatedStats(filteredRecords, data.metrics);
+    const aggregatedData = getAggregatedStats(filteredRecords, data.metrics, selectedProfiles);
     const graphData = getGraphData(filteredRecords, [...state.timeframe.graphPartitions]);
 
     const getPostHeaders = () => {
@@ -144,7 +145,9 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
                 </div>
             </div>
             <div className={styles.content}>
-                <div className={styles.contentLeft}>
+                <div className={styles.contentLeft} style={{
+                    width: state.profilePickerExpanded ? '18%' : '3%',
+                }}>
                     <div className={styles.contentLeftPicker}>
                         <ProfilePicker
                             profiles={data.profiles}
@@ -154,7 +157,9 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
                             toggleExpanded={toggleProfilePickerExpanded}/>
                     </div>
                 </div>
-                <div className={styles.contentRight}>
+                <div className={styles.contentRight} style={{
+                    width: state.profilePickerExpanded ? '82%' : '97%',
+                }}>
                     <div className={styles.dropdown}>
                         <FormControl sx={{ m: 1, minWidth: 120, height: '100%' }}>
                             <InputLabel>Timeframe</InputLabel>
@@ -175,7 +180,7 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
                         <AggregatedStatsContainer
                             data={aggregatedData}/>
                     </div>
-                    <div className={styles.contentNottom}>
+                    <div className={styles.contentBottom}>
                         <PostsContainer
                             posts={filteredRecords}
                             headers={getPostHeaders()}

@@ -16,26 +16,51 @@
     border-left: 1px solid lightgrey;
 }
 
-.form {
-    height: 60%;
-    width: 40%;
+.content {
     background-color: white;
     border-radius: 5px;
     box-shadow: 5px 5px lightgray;
+}
+
+.header {
+    height: 8vh;
+    width: 20vw;
+    margin-top: 2vh;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.title {
+    width: 100%;
+    align-items: center;
+    height: 50%;
+    color: grey;
+    white-space: nowrap;
+    text-align: center;
+    margin-top: 5px;
+}
+
+.form {
+    display: flex;
+    justify-content: center;
+}
+
+.formContent {
     display: flex;
     flex-direction: column;
     /* justify-content: center; */
     align-items: center;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
 }
 
-.header {
-    margin-top: 30%;
+.logo {
+    height: 50%;
+    width: 12%;
 }
 
 .username {
-    margin-top: 20%;
 }
 
 .buttons {
-    margin-top: 5%;
 }

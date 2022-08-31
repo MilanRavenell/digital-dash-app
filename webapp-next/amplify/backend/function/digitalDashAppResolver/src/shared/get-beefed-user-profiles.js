@@ -45,6 +45,7 @@ async function getTwitterProfileInfo(ctx, profile) {
         });
     
         return {
+            followerCount: response.data.public_metrics.followers_count,
             profilePicUrl: response.data.profile_image_url,
         }
     } catch (err) {
@@ -60,10 +61,12 @@ async function getYoutubeProfileInfo(ctx, profile) {
     
     try {
         const accessToken = await getAccessToken(ctx, profile);
-        const response = await axios.get(`https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${id}&access_token=${accessToken}`);
-        const pic = response.data.items[0].snippet.thumbnails['default'];
+        const response = await axios.get(`https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${id}&access_token=${accessToken}`);
+        const item = response.data.items[0];
+        const pic = item.snippet.thumbnails['default'];
 
         return {
+            followerCount: item.statistics.subscriberCount,
             profilePicUrl: pic.url,
         }
     } catch (err) {
@@ -79,6 +82,7 @@ async function getInstagramProfileInfo(ctx, profile) {
         const response = await axios.get(`https://graph.facebook.com/v14.0/${accountId}?fields=followers_count,profile_picture_url&access_token=${accessToken}`);
 
         return {
+            followerCount: response.data.followers_count,
             profilePicUrl: response.data.profile_picture_url,
         }
     } catch (err) {

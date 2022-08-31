@@ -66,7 +66,6 @@ export default function Home() {
       }
 
       if (deletedProfile.platform === 'twitter') {
-        signOut({ redirect: false })
         await axios.get(`/api/auth/sign-out-twitter?accessToken=${JSON.parse(deletedProfile.meta).accessToken}`);
       }
 

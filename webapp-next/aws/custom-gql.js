@@ -18,6 +18,7 @@ export const getData = /* GraphQL */ `
           profileName
           user
           profilePicUrl
+          followerCount
         }
         records {
           __typename
@@ -89,17 +90,72 @@ export const getData = /* GraphQL */ `
   }
 `;
 
-export const findProfiles = /* GraphQL */ `
-  query FindProfiles($platform: String!, $accessToken: String!) {
-    findProfiles(input: {
-      accessToken: $accessToken,
-      platform: $platform,
+export const populateAnalytics = /* GraphQL */ `
+  mutation PopulateAnalytics($username: String!) {
+    populateAnalytics(input: {
+      username: $username,
     }) {
-      profiles {
-        profileName
-        meta
+      data {
+        __typename
+        ... on TwitterPost {
+          id
+          caption
+          createdAt
+          datePosted
+          detailExpandCount
+          engagementCount
+          likeCount
+          mediaEngagementCount
+          profileClickCount
+          profileName
+          replyCount
+          updatedAt
+          viewCount
+          link
+          media {
+            thumbnailUrl
+            type
+          }
+        }
+        ... on YoutubePost {
+          id
+          caption
+          commentCount
+          createdAt
+          datePosted
+          engagementCount
+          likeCount
+          profileName
+          updatedAt
+          viewCount
+          link
+          media {
+            thumbnailUrl
+            type
+          }
+        }
+        ... on InstagramPost {
+          id
+          caption
+          commentCount
+          createdAt
+          datePosted
+          engagementCount
+          likeCount
+          link
+          profileName
+          reachCount
+          saveCount
+          updatedAt
+          viewCount
+          media {
+            thumbnailUrl
+            type
+          }
+        }
       }
       success
+      dataUpdated
     }
   }
 `;

@@ -6,6 +6,7 @@ type User @model {
   email: String! @primaryKey
   firstName: String!
   lastName: String!
+  postsLastPopulated: String
 }
 
 type UserProfile @model {
@@ -83,6 +84,7 @@ type BeefedUserProfile {
   platform: String!
   profileName: String!
   profilePicUrl: String
+  followerCount: Int
 }
 
 type GetDataDataTimeframe {
@@ -145,6 +147,7 @@ input PopulateAnalyticsInput {
 
 type PopulateAnalyticsResponse {
   data: [Post!]!
+  dataUpdated: Boolean!
   success: Boolean!
 }
 

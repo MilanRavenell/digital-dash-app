@@ -3,7 +3,7 @@
     border-radius: 10px;
     overflow: auto;
     height: 100%;
-    width: 17vw;
+    width: 100%;
     background-color: white;
     box-shadow: 5px 5px lightgray;
 }
@@ -117,7 +117,7 @@
     overflow: auto;
     height: 100%;
     margin-right: 5px;
-    width: 3vw;
+    width: 100%;
     background-color: white;
     box-shadow: 5px 5px lightgray;
     margin-top: 10px;

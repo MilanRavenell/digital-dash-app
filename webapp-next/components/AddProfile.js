@@ -2,6 +2,8 @@ import React from 'react';
 import { Button } from '@mui/material';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
+import { platformToLogoUrlMap } from '../helpers';
 
 import styles from '../styles/AddProfile.module.css';
 
@@ -55,21 +57,21 @@ const AddProfile = ({
             case 'sign-in':
                 return (
                     <div className={styles.form}>
-                        <div className={styles.header}>
-                            Add {platform} account
-                        </div>
-                        <div className={styles.buttons}>
-                            <Button onClick={login}>Log into {platform}</Button>
-                            <Button onClick={cancel}>Cancel</Button>
+                        <div className={styles.formContent}>
+                            <div className={styles.buttons}>
+                                <div>
+                                    <Button onClick={login}>Sign in with {platform}</Button>
+                                </div>
+                                <div>
+                                    <Button onClick={cancel}>Cancel</Button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 );
             case 'verify':
                 return (
                     <div className={styles.form}>
-                        <div className={styles.header}>
-                            Add these profiles?
-                        </div>
                         <div className={styles.profiles}>
                         {
                             (state.profiles !== null && state.profiles !== undefined) && 
@@ -98,7 +100,22 @@ const AddProfile = ({
 
             </div>
             <div className={styles.right}>
-               { getContent() }
+                <div className={styles.content}>
+                    <div className={styles.header}>
+                        <div className={styles.logo}>
+                            <Image
+                                src={platformToLogoUrlMap[platform].url}
+                                layout="responsive"
+                                width={platformToLogoUrlMap[platform].width}
+                                height={platformToLogoUrlMap[platform].height}
+                            />
+                        </div>
+                        <div className={styles.title}>
+                            Add {platform[0].toUpperCase() + platform.slice(1)} Account
+                        </div>
+                    </div>
+                    { getContent() }
+                </div>
             </div>
         </div>
     );

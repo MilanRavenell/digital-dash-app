@@ -1,4 +1,5 @@
 const Twitter = require('twitter-lite');
+import { signOut } from 'next-auth/react';
 
 async function twitterLoginCallbackHandler(sessionData, currentProfiles, setProfiles) {
     const profile = {
@@ -15,6 +16,7 @@ async function twitterLoginCallbackHandler(sessionData, currentProfiles, setProf
         return;
     }
 
+    signOut({ redirect: false })
     setProfiles([profile]);
 }
 

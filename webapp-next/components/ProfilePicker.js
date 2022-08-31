@@ -149,7 +149,7 @@ const ProfilePicker = ({
                     const profilePicUrl = (profile.profilePicUrl !== null && profile.profilePicUrl !== undefined) ? profile.profilePicUrl : '/';
                     return (
                         <div className={styles.profileMinimized} key={index}>
-                            <div className={styles.profilePicMinimized}>
+                            <div className={styles.profilePicMinimized} style={selectedStyle(profile.profileName)}>
                                 <img
                                     src={profilePicUrl}
                                     alt='profile pic'
