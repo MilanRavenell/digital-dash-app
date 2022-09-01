@@ -121,7 +121,7 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
             <div className={styles.header}>
                 <div className={styles.headerLeft}>
                     <div className={styles.headerLeftBanner}>
-                        Digital Dash App
+                        Digital Dash App {process.env.NEXTAUTH_URL}
                     </div>
                 </div>
                 <div className={styles.headerRight}>
