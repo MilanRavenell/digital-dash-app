@@ -10,6 +10,25 @@ import {
   import AppContext from '../../components/AppContext';
   import { platformLoginHandlers, platformLoginCallbackHandlers } from '../../helpers';
 
+export async function getStaticPaths() {
+  return {
+    paths: [
+      { params: { platform: 'twitter' } },
+      { params: { platform: 'youtube' } },
+      { params: { platform: 'instagram' } },
+    ],
+    fallback: false, // can also be true or 'blocking'
+  }
+}
+
+export async function getStaticProps(context) {
+  return {
+    // Passed to the page component as props
+    props: { platform: {} },
+  }
+}
+
+
 const AddProfile = () => {
     const router = useRouter();
     const { platform } = router.query;
