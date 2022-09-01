@@ -59,11 +59,16 @@ const IndividualPostPopUp = ({ post, headers }) => {
             <div className={styles.details}>
                 <div className={styles.header}>
                     <div className={styles.logo}>
-                        <Image
+                        <img
                             src={platformToLogoUrlMap[platform].url}
-                            layout="responsive"
-                            width={platformToLogoUrlMap[platform].width}
-                            height={platformToLogoUrlMap[platform].height}
+                            alt={'media'}
+                            loading='lazy'
+                            referrerPolicy="no-referrer"
+                            style={{
+                                height: '100%',
+                                width: '100%',
+                                objectFit: 'contain',
+                            }}
                         />
                     </div>
                 </div>
