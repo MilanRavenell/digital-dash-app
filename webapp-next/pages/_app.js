@@ -5,6 +5,7 @@ import { API } from 'aws-amplify';
 import { getBeefedUserProfiles } from '../aws/graphql/queries';
 import Head from 'next/head';
 import Script from 'next/script';
+import { Authenticator } from '@aws-amplify/ui-react';
 
 import Amplify from 'aws-amplify';
 import config from '../aws/aws-exports';
@@ -86,7 +87,9 @@ function MyApp({ Component, pageProps }) {
             {/* This is so that youtube profile pictures load properly, sometimes get a 403 error when fetching image in img tag */}
             <meta name="referrer" content="no-referrer"></meta>
             <SessionProvider session={pageProps.session}>
-                <Component {...pageProps} />
+                <Authenticator.Provider>
+                    <Component {...pageProps} />
+                </Authenticator.Provider>
             </SessionProvider>
         </AppContext.Provider>
     );

@@ -51,7 +51,10 @@ const AddProfile = () => {
             router.push({
               pathname: `/add-profile-selection`,
               query: {
-                profiles: JSON.stringify(response.map(({ data }) => data.createUserProfile)),
+                profiles: JSON.stringify(response.map(({ data }, index) => ({
+                  ...data.createUserProfile,
+                  profilePicUrl: profiles[index].profilePicUrl,
+                }))),
               }
             });
         } catch (err) {

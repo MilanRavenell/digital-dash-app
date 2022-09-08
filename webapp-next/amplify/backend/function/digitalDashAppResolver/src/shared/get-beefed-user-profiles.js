@@ -70,7 +70,7 @@ async function getYoutubeProfileInfo(ctx, profile) {
             profilePicUrl: pic.url,
         }
     } catch (err) {
-        // console.error('Failed to get youtube profile information', err);
+        console.error('Failed to get youtube profile information', err);
         return {};
     }
 }
@@ -86,7 +86,7 @@ async function getInstagramProfileInfo(ctx, profile) {
             profilePicUrl: response.data.profile_picture_url,
         }
     } catch (err) {
-        // console.error('Failed to get innstagram profile information', err);
+        console.error('Failed to get innstagram profile information', err);
         return {};
     }
 }

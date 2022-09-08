@@ -29,4 +29,9 @@ code {
     width: 100%;
     overflow: hidden;
 }
+
+[data-amplify-router] {
+    box-shadow: none !important;
+    border-color: lightgrey !important
+}
   

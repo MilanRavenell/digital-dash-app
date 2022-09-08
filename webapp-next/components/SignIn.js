@@ -1,50 +1,57 @@
 import React from 'react';
-import { TextField, Button } from '@mui/material';
+import { useRouter } from 'next/router';
 import "@aws-amplify/ui-react/styles.css";
 import {
-  withAuthenticator,
+    useAuthenticator,
+    Authenticator,
 } from "@aws-amplify/ui-react";
 
-import { Auth } from 'aws-amplify';
+import styles from '../styles/SignIn.module.css';
 
-// import '../styles/SignIn.css';
+const SignIn = ({}) => {
+    const router = useRouter();
+    const { authStatus } = useAuthenticator(context => [context.authStatus]);
 
-const SignIn = ({ handleSubmit, handleSignUp }) => {
-    const userRef = React.useRef();
-    const passRef = React.useRef();
+    const authenticatorFormFields = {
+        signUp: {
+            given_name: {
+                order:1,
+                placeholder: 'First Name',
+            },
+            family_name: {
+                order: 2,
+                placeholder: 'Last Name',
+            },
+            email: {
+                order: 4
+            },
+            password: {
+                order: 5
+            },
+            confirm_password: {
+                order: 6
+            }
+        },
+    };
 
     React.useEffect(() => {
-        Auth.currentAuthenticatedUser().then((user) => {
-            console.log('hi ' + user.attributes.email)
-        })
-    })
-
-    const onSubmitClick = () => {
-        handleSubmit(userRef.current.value, passRef.current.value);
-    };
-
-    const onSignUpClick = () => {
-        handleSignUp(userRef.current.value, passRef.current.value);
-    };
+        if (authStatus === 'authenticated') {
+            router.push('/')
+        }
+    });
 
     return (
-        <div className="SignIn">
-            <div className="SignIn-Form">
-                <div className="SignIn-email">
-                    <TextField inputRef={userRef} variant="outlined" label="email"/>
-                </div>
-                <div className="SignIn-password">
-                    <TextField inputRef={passRef} variant="outlined" label="password" type="password"/>
-                </div>
-                <div>
-                    <Button onClick={onSubmitClick}>Sign In</Button>
-                </div>
-                <div>
-                    <Button onClick={onSignUpClick}>Sign Up</Button>
+        <div className={styles.container}>
+            <div className={styles.left}>
+        
+            </div>
+            <div className={styles.right}>
+                <div className={styles.authenticator}>
+                    <Authenticator formFields={authenticatorFormFields}/>
                 </div>
             </div>
         </div>
     );
 }
 
-export default withAuthenticator(SignIn);
+export default SignIn;

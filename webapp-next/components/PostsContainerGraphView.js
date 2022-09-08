@@ -1,12 +1,12 @@
 import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Line, Bar } from 'react-chartjs-2';
 import { 
     Chart as ChartJS,
     BarElement,
+    LineElement,
     CategoryScale,
     LinearScale,
     PointElement,
-    LineElement,
     Title,
     Tooltip,
     Legend, } from 'chart.js';

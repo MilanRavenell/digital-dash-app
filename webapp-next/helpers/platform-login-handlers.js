@@ -14,13 +14,14 @@ async function igLoginHandler({ setProfiles }) {
             console.error('Failed to get users pages', err);
             return;
         }
-    
 
         // get profiles
         const profiles = await Promise.all(pages.map(async (page) => {
             try {
                 const response = await axios.get(`https://graph.facebook.com/v14.0/${page.id}?fields=instagram_business_account&access_token=${accessToken}`);
                 const accountId = response.data.instagram_business_account.id;
+
+                const profileResponse = await axios.get(`https://graph.facebook.com/v14.0/${accountId}?fields=profile_picture_url&access_token=${accessToken}`);
     
                 return {
                     profileName: page.name,
@@ -28,6 +29,7 @@ async function igLoginHandler({ setProfiles }) {
                         account_id: accountId,
                         access_token: accessToken,
                     }),
+                    profilePicUrl: profileResponse.data.profile_picture_url,
                 }
             } catch (err) {
                 console.error('Failed to get user accounts', err);
@@ -57,6 +59,7 @@ async function youtubeLoginHandler({ currentProfiles, setProfiles }) {
         const { access_token: accessToken, refresh_token: refreshToken, expiry_date } = tokenResponse.data;
 
         const getChannelsResponse = await axios.get(`https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet,contentDetails&mine=true&access_token=${accessToken}`);
+        console.log(getChannelsResponse)
 
         if (getChannelsResponse.status === 200) {
             const channels = getChannelsResponse.data.items;
@@ -68,7 +71,8 @@ async function youtubeLoginHandler({ currentProfiles, setProfiles }) {
                     accessToken,
                     refreshToken,
                     expires: new Date(expiry_date),
-                })
+                }),
+                profilePicUrl: channel.snippet.thumbnails['default'].url,
             }));
     
             if (currentProfiles === null) {

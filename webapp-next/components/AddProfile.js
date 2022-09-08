@@ -4,6 +4,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { platformToLogoUrlMap } from '../helpers';
+import ProfileCard from './ProfileCard';
 
 import styles from '../styles/AddProfile.module.css';
 
@@ -76,16 +77,25 @@ const AddProfile = ({
                         {
                             (state.profiles !== null && state.profiles !== undefined) && 
                             state.profiles.map((profile, index) => (
-                                <div className={styles.profile} key={index}>
-                                    { profile.profileName }
+                                <div className={styles.profile}>
+                                    <ProfileCard 
+                                        profile={{
+                                            ...profile,
+                                            platform,
+                                        }}
+                                        key={index}
+                                    />
                                 </div>
                             ))
                         }
                         </div>
                         <div className={styles.buttons}>
-                            <Button onClick={onSubmitClick}>Confirm</Button>
-                            <Button onClick={signOut}>Log iout o {platform}</Button>
-                            <Button onClick={cancel}>Cancel</Button>
+                            <div>
+                                <Button onClick={onSubmitClick}>Confirm</Button>
+                            </div>
+                            <div>
+                                <Button onClick={cancel}>Cancel</Button>
+                            </div>
                         </div>
                     </div>
                 );

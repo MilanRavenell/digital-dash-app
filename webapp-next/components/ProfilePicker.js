@@ -3,6 +3,7 @@ import { Button, IconButton } from '@mui/material';
 import { ArrowForwardIos, ArrowBackIos } from '@mui/icons-material';
 import Image from 'next/image';
 import { platformToLogoUrlMap } from '../helpers';
+import ProfileCard from './ProfileCard';
 
 import profPic from './twit_prof_pic.jpeg';
 
@@ -90,42 +91,7 @@ const ProfilePicker = ({
                             <div className={styles.profileExpanded}
                                 onClick={() => {onProfileClick(profile.profileName)}}
                                 style={selectedStyle(profile.profileName)}>
-                                <div className={styles.profilePlatformExpanded}>
-                                    <div className={styles.profilePicExpanded}>
-                                        <img
-                                            src={profilePicUrl}
-                                            alt='profile pic'
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                objectFit: 'contain',
-                                            }}
-                                            referrerPolicy="no-referrer"
-                                        />
-                                    </div>
-                                </div>
-                                <div className={styles.profileDetailsExpanded}>
-                                    <div className={styles.profilePicOverlayExpanded}>
-                                        
-                                    </div>
-                                    <div className={styles.profileCoverExpanded}>
-                                        <div className={styles.platformLogoExpanded}>
-                                            <img
-                                                src={platformToLogoUrlMap[profile.platform].url}
-                                                alt='profile pic'
-                                                style={{
-                                                    height: '100%',
-                                                    width: '100%',
-                                                    objectFit: 'contain',
-                                                }}
-                                                referrerPolicy="no-referrer"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className={styles.profileUsernameExpanded}>
-                                        {profile.profileName}
-                                    </div>
-                                </div>
+                                <ProfileCard profile={profile}/>
                             </div>
                             {
                                 editMode && (

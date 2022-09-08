@@ -70,6 +70,11 @@ type InstagramPost @model
   reachCount: Int
 }
 
+# type PostMetric @model
+# {
+#   postId: String! 
+# }
+
 type PostMedia {
   thumbnailUrl: String!
   type: String!

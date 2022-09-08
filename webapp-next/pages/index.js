@@ -1,7 +1,12 @@
+import React from 'react';
 import App from '../components/App';
 import "@aws-amplify/ui-react/styles.css";
 import {
   Authenticator
+} from "@aws-amplify/ui-react";
+import { useRouter } from 'next/router';
+import {
+  useAuthenticator,
 } from "@aws-amplify/ui-react";
 
 import Amplify from 'aws-amplify';
@@ -9,6 +14,15 @@ import config from '../aws/aws-exports';
 Amplify.configure(config);
 
 export default function Home() {
+  const router = useRouter();
+  const { authStatus } = useAuthenticator(context => [context.authStatus]);
+
+  React.useEffect(() => {
+    if (authStatus !== 'authenticated') {
+        router.push('/sign-in')
+    }
+  });
+
   const authenticatorFormFields = {
     signUp: {
       given_name: {
@@ -34,11 +48,13 @@ export default function Home() {
   return (
     <div className="container">
       <Authenticator formFields={authenticatorFormFields}>
-        {({ signOut, user }) => (
-          <div className='container'>
-            <App signOut={signOut} authUser={user}/>
-          </div>
-        )}
+        {({ signOut, user }) => {
+          return (
+            <div className='container'>
+              <App signOut={signOut} authUser={user}/>
+            </div>
+          )
+        }}
       </Authenticator>
     </div>
   )
