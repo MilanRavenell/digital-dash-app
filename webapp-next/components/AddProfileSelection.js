@@ -13,7 +13,8 @@ const AddProfileSelection = ({
     handleProfileDelete,
     getProfiles,
     handlePlatformClick,
-    handleContinueClick
+    handleContinueClick,
+    isFirstLogin,
 }) => {
     const platformList = ['twitter', 'youtube', 'instagram'];
 
@@ -69,7 +70,7 @@ const AddProfileSelection = ({
                             }
                         </div>
                         <div className={styles.button}>
-                            <Button onClick={handleContinueClick}>Continue</Button>
+                            <Button onClick={handleContinueClick}>{isFirstLogin ? 'Continue to Dashboard' : 'Back to Dashboard'}</Button>
                         </div>
                     </div>
                 </div>

@@ -4,55 +4,6 @@
     width: 100vw;
 }
 
-.header {
-    height: 6%;
-    border: 1px solid lightgray;
-    width: 100%;
-    background-color: white;
-    display: flex;
-}
-
-.headerLeft {
-    height: 100%;
-    flex: 1;
-    display: flex;
-    align-items: center;
-}
-
-.contentLeftPicker {
-    margin-top: 10px;
-    margin-right: 5px;
-    height: 100%;
-}
-
-.headerLeftBanner {
-    display: flex;
-    align-items: center;
-    color: blue;
-    margin-left: 5%;
-    font-family:'Times New Roman', Times, serif;
-}
-
-.headerRight {
-    height: 100%;
-    flex: 1;
-    display: flex;
-    justify-content: right;
-    align-items: center;
-}
-
-.headerRightContent {
-    margin-right: 3%;
-    display: flex;
-}
-
-.headerRightContentName {
-    font-size: large;
-    margin-right: 10px;
-    display: flex;
-    align-items: center ;
-}
-
 .content {
     z-index: 1;
     width: 98%;
@@ -65,6 +16,12 @@
 
 .contentLeft {
     height: 95%;
+}
+
+.contentLeftPicker {
+    margin-top: 10px;
+    margin-right: 5px;
+    height: 100%;
 }
 
 .contentRight {

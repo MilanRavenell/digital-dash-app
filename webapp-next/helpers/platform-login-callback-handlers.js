@@ -1,7 +1,7 @@
 import axios from "axios";
 import { signOut } from 'next-auth/react';
 
-async function twitterLoginCallbackHandler(sessionData, currentProfiles, setProfiles) {
+async function twitterLoginCallbackHandler({ sessionData, currentProfiles, setProfiles }) {
     // If the profile from the session data already exists, do not display for confirmation
     if (currentProfiles === null || currentProfiles.map(profile => profile.profileName).includes(sessionData.profileName)) {
         return;
@@ -24,14 +24,44 @@ async function twitterLoginCallbackHandler(sessionData, currentProfiles, setProf
             expires: sessionData.expires,
         }),
         profilePicUrl,
+        platform: 'twitter',
     };
 
     signOut({ redirect: false })
     setProfiles([profile]);
 }
 
+async function igBasicLoginCallbackHandler({ code, currentProfiles, setProfiles }) {
+    try {
+        const { access_token, user_id, expires_in } = (await axios.get(`/api/auth/get-ig-basic-access-token?code=${code}`)).data;
+
+        const user = (await axios.get(`https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`)).data;
+
+        // If the profile from the session data already exists, do not display for confirmation
+        if (currentProfiles === null || currentProfiles.map(profile => profile.profileName).includes(user.username)) {
+            return;
+        }
+
+        const profile = {
+            profileName: user.username,
+            meta: JSON.stringify({
+                id: user_id,
+                accessToken: access_token,
+                expires: expires_in,
+            }),
+            platform: 'instagram-basic',
+        };
+
+        setProfiles([profile]);
+
+    } catch (err) {
+        console.error('Failed to get ig basic access token')
+    }
+}
+
 const platformLoginCallbackHandlers = Object.freeze({
     'twitter': twitterLoginCallbackHandler,
+    'instagram': igBasicLoginCallbackHandler,
 });
 
 module.exports = platformLoginCallbackHandlers;

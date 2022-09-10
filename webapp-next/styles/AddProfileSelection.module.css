@@ -68,6 +68,7 @@
 .platformLogoNameContainer {
     display: flex;
     justify-content: center;
+    height: 50%;
 }
 
 .platformLogoName {
@@ -77,6 +78,7 @@
 
 .platformLogo {
     width: 30%;
+    max-width: 60px;
 }
 
 .platformName {

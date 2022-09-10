@@ -1,4 +1,4 @@
-const populateAnalyticsForIgProfile = require('./populate-analytics-for-ig-profile');
+const fetchAnalyticsForIgProProfile = require('./populate-analytics-for-ig-pro-profile');
 const populateAnalyticsForTwitterProfile = require('./populate-analytics-for-twitter-profile');
 const populateAnalyticsForYtProfile = require('./populate-analytics-for-yt-profile');
 
@@ -49,11 +49,11 @@ async function fetchAnalytics(ctx) {
     try {
         const results = await Promise.all(profiles.map(async (profile) => {
             switch(profile.platform) {
-                case 'instagram':
+                case 'instagram-pro':
                     let tries = 0;
                     while (tries < 10) {
                         try {
-                            return await populateAnalyticsForIgProfile(ctx, profile);
+                            return await fetchAnalyticsForIgProProfile(ctx, profile);
                         } catch (err) {
                             tries += 1;
                             // sleep for 2 seconds

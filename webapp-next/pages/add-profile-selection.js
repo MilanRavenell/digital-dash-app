@@ -2,21 +2,33 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import AddProfileSelection from '../components/AddProfileSelection';
 import "@aws-amplify/ui-react/styles.css";
-import {
-    Authenticator
-} from "@aws-amplify/ui-react";
-import { API, googleSignInButton } from 'aws-amplify';
+import { useAuthenticator } from "@aws-amplify/ui-react";
+import { API } from 'aws-amplify';
 import { deleteUserProfile } from '../aws/graphql/mutations';
 import AppContext from '../components/AppContext';
-import { Google } from '@mui/icons-material';
 import axios from "axios";
-import { signOut } from 'next-auth/react';
+import Header from '../components/Header';
 
 export default function Home() {
   const router = useRouter();
   const context = React.useContext(AppContext);
+  const { authStatus } = useAuthenticator(context => [context.authStatus]);
+  const { user: authUser, signOut } = useAuthenticator((context) => [context.user]);
+
+  const isFirstLogin = (router.query.f === 1);
 
   React.useEffect(() => {
+    if (authStatus === 'unauthenticated') {
+      router.push('/sign-in')
+    }
+
+    if (authStatus === 'configuring') {
+      return;
+    }
+
+    context.setUserCallback(authUser);
+
+    // Append any new profiles sent in the URL query field from add-profiles
     if (router.query.profiles !== undefined && context.userProfiles) {
       const profiles = JSON.parse(router.query.profiles);
 
@@ -31,10 +43,11 @@ export default function Home() {
           ),
         );
       } else {
+        //  Clear query parameters from the URL
         router.push('/add-profile-selection')
       }
     }
-  })
+  });
 
   const handleProfileDelete = React.useCallback(async (user, profiles, profileIndex) => {
     try {
@@ -83,45 +96,24 @@ export default function Home() {
     router.push(`/add-profile/${platform}`);
   }
 
-  const authenticatorFormFields = {
-    signUp: {
-      given_name: {
-        order:1,
-        placeholder: 'First Name',
-      },
-      family_name: {
-        order: 2,
-        placeholder: 'Last Name',
-      },
-      email: {
-        order: 4
-      },
-      password: {
-        order: 5
-      },
-      confirm_password: {
-        order: 6
-      }
-    },
-  };
+  if (context.user) {
+    return (
+      <div className='container'>
+        <Header user={context.user} signOut={signOut}/>
+        <AddProfileSelection
+          user={context.user}
+          profiles={context.userProfiles}
+          handleProfileDelete={handleProfileDelete}
+          handlePlatformClick={navigateToPlatform}
+          handleContinueClick={navigateToMain}
+          isFirstLogin={isFirstLogin}
+        />
+      </div>
+    )
+  }
 
   return (
-    <Authenticator formFields={authenticatorFormFields}>
-      {({ user }) => {
-        context.setUserCallback(user);
-
-        return (
-          <div className='container'>
-            <AddProfileSelection
-              user={user.attributes}
-              profiles={context.userProfiles}
-              handleProfileDelete={handleProfileDelete}
-              handlePlatformClick={navigateToPlatform}
-              handleContinueClick={navigateToMain}
-            />
-          </div>
-        )
-      }}
-    </Authenticator>
+    <div className='container'>Loading</div>
   )
+  
 }

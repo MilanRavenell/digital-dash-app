@@ -1,0 +1,42 @@
+.container {
+    height: 6%;
+    border: 1px solid lightgray;
+    width: 100%;
+    background-color: white;
+    display: flex;
+}
+
+.left {
+    height: 100%;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.leftBanner {
+    display: flex;
+    align-items: center;
+    color: blue;
+    margin-left: 5%;
+    font-family:'Times New Roman', Times, serif;
+}
+
+.right {
+    height: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.rightContent {
+    margin-right: 3%;
+    display: flex;
+}
+
+.rightContentName {
+    font-size: large;
+    margin-right: 10px;
+    display: flex;
+    align-items: center ;
+}

@@ -3,7 +3,8 @@ const { getBeefedUserProfiles } = require('../../shared');
 const platformTableMap = Object.freeze({
     'twitter': 'TwitterPost',
     'youtube': 'YoutubePost',
-    'instagram': 'InstagramPost',
+    'instagram-pro': 'InstagramPost',
+    'instagram-basic': 'InstagramPost',
 });
 
 // Must be reverse ordered chronologically
@@ -64,7 +65,7 @@ async function getData(ctx) {
                     ]
                 },
                 {
-                    platform: 'instagram',
+                    platform: 'instagram-pro',
                     metrics: [
                         { displayName: 'Likes', field: 'likeCount'},
                         { displayName: 'Comments', field: 'commentCount'},
@@ -93,7 +94,7 @@ async function getRecords(ctx, profiles) {
             }).promise())
                 .Items;
 
-            return items
+            return items;
         })))
             .flat())
     } catch (err) {

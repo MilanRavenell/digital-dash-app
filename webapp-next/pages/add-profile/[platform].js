@@ -2,13 +2,12 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import AddProfileComponent from '../../components/AddProfile';
 import "@aws-amplify/ui-react/styles.css";
-import {
-    Authenticator
-  } from "@aws-amplify/ui-react";
+import { useAuthenticator } from "@aws-amplify/ui-react";
   import { API } from 'aws-amplify';
   import { createUserProfile } from '../../aws/graphql/mutations';
   import AppContext from '../../components/AppContext';
   import { platformLoginHandlers, platformLoginCallbackHandlers } from '../../helpers';
+  import Header from '../../components/Header';
 
 export async function getStaticPaths() {
   return {
@@ -34,14 +33,49 @@ const AddProfile = () => {
     const { platform } = router.query;
     const context = React.useContext(AppContext);
 
-    const handleSubmit = React.useCallback(async (user, profiles, platform) => {
+    const { authStatus } = useAuthenticator(context => [context.authStatus]);
+    const { user: authUser, signOut } = useAuthenticator((context) => [context.user]);
+
+    React.useEffect(() => {
+    if (authStatus === 'unauthenticated') {
+      router.push('/sign-in')
+    }
+
+    if (authStatus === 'configuring') {
+      return;
+    }
+
+    context.setUserCallback(authUser);
+
+    // Append any new profiles sent in the URL query field from add-profiles
+    if (router.query.profiles !== undefined && context.userProfiles) {
+      const profiles = JSON.parse(router.query.profiles);
+
+      const prevProfileNames = context.userProfiles.map(({ profileName }) => profileName);
+      const filteredProfiles = profiles
+        .filter(({ profileName }) => !prevProfileNames.includes(profileName));
+
+      if (filteredProfiles.length > 0) {
+        context.setUserProfiles(
+          context.userProfiles.concat(
+            filteredProfiles,
+          ),
+        );
+      } else {
+        //  Clear query parameters from the URL
+        router.push('/add-profile-selection')
+      }
+    }
+  })
+
+    const handleSubmit = React.useCallback(async (user, profiles) => {
         try {
             const response = await Promise.all(profiles.map(profile => API.graphql({
                 query: createUserProfile,
                 variables: {
                     input: {
                         user: user.email,
-                        platform,
+                        platform: profile.platform,
                         profileName: profile.profileName,
                         meta: profile.meta,
                     },
@@ -67,50 +101,26 @@ const AddProfile = () => {
       router.push(`/add-profile-selection`);
     };
 
-    const authenticatorFormFields = {
-        signUp: {
-          given_name: {
-            order:1,
-            placeholder: 'First Name',
-          },
-          family_name: {
-            order: 2,
-            placeholder: 'Last Name',
-          },
-          email: {
-            order: 4
-          },
-          password: {
-            order: 5
-          },
-          confirm_password: {
-            order: 6
-          }
-        },
-    };
+    if (context.user) {
+      return (
+        <div className='container'>
+          <Header user={context.user} signOut={signOut}/>
+          <AddProfileComponent
+              user={context.user}
+              currentProfiles={context.userProfiles}
+              platform={platform}
+              loginHandlers={platformLoginHandlers[platform]}
+              loginCallbackHandler={platformLoginCallbackHandlers[platform]}
+              handleSubmit={handleSubmit}
+              cancel={cancel}
+          />
+        </div>
+      );
+    }
 
     return (
-        <Authenticator formFields={authenticatorFormFields}>
-            {({ user }) => {
-              context.setUserCallback(user);
-
-              return(
-                <div className='container'>
-                  <AddProfileComponent
-                      user={user.attributes}
-                      currentProfiles={context.userProfiles}
-                      platform={platform}
-                      loginHandler={platformLoginHandlers[platform]}
-                      loginCallbackHandler={platformLoginCallbackHandlers[platform]}
-                      handleSubmit={handleSubmit}
-                      cancel={cancel}
-                  />
-                </div>
-              )
-              
-            }}
-        </Authenticator>
-    );
+      <div className='container'>Loading</div>
+    )
 }
 
 export default AddProfile;

@@ -75,7 +75,7 @@ async function getYoutubeProfileInfo(ctx, profile) {
     }
 }
 
-async function getInstagramProfileInfo(ctx, profile) {
+async function getInstagramProProfileInfo(ctx, profile) {
     const { account_id: accountId, access_token: accessToken } = JSON.parse(profile.meta);
 
     try {
@@ -96,7 +96,7 @@ async function getInstagramProfileInfo(ctx, profile) {
 const platformToProfileInfoGetterMap = Object.freeze({
     'twitter': getTwitterProfileInfo,
     'youtube': getYoutubeProfileInfo, 
-    'instagram': getInstagramProfileInfo,
+    'instagram-pro': getInstagramProProfileInfo,
 });
 
 module.exports = getBeefedUserProfiles;

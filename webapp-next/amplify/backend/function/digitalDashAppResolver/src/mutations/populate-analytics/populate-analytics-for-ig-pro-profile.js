@@ -5,7 +5,7 @@ const http = rateLimit(axios.create(), {
     maxRPS: 50,
 })
 
-async function fetchAnalyticsForIgProfile (ctx, profile) {
+async function fetchAnalyticsForIgProProfile (ctx, profile) {
     const { ddbClient } = ctx.resources;
     const { debug_noUploadToDDB } = ctx.arguments.input;
     const { account_id: accountId, access_token: accessToken } = JSON.parse(profile.meta);
@@ -91,4 +91,4 @@ async function getMedia(id, responseData, accessToken) {
     }))).flat();
 }
 
-module.exports = fetchAnalyticsForIgProfile;
+module.exports = fetchAnalyticsForIgProProfile;

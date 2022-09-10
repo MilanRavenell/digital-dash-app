@@ -1,8 +1,14 @@
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
-import Twitter from 'twitter-lite';
 
-async function igLoginHandler({ setProfiles }) {
+async function igBasicLoginHandler({ router }) {
+    const appId = '582112473702622';
+    const redirectUri = 'https://c54c-38-34-126-58.ngrok.io/add-profile/instagram';
+
+    router.push(`https://api.instagram.com/oauth/authorize?client_id=${appId}&redirect_uri=${redirectUri}&scope=user_profile,user_media&response_type=code`)
+}
+
+async function igProLoginHandler({ setProfiles }) {
     const onSignIn = async (shortTermToken) => {
         const accessToken = (await axios.get(`/api/auth/get-fb-long-lived-token?shortTermToken=${shortTermToken}`)).data;
 
@@ -30,6 +36,7 @@ async function igLoginHandler({ setProfiles }) {
                         access_token: accessToken,
                     }),
                     profilePicUrl: profileResponse.data.profile_picture_url,
+                    platform: 'instagram-pro',
                 }
             } catch (err) {
                 console.error('Failed to get user accounts', err);
@@ -73,6 +80,7 @@ async function youtubeLoginHandler({ currentProfiles, setProfiles }) {
                     expires: new Date(expiry_date),
                 }),
                 profilePicUrl: channel.snippet.thumbnails['default'].url,
+                platform: 'youtube',
             }));
     
             if (currentProfiles === null) {
@@ -99,9 +107,9 @@ async function youtubeLoginHandler({ currentProfiles, setProfiles }) {
 }
 
 const platformLoginHandlers = Object.freeze({
-    'instagram': igLoginHandler,
-    'youtube': youtubeLoginHandler,
-    'twitter': twitterLoginHandler,
+    'instagram': [igBasicLoginHandler, igProLoginHandler],
+    'youtube': [youtubeLoginHandler],
+    'twitter': [twitterLoginHandler],
 });
 
 module.exports = platformLoginHandlers;

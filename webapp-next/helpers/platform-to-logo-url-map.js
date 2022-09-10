@@ -1,15 +1,25 @@
 const platformToLogoMap = Object.freeze({
-    twitter: {
+    'twitter': {
         url: `/twitter_logo.png`,
         height: 1687,
         width: 1687,
     },
-    youtube: {
+    'youtube': {
         url: `/youtube_logo.png`,
         height: 721,
         width: 1024,
     },
-    instagram: {
+    'instagram': {
+        url: `/instagram_logo.png`,
+        height: 1000,
+        width: 1000,
+    },
+    'instagram-pro': {
+        url: `/instagram_logo.png`,
+        height: 1000,
+        width: 1000,
+    },
+    'instagram-basic': {
         url: `/instagram_logo.png`,
         height: 1000,
         width: 1000,

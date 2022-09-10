@@ -12,7 +12,7 @@ const AddProfile = ({
     user,
     currentProfiles,
     platform,
-    loginHandler,
+    loginHandlers,
     loginCallbackHandler,
     handleSubmit,
     cancel
@@ -33,25 +33,54 @@ const AddProfile = ({
         }));
     }
 
-    React.useEffect(() => {
+    React.useEffect(async () => {
+        console.log(state.profiles)
         if (loginCallbackHandler) {
             if (session && session.status === 'authenticated' && state.profiles.length === 0) {
-                loginCallbackHandler(session.data, currentProfiles, setProfiles);
+                await loginCallbackHandler({ sessionData: session.data, currentProfiles, setProfiles });
+            }
+            if (router.query.code  && state.profiles.length === 0) {
+                const code = router.query.code.split('#_')[0];
+                await loginCallbackHandler({ code, currentProfiles, setProfiles });
             }
         }
     });
 
     const onSubmitClick = () => {
-        handleSubmit(user, state.profiles, platform);
+        handleSubmit(user, state.profiles);
     };
 
-    const login = () => {
-        loginHandler({
+    const login = (index) => {
+        loginHandlers[index]({
             currentProfiles,
             setProfiles,
             router,
         });
     };
+
+    const platformButtons = () => {
+        switch(platform) {
+            case 'twitter':
+            case 'youtube':
+            default:
+                return (
+                    <div>
+                        <Button onClick={() => { login(0); }}>Sign in with {platform}</Button>
+                    </div>
+                );
+            case 'instagram':
+                return (
+                    <div>
+                        <div>
+                            <Button onClick={() => { login(0); }}>Sign in with Instagram Basic</Button>
+                        </div>
+                        <div>
+                            <Button onClick={() => { login(1); }}>Sign in with Instagram Pro</Button>
+                        </div>
+                    </div>
+                )
+        }
+    }
 
     const getContent = () => {
         switch(state.screen) {
@@ -60,9 +89,7 @@ const AddProfile = ({
                     <div className={styles.form}>
                         <div className={styles.formContent}>
                             <div className={styles.buttons}>
-                                <div>
-                                    <Button onClick={login}>Sign in with {platform}</Button>
-                                </div>
+                                { platformButtons() }
                                 <div>
                                     <Button onClick={cancel}>Cancel</Button>
                                 </div>

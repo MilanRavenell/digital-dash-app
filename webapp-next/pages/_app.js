@@ -6,6 +6,8 @@ import { getBeefedUserProfiles } from '../aws/graphql/queries';
 import Head from 'next/head';
 import Script from 'next/script';
 import { Authenticator } from '@aws-amplify/ui-react';
+import { getUser } from '../graphql/queries';
+import { useRouter } from 'next/router';
 
 import Amplify from 'aws-amplify';
 import config from '../aws/aws-exports';
@@ -14,6 +16,7 @@ Amplify.configure(config);
 import '../styles/global.css';
 
 function MyApp({ Component, pageProps }) {
+    const router = useRouter();
     const [userProfiles, setUserProfiles] = useState(null);
     const [user, setUser] = useState(null);
 
@@ -36,14 +39,34 @@ function MyApp({ Component, pageProps }) {
             return;
         }
 
-        setUserProfiles(await getUserProfiles(user.attributes));
+        setUserProfiles(await getUserProfiles(user));
     });
 
-    const setUserCallback = useCallback((inputUser) => {
+    const setUserCallback = useCallback(async (authUser) => {
         if (user) {
             return;
         }
-        setUser(inputUser);
+
+        let ddbUser = (await API.graphql({ query: getUser, variables: { email: authUser.attributes.email }})).data.getUser;
+
+        // User's first sign in, send to add-platform-selection
+        if (ddbUser === null) {
+            ddbUser = {
+                email: authUser.attributes.email,
+                firstName: authUser.attributes.given_name,
+                lastName: authUser.attributes.family_name,
+            }
+
+            await API.graphql({ query: createUser, variables: { input: ddbUser }});
+
+            setUser(ddbUser);
+            router.push({
+                pathname: `/add-profile-selection`,
+                query: { f: 1 },
+              });
+        } else {
+            setUser(ddbUser);
+        }
     }, [user])
 
     return (

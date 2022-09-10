@@ -3,6 +3,7 @@ import AggregatedStatsContainer from './AggregatedStatsContainer';
 import PostsContainer from './PostsContainer';
 import IndividualPostPopUp from './IndividualPostPopUp';
 import ProfilePicker from './ProfilePicker';
+import Header from './Header';
 import { Select, MenuItem, FormControl, InputLabel, Menu, IconButton } from '@mui/material';
 import { SettingsOutlined } from '@mui/icons-material';
 
@@ -13,7 +14,7 @@ import {
 
 import styles from '../styles/MainContentContainer.module.css';
 
-const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
+const MainContentContainer = ({ data, goToAddPlatformSelection, signOut, user }) => {
     const timeframeNames = data.timeframes.map(timeframe => timeframe.name);
     const profileNames = data.profiles === null ? [] : data.profiles.map(profile => profile.profileName);
 
@@ -22,7 +23,6 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
         timeframe: data.timeframes[0],
         popUpPost: null,
         profilePickerExpanded: true,
-        settingsAnchorEl: null,
     });
     
     const handleProfileChange = React.useCallback((newValue) => {
@@ -62,19 +62,6 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
         }))
     }, []);
 
-    const openSettingsMenu = (event) => {
-        setState((prevState) => ({
-            ...prevState,
-            settingsAnchorEl: event.currentTarget,
-        }));
-    };
-
-    const closeSettingsMenu = () => {
-        setState((prevState) => ({
-            ...prevState,
-            settingsAnchorEl: null,
-        }));
-    }
 
     const filterRecordsByTimeframeAndUsername = () => {
         const profileRecords = data.records.filter(record => state.profiles.includes(record.profileName));
@@ -118,32 +105,7 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut }) => {
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}>
-                <div className={styles.headerLeft}>
-                    <div className={styles.headerLeftBanner}>
-                        Digital Dash App
-                    </div>
-                </div>
-                <div className={styles.headerRight}>
-                    <div className={styles.headerRightContent}>
-                        <div className={styles.headerRightContentName}>
-                            Hi, Milan
-                        </div>
-                        <div className={styles.headerRightContentSettings}>
-                            <IconButton onClick={openSettingsMenu}>
-                                <SettingsOutlined fontSize="medium"/>
-                            </IconButton>
-                        </div>
-                        <Menu
-                            anchorEl={state.settingsAnchorEl}
-                            open={state.settingsAnchorEl !== null}
-                            onClose={closeSettingsMenu}>
-                            <MenuItem onClick={goToAddPlatformSelection}>Add/Remove Accounts</MenuItem>
-                            <MenuItem onClick={signOut}>Sign Out</MenuItem>
-                        </Menu>
-                    </div>
-                </div>
-            </div>
+            {/* <Header user={user} goToAddPlatformSelection={goToAddPlatformSelection} signOut={signOut}/> */}
             <div className={styles.content}>
                 <div className={styles.contentLeft} style={{
                     width: state.profilePickerExpanded ? '18%' : '3%',
