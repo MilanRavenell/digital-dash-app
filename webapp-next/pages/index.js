@@ -129,6 +129,12 @@ export default function Home() {
 
   const updateTimeFrame = React.useCallback(async (newTimeframe) => {
     console.log(newTimeframe)
+
+    if (!newTimeframe.startDate || !newTimeframe.endDate) {
+      setTimeframe(newTimeframe);
+      return;
+    }
+
     const newData = await getData(
       context.user.email,
       newTimeframe,

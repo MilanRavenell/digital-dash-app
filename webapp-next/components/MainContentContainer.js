@@ -3,9 +3,11 @@ import AggregatedStatsContainer from './AggregatedStatsContainer';
 import PostsContainer from './PostsContainer';
 import IndividualPostPopUp from './IndividualPostPopUp';
 import ProfilePicker from './ProfilePicker';
+import DatePicker from './DatePicker';
 import Header from './Header';
 import { Select, MenuItem, FormControl, InputLabel, Menu, IconButton } from '@mui/material';
 import { SettingsOutlined } from '@mui/icons-material';
+import Popover from '@mui/material/Popover';
 
 import styles from '../styles/MainContentContainer.module.css';
 
@@ -23,10 +25,32 @@ const MainContentContainer = ({
         profilePickerExpanded: true,
     });
 
+    const popoverAnchorEl = React.useRef();
+    const [popoverOpen, setPopoverOpen] = React.useState(false);
+
     const handleTimeFrameChange = React.useCallback((event) => {
+        const value = event.target.value;
+
+        if (value === 'Custom') {
+            setPopoverOpen(true);
+        }
+
         const timeframeIndex = timeframeNames.indexOf(event.target.value);
         setTimeframe(data.timeframes[timeframeIndex]);
     }, []);
+
+    const handleCustomTimeframe = React.useCallback((startDate, endDate) => {
+        setPopoverOpen(false);
+        setTimeframe({
+            name: 'CustomSelected',
+            startDate,
+            endDate,
+        });
+    }, []);
+
+    const handlePopoverClose = () => {
+        setPopoverOpen(false);
+    }
 
     const setPopUpPost = React.useCallback((post) => {
         setState((prevState) => ({
@@ -51,6 +75,8 @@ const MainContentContainer = ({
 
     const aggregatedData = data.aggregated
     const graphData = data.graph;
+
+    const dateOptions = { year:"numeric", month:"short", day:"numeric" };
 
     const getPostHeaders = () => {
         if (data.profiles === null) {
@@ -94,8 +120,14 @@ const MainContentContainer = ({
                 <div className={styles.contentRight} style={{
                     width: state.profilePickerExpanded ? '82%' : '97%',
                 }}>
-                    <div className={styles.dropdown}>
-                        <FormControl sx={{ m: 1, minWidth: 120, height: '100%' }}>
+                    <div className={styles.date}>
+                        <div className={styles.dateLabel}>
+                            {
+                                (timeframe.startDate && timeframe.endDate)
+                                && `${new Date(timeframe.startDate).toLocaleDateString('en-us', dateOptions) } - ${new Date(timeframe.endDate).toLocaleDateString('en-us', dateOptions)}`
+                            }
+                        </div>
+                        <FormControl sx={{ m: 1, minWidth: 120, height: '100%' }} ref={popoverAnchorEl}>
                             <InputLabel>Timeframe</InputLabel>
                             <Select
                                 label="Timeframe"
@@ -110,6 +142,21 @@ const MainContentContainer = ({
                             </Select>
                         </FormControl>
                     </div>
+                    <Popover
+                        open={popoverOpen}
+                        anchorEl={popoverAnchorEl.current}
+                        onClose={handlePopoverClose}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'right',
+                        }}
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                    >
+                        <DatePicker submit={handleCustomTimeframe}/>
+                    </Popover>
                     <div className={styles.contentTop}>
                         <AggregatedStatsContainer
                             data={aggregatedData}/>

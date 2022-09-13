@@ -15,7 +15,7 @@ const PostsContainerPostsView = ({ posts, headers, profiles, openPopUp }) => {
                         const style = displayName === 'Platform' ? styles.headerFieldShort : styles.headerFieldLong
                         return (
                             <div className={style} key={keyIndex}>
-                                { displayName }
+                                { (displayName !== 'Platform') && displayName }
                             </div>
                         );
                     })
@@ -34,25 +34,27 @@ const PostsContainerPostsView = ({ posts, headers, profiles, openPopUp }) => {
                                             {
                                                 (() => {
                                                     switch(displayName) {
-                                                    case 'Platform':
-                                                        return (
-                                                            <div className={styles.logo}>
-                                                                <img
-                                                                    src={platformToLogoUrlMap[platform].url}
-                                                                    alt='profile pic'
-                                                                    style={{
-                                                                        height: '100%',
-                                                                        width: '100%',
-                                                                        objectFit: 'contain',
-                                                                    }}
-                                                                    referrerPolicy="no-referrer"
-                                                                />
-                                                            </div>
-                                                        );
-                                                    case 'Caption':
-                                                        return (<a href={post['Link']} target="_blank" rel="noreferrer">{post[field]}</a>);
-                                                    default:
-                                                        return post[field];
+                                                        case 'Platform':
+                                                            return (
+                                                                <div className={styles.logo}>
+                                                                    <img
+                                                                        src={platformToLogoUrlMap[platform].url}
+                                                                        alt='profile pic'
+                                                                        style={{
+                                                                            height: '100%',
+                                                                            width: '100%',
+                                                                            objectFit: 'contain',
+                                                                        }}
+                                                                        referrerPolicy="no-referrer"
+                                                                    />
+                                                                </div>
+                                                            );
+                                                        case 'Caption':
+                                                            return (<a href={post['Link']} target="_blank" rel="noreferrer">{post[field]}</a>);
+                                                        case 'Date':
+                                                            return new Date(post[field]).toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric" });
+                                                        default:
+                                                            return post[field];
                                                     }
                                                 })()
                                             }

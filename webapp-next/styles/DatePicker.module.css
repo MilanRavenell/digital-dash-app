@@ -1,0 +1,17 @@
+.top {
+    display: flex;
+}
+
+.left {
+    border-right: 1px solid lightgrey;
+}
+
+.bottom {
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid lightgrey;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    margin-right: 5%;
+    margin-left: 5%;
+}

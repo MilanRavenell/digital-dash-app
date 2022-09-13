@@ -19,7 +19,9 @@ function getGraphData(records, start, end) {
     });
 
     return {
-        labels: partitions.reverse(),
+        labels: partitions
+            .reverse()
+            .map(partition => new Date(partition).toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric" })),
         datasets: [
             {
                 label: 'Views',

@@ -96,7 +96,7 @@ const IndividualPostPopUp = ({ post, headers }) => {
                 </div>
                 <div className={styles.extraDetails}>
                     <div className={styles.titleDate}>{post.profileName}</div>
-                    <div className={styles.titleDate}>{post.datePosted}</div>
+                    <div className={styles.titleDate}>{new Date(post.datePosted).toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric" })}</div>
                     <div className={styles.titleLink}>
                         <a href={post.link} target="_blank" rel="noreferrer">Link</a>
                     </div>

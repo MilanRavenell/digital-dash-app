@@ -172,7 +172,7 @@ input PopulateAnalyticsInput {
 }
 
 type PopulateAnalyticsResponse {
-  data: [Post!]!
+  data: [Post]!
   dataUpdated: Boolean!
   success: Boolean!
 }
