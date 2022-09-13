@@ -6,14 +6,19 @@ async function getBeefedUserProfiles(ctx, username) {
     const { ddbClient } = ctx.resources;
 
     const profiles = [];
+
+    const params = {
+        TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+        KeyConditionExpression: '#user = :user',
+        ExpressionAttributeValues: { ':user': username },
+        ExpressionAttributeNames: { '#user': 'user' },
+    };
+
     try {
-        profiles.push(...(await ddbClient.query({
-            TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
-            KeyConditionExpression: '#user = :user',
-            ExpressionAttributeValues: { ':user': username },
-            ExpressionAttributeNames: { '#user': 'user' }
-        }).promise())
-            .Items);
+        profiles.push(
+            ...(await ddbClient.query(params).promise())
+                .Items
+        );
 
         return await Promise.all(profiles.map(async (profile) => ({
             user: profile.user,

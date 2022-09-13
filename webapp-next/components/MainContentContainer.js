@@ -7,38 +7,25 @@ import Header from './Header';
 import { Select, MenuItem, FormControl, InputLabel, Menu, IconButton } from '@mui/material';
 import { SettingsOutlined } from '@mui/icons-material';
 
-import {
-    getGraphData,
-    getAggregatedStats,
-} from '../data-manipulations';
-
 import styles from '../styles/MainContentContainer.module.css';
 
-const MainContentContainer = ({ data, goToAddPlatformSelection, signOut, user }) => {
+const MainContentContainer = ({
+    data,
+    selectedProfileNames,
+    timeframe,
+    setSelectedProfileNames,
+    setTimeframe,
+}) => {
     const timeframeNames = data.timeframes.map(timeframe => timeframe.name);
-    const profileNames = data.profiles === null ? [] : data.profiles.map(profile => profile.profileName);
 
     const [state, setState] = React.useState({
-        profiles: profileNames,
-        timeframe: data.timeframes[0],
         popUpPost: null,
         profilePickerExpanded: true,
     });
-    
-    const handleProfileChange = React.useCallback((newValue) => {
-        setState((prevState) => ({
-            ...prevState,
-            profiles: newValue,
-        }));
-    }, []);
 
     const handleTimeFrameChange = React.useCallback((event) => {
         const timeframeIndex = timeframeNames.indexOf(event.target.value);
-
-        setState((prevState) => ({
-            ...prevState,
-            timeframe: data.timeframes[timeframeIndex],
-        }));
+        setTimeframe(data.timeframes[timeframeIndex]);
     }, []);
 
     const setPopUpPost = React.useCallback((post) => {
@@ -62,22 +49,8 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut, user })
         }))
     }, []);
 
-
-    const filterRecordsByTimeframeAndUsername = () => {
-        const profileRecords = data.records.filter(record => state.profiles.includes(record.profileName));
-        const partitionDate = state.timeframe.partitionDate;
-
-        if (partitionDate === null) {
-            return profileRecords;
-        }
-    
-        return profileRecords.filter(record => (new Date(record.datePosted) > new Date(partitionDate)));
-    }
-
-    const selectedProfiles = data.profiles.filter(profile => (state.profiles.includes(profile.profileName)));
-    const filteredRecords = filterRecordsByTimeframeAndUsername();
-    const aggregatedData = getAggregatedStats(filteredRecords, data.metrics, selectedProfiles);
-    const graphData = getGraphData(filteredRecords, [...state.timeframe.graphPartitions]);
+    const aggregatedData = data.aggregated
+    const graphData = data.graph;
 
     const getPostHeaders = () => {
         if (data.profiles === null) {
@@ -87,11 +60,11 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut, user })
         const globalHeaders = data.postHeaders.find((postHeader => postHeader.platform === 'global')).metrics;
         const platformHeaders = [];
 
-        const selectedProfiles = data.profiles.filter(profile => (state.profiles.includes(profile.profileName)));
+        const selectedProfiles = data.profiles.filter(profile => (selectedProfileNames.includes(profile.profileName)));
         const hasSinglePlatform = (new Set(selectedProfiles.map(profile => profile.platform)).size === 1);
 
         if (hasSinglePlatform) {
-            const platform = data.profiles.find(profile => (profile.profileName === state.profiles[0])).platform;
+            const platform = data.profiles.find(profile => (profile.profileName === selectedProfileNames[0])).platform;
             platformHeaders.push(
                 ...data.postHeaders.find((postHeader => postHeader.platform === platform)).metrics
             );
@@ -105,7 +78,6 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut, user })
 
     return (
         <div className={styles.container}>
-            {/* <Header user={user} goToAddPlatformSelection={goToAddPlatformSelection} signOut={signOut}/> */}
             <div className={styles.content}>
                 <div className={styles.contentLeft} style={{
                     width: state.profilePickerExpanded ? '18%' : '3%',
@@ -113,8 +85,8 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut, user })
                     <div className={styles.contentLeftPicker}>
                         <ProfilePicker
                             profiles={data.profiles}
-                            selectedProfileNames={state.profiles}
-                            handleProfileClick={handleProfileChange}
+                            selectedProfileNames={selectedProfileNames}
+                            handleProfileClick={setSelectedProfileNames}
                             expanded={state.profilePickerExpanded}
                             toggleExpanded={toggleProfilePickerExpanded}/>
                     </div>
@@ -127,7 +99,7 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut, user })
                             <InputLabel>Timeframe</InputLabel>
                             <Select
                                 label="Timeframe"
-                                value={state.timeframe.name}
+                                value={timeframe.name}
                                 onChange={handleTimeFrameChange}
                             >
                             {
@@ -144,7 +116,7 @@ const MainContentContainer = ({ data, goToAddPlatformSelection, signOut, user })
                     </div>
                     <div className={styles.contentBottom}>
                         <PostsContainer
-                            posts={filteredRecords}
+                            posts={data.records}
                             headers={getPostHeaders()}
                             profiles={data.profiles}
                             graphData={graphData}

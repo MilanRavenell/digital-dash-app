@@ -1,4 +1,5 @@
-function getGraphData(records, partitions) {
+function getGraphData(records, start, end) {
+    const partitions = getGraphPartitions(start, end);
     const viewsPartitoned = partitions.reduce((acc, partition) => ({ ...acc, [partition]: 0 }), {});
     const engagementPartitioned = partitions.reduce((acc, partition) => ({ ...acc, [partition]: 0 }), {});
 
@@ -12,8 +13,8 @@ function getGraphData(records, partitions) {
         }
 
         const partition = partitions[partitionIndex];
-        viewsPartitoned[partition] += parseInt(record.viewCount);
-        engagementPartitioned[partition] += parseInt(record.engagementCount);
+        viewsPartitoned[partition] += parseInt(record.viewCount || 0);
+        engagementPartitioned[partition] += parseInt(record.engagementCount || 0);
         return true;
     });
 
@@ -34,4 +35,21 @@ function getGraphData(records, partitions) {
     };
 }
 
-export default getGraphData;
+function getGraphPartitions(start, end) {
+    const date = new Date(end);
+    date.setMinutes(0, 0, 0);
+
+    const startDate = new Date(start);
+    startDate.setMinutes(0, 0, 0);
+
+    const partitions = [];
+
+    while (date > startDate) {
+        partitions.push(date.toISOString());
+        date.setDate(date.getDate() - 1);
+    }
+
+    return partitions;
+}
+
+module.exports = getGraphData;

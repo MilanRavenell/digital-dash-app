@@ -319,7 +319,7 @@ export const userProfilesByUserAndPlatform = /* GraphQL */ `
 export const twitterPostsByProfileName = /* GraphQL */ `
   query TwitterPostsByProfileName(
     $profileName: String!
-    $createdAt: ModelStringKeyConditionInput
+    $datePosted: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelTwitterPostFilterInput
     $limit: Int
@@ -327,7 +327,7 @@ export const twitterPostsByProfileName = /* GraphQL */ `
   ) {
     twitterPostsByProfileName(
       profileName: $profileName
-      createdAt: $createdAt
+      datePosted: $datePosted
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -357,7 +357,7 @@ export const twitterPostsByProfileName = /* GraphQL */ `
 export const youtubePostsByProfileName = /* GraphQL */ `
   query YoutubePostsByProfileName(
     $profileName: String!
-    $createdAt: ModelStringKeyConditionInput
+    $datePosted: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelYoutubePostFilterInput
     $limit: Int
@@ -365,7 +365,7 @@ export const youtubePostsByProfileName = /* GraphQL */ `
   ) {
     youtubePostsByProfileName(
       profileName: $profileName
-      createdAt: $createdAt
+      datePosted: $datePosted
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -393,7 +393,7 @@ export const youtubePostsByProfileName = /* GraphQL */ `
 export const igPostsByProfileName = /* GraphQL */ `
   query IgPostsByProfileName(
     $profileName: String!
-    $createdAt: ModelStringKeyConditionInput
+    $datePosted: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelInstagramPostFilterInput
     $limit: Int
@@ -401,7 +401,7 @@ export const igPostsByProfileName = /* GraphQL */ `
   ) {
     igPostsByProfileName(
       profileName: $profileName
-      createdAt: $createdAt
+      datePosted: $datePosted
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit

@@ -8,7 +8,7 @@ import { useAuthenticator } from "@aws-amplify/ui-react";
 import { API } from 'aws-amplify';
 import { getUser } from '../graphql/queries';
 import { createUser, createUserProfile } from '../aws/graphql/mutations';
-import { getData, populateAnalytics } from '../aws/custom-gql';
+import { getData as getDataQuery, populateAnalytics } from '../aws/custom-gql';
 
 import Amplify from 'aws-amplify';
 import config from '../aws/aws-exports';
@@ -22,6 +22,8 @@ export default function Home() {
 
   const [data, setData] = React.useState(null);
   const [fetchRecentData, setFetchRecentData] = React.useState(false);
+  const [selectedProfileNames, setSelectedProfileNames] = React.useState([]);
+  const [timeframe, setTimeframe] = React.useState(null);
 
   React.useEffect(async () => {
     if (authStatus === 'unauthenticated') {
@@ -49,16 +51,11 @@ export default function Home() {
 
   const initialize = async () => {
     try {
-      const response = (await API.graphql({
-        query: getData,
-        variables: {
-          username: context.user.email
-        }
-      })).data.getData;
+      const response = await getData(context.user.email);
 
-      console.log(response.data)
-
-      if (response.success) {
+      if (response && response.success) {
+        setSelectedProfileNames(response.data.profiles.map(profile => profile.profileName))
+        setTimeframe(response.data.timeframes[0]);
         setData(response.data);
         setFetchRecentData(true);
       }
@@ -84,7 +81,7 @@ export default function Home() {
       if (response.success) {
         setData((prevData) => ({
           ...prevData,
-          records: response.dataUpdated ? response.data : prevState.data.records,
+          records: response.dataUpdated ? response.data : prevData.records,
         }));
         setFetchRecentData(false);
       }
@@ -92,6 +89,57 @@ export default function Home() {
       console.error('Failed to fetch most recent post data', err);
     }
   }
+
+  const getData = async (username, timeframe, selectedProfileNames) => {
+    const { startDate, endDate } = timeframe ?? {};
+    console.log(startDate, endDate)
+
+    try {
+      const response = (await API.graphql({
+        query: getDataQuery,
+        variables: {
+          username,
+          startDate,
+          endDate,
+          selectedProfileNames,
+        }
+      })).data.getData;
+
+      console.log('data')
+      console.log(response)
+
+      return response;
+    } catch (err) {
+      console.error('Failed to get data for user', err);
+    }
+  };
+
+  const updateSelectedProfileName = React.useCallback(async (newSelectedProfileNames) => {
+    const newData = await getData(
+      context.user.email,
+      timeframe,
+      newSelectedProfileNames,
+    );
+
+    if (newData.success) {
+      setData(newData.data);
+      setSelectedProfileNames(newSelectedProfileNames);
+    }
+  }, [context, timeframe]);
+
+  const updateTimeFrame = React.useCallback(async (newTimeframe) => {
+    console.log(newTimeframe)
+    const newData = await getData(
+      context.user.email,
+      newTimeframe,
+      selectedProfileNames,
+    );
+
+    if (newData.success) {
+      setData(newData.data);
+      setTimeframe(newTimeframe);
+    }
+  }, [context, selectedProfileNames]);
 
   const goToAddPlatformSelection = React.useCallback(() => {
     router.push(`/add-profile-selection`);
@@ -102,7 +150,13 @@ export default function Home() {
       return (
         <div className='container'>
           <Header user={context.user} goToAddPlatformSelection={goToAddPlatformSelection} signOut={signOut}/>
-          <MainContentContainer data={data}/>
+          <MainContentContainer
+            data={data}
+            selectedProfileNames={selectedProfileNames}
+            timeframe={timeframe}
+            setSelectedProfileNames={updateSelectedProfileName}
+            setTimeframe={updateTimeFrame}
+          />
         </div>
       )
     }

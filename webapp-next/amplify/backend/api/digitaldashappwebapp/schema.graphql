@@ -21,7 +21,7 @@ type TwitterPost @model
 
   id: String! @primaryKey
   createdAt: String!
-  profileName: String! @index(name: "ByProfileName", sortKeyFields: ["createdAt"], queryField: "twitterPostsByProfileName")
+  profileName: String! @index(name: "ByProfileName", sortKeyFields: ["datePosted"], queryField: "twitterPostsByProfileName")
   datePosted: String!
   caption: String!
   link: String!
@@ -40,7 +40,7 @@ type YoutubePost @model
 {
   id: String! @primaryKey
   createdAt: String!
-  profileName: String! @index(name: "ByProfileName", sortKeyFields: ["createdAt"], queryField: "youtubePostsByProfileName")
+  profileName: String! @index(name: "ByProfileName", sortKeyFields: ["datePosted"], queryField: "youtubePostsByProfileName")
   datePosted: String!
   caption: String!
   link: String!
@@ -57,7 +57,7 @@ type InstagramPost @model
 {
   id: String! @primaryKey
   createdAt: String!
-  profileName: String! @index(name: "ByProfileName", sortKeyFields: ["createdAt"], queryField: "igPostsByProfileName")
+  profileName: String! @index(name: "ByProfileName", sortKeyFields: ["datePosted"], queryField: "igPostsByProfileName")
   datePosted: String!
   caption: String!
   link: String!
@@ -82,6 +82,9 @@ type PostMedia {
 
 input GetDataInput {
   username: String!
+  selectedProfileNames: [String!]
+  startDate: String
+  endDate: String
 }
 
 type BeefedUserProfile {
@@ -92,10 +95,26 @@ type BeefedUserProfile {
   followerCount: Int
 }
 
+type GetDataGraph {
+  labels: [String!]!
+  datasets: [GetDataGraphDataset!]!
+}
+
+type GetDataGraphDataset {
+  label: String!
+  data: [Int!]!
+  backgroundColor: String!
+}
+
+type GetDataAggregated {
+  name: String!
+  value: Float!
+}
+
 type GetDataDataTimeframe {
   name: String!
-  partitionDate: String
-  graphPartitions: [String!]!
+  startDate: String
+  endDate: String
 }
 
 type GetDataDataMetric {
@@ -112,6 +131,8 @@ union Post = TwitterPost | YoutubePost | InstagramPost
 
 type getDataData {
   profiles: [BeefedUserProfile!]
+  graph: GetDataGraph
+  aggregated: [GetDataAggregated!]
   timeframes: [GetDataDataTimeframe!]
   metrics: [GetDataDataMetric!]
   records: [Post!]

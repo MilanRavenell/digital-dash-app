@@ -1,3 +1,5 @@
+const getGraphData = require('./get-graph-data');
+const getAggregatedStats = require('./get-aggregated-stats');
 const { getBeefedUserProfiles } = require('../../shared');
 
 const platformTableMap = Object.freeze({
@@ -8,11 +10,24 @@ const platformTableMap = Object.freeze({
 });
 
 // Must be reverse ordered chronologically
+const now = new Date();
 const timeframes = [
-    { name: 'day', nDays: 1 },
-    { name: 'month', nDays: 30 },
-    { name: 'year', nDays: 365 },
-    { name: 'all time' }
+    {
+        name: 'Past Week',
+        endDate: now.toISOString(),
+        startDate: new Date(new Date().setDate(now.getDate() - 7)).toISOString(),
+    },
+    {
+        name: 'Past Month',
+        endDate: now.toISOString(),
+        startDate: new Date(new Date().setDate(now.getDate() - 30)).toISOString(),
+    },
+    {
+        name: 'Past Year',
+        endDate: now.toISOString(),
+        startDate: new Date(new Date().setDate(now.getDate() - 365)).toISOString(),
+    },
+    { name: 'Custom' }
 ];
 
 const metrics = [
@@ -21,21 +36,22 @@ const metrics = [
 ];
 
 async function getData(ctx) {
-    const { username } = ctx.arguments.input;
+    const { username, selectedProfileNames } = ctx.arguments.input;
+    const { startDate, endDate } = ctx.arguments.input.startDate ? ctx.arguments.input : timeframes[0];
 
     const profiles = await getBeefedUserProfiles(ctx, username);
-    const records = await getRecords(ctx, profiles);
+    const filteredProfiles = selectedProfileNames
+        ? profiles.filter(({ profileName }) => (selectedProfileNames.includes(profileName)))
+        : profiles;
+    const records = await getRecords(ctx, filteredProfiles, startDate, endDate);
     
     return {
         data: {
             profiles,
-            timeframes: timeframes.map(timeframe => ({
-                name: timeframe.name,
-                partitionDate: getDatePartitions(timeframe.nDays),
-                graphPartitions: getGraphPartitionsFromTimeframe(timeframe.name)
-            })),
-            metrics,
+            graph: getGraphData(records, startDate, endDate),
+            aggregated: getAggregatedStats(records, metrics, filteredProfiles),
             records,
+            timeframes,
             postHeaders: [
                 {
                     platform: 'global',
@@ -79,23 +95,33 @@ async function getData(ctx) {
     };
 }
 
-async function getRecords(ctx, profiles) {
+async function getRecords(ctx, profiles, startDate, endDate) {
     const { ddbClient } = ctx.resources;
     
     const records = [];
     try {
-        records.push(...(await Promise.all(profiles.map(async (profile) => {
-            const items = (await ddbClient.query({
-                TableName: `${platformTableMap[profile.platform]}-7hdw3dtfmbhhbmqwm7qi7fgbki-staging`,
-                IndexName: 'ByProfileName',
-                KeyConditionExpression: '#profileName = :profileName',
-                ExpressionAttributeValues: { ':profileName': profile.profileName },
-                ExpressionAttributeNames: { '#profileName': 'profileName' }
-            }).promise())
-                .Items;
+        records.push(...(await Promise.all(
+            profiles
+                .map(async (profile) => {
+                    const items = (await ddbClient.query({
+                        TableName: `${platformTableMap[profile.platform]}-7hdw3dtfmbhhbmqwm7qi7fgbki-staging`,
+                        IndexName: 'ByProfileName',
+                        KeyConditionExpression: '#profileName = :profileName AND #datePosted BETWEEN :start AND :end',
+                        ExpressionAttributeValues: {
+                            ':profileName': profile.profileName,
+                            ':start': startDate,
+                            ':end': endDate,
+                        },
+                        ExpressionAttributeNames: {
+                            '#profileName': 'profileName',
+                            '#datePosted': 'datePosted',
+                        }
+                    }).promise())
+                        .Items;
 
-            return items;
-        })))
+                    return items;
+                })
+            ))
             .flat())
     } catch (err) {
         console.error(`Failed to fetch records for user`, err);
@@ -106,49 +132,6 @@ async function getRecords(ctx, profiles) {
     });
 
     return records;
-}
-
-function getGraphPartitionsFromTimeframe(timeframe) {
-    const date = new Date();
-    date.setMinutes(0, 0, 0)
-    const partitions = [];
-
-    switch(timeframe){
-        case 'day':
-            for (let i = 0; i < 24; i++) {
-                date.setHours(date.getHours() - 1);
-                partitions.push(date.toISOString())
-            }
-            break;
-        case 'month':
-            date.setHours(0);
-            for (let i = 0; i < 30; i++) {
-                date.setDate(date.getDate() - 1);
-                partitions.push(date.toISOString())
-            }
-            break;
-        case 'year':
-        case 'all time':
-            date.setHours(0);
-            date.setDate(0);
-            for (let i = 0; i < 12; i++) {
-                date.setMonth(date.getMonth() - 1);
-                partitions.push(date.toISOString())
-            }
-            break;
-    };
-
-    return partitions;
-}
-
-function getDatePartitions(nDays) {
-    if (nDays === undefined) {
-        return null;
-    };
-
-    const date = new Date();
-    date.setDate(date.getDate() - nDays);
-    return date;
 }
 
 module.exports = getData;

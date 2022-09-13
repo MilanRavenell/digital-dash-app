@@ -1,9 +1,9 @@
 function getAggregatedStats(records, metrics, profiles) {
-    return {
-        'Total Followers': getTotalFollowerCount(profiles),
-        'Total Posts': records.length,
+    return [
+        { name: 'Total Followers', value: getTotalFollowerCount(profiles) },
+        { name: 'Total Posts', value: records.length },
         ...getTotalAndAverageFromRecords(records, metrics),
-    };
+    ];
 }
 
 function getTotalAndAverageFromRecords(records, metrics) {
@@ -24,13 +24,15 @@ function getTotalAndAverageFromRecords(records, metrics) {
         calculations[`Average ${metric.displayName} per Post`] = (len === 0) ? 0 : (calculations[`Total ${metric.displayName}`] / len).toFixed(2)
     });
 
-    return calculations;
+    return Object.keys(calculations).map(key => (
+        { name: key, value: calculations[key] }
+    ));
 }
 
 function getTotalFollowerCount(profiles) {
     return profiles.reduce((acc, profile) => {
-        return acc + profile.followerCount;
+        return acc + parseInt(profile.followerCount);
     }, 0);
 }
 
-export default getAggregatedStats;
+module.exports = getAggregatedStats;

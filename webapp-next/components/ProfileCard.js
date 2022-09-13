@@ -9,7 +9,6 @@ import { platformToLogoUrlMap } from '../helpers';
 
 const ProfileCard = ({ profile }) => {
     const profilePicUrl = (profile.profilePicUrl !== null && profile.profilePicUrl !== undefined) ? profile.profilePicUrl : '/';
-    console.log(profile)
 
     return (
         <Card sx={{ width: '100%', height: '100%' }}>

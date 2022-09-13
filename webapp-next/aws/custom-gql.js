@@ -1,6 +1,16 @@
 export const getData = /* GraphQL */ `
-  query GetData($username: String!) {
-    getData(input: {username: $username}) {
+  query GetData(
+    $username: String!,
+    $selectedProfileNames: [String!],
+    $startDate: String,
+    $endDate: String
+  ) {
+    getData(input: {
+      username: $username,
+      selectedProfileNames: $selectedProfileNames,
+      startDate: $startDate,
+      endDate: $endDate
+    }) {
       data {
         metrics {
           field
@@ -19,6 +29,18 @@ export const getData = /* GraphQL */ `
           user
           profilePicUrl
           followerCount
+        }
+        graph {
+          labels
+          datasets {
+            label
+            data
+            backgroundColor
+          }
+        }
+        aggregated {
+          name
+          value
         }
         records {
           __typename
@@ -80,9 +102,9 @@ export const getData = /* GraphQL */ `
           }
         }
         timeframes {
-          graphPartitions
           name
-          partitionDate
+          startDate
+          endDate
         }
       }
       success

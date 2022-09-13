@@ -6,14 +6,13 @@ import { batchArray } from '../helpers';
 import styles from '../styles/AggregatedStatsContainer.module.css';
 
 const AggregatedStatsContainer = ({ data }) => {
-
     const getContent = () => {
-        return batchArray(Object.keys(data), 4)
+        return batchArray(data, 4)
             .map((batch, batchIndex) => (
                 <div className={styles.row} key={batchIndex}>
                     {
                         batch.map((stat, keyIndex) => (
-                            <StatContainer name={stat} value={data[stat]} key={keyIndex}/>
+                            <StatContainer name={(stat || {}).name} value={(stat || {}).value} key={keyIndex}/>
                         ))
                     }
                 </div>
