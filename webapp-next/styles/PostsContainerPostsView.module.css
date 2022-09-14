@@ -4,26 +4,37 @@
 
 .header {
     display: flex;
-    padding-bottom: 20px;
-    padding-top: 10px;
+    height: 5vh;
 }
 
 .headerFieldLong {
-    flex: 1;
     font-size: large;
     text-align: left;
-    margin-left: 10px;
-    margin-right: 10px;
     flex: 5;
 }
 
 .headerFieldShort {
-    flex: 1;
     font-size: large;
     text-align: left;
-    margin-left: 10px;
-    margin-right: 10px;
     flex: 1;
+}
+
+.headerInner {
+    display: flex;
+    width: 100%;
+}
+
+.headerName {
+    width: 80%;
+}
+
+.headerIcon {
+    width: 20%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    color: grey;
+    margin-right: 2%;
 }
 
 .post {
@@ -47,8 +58,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: left;
-    margin-left: 10px;
-    margin-right: 10px;
     justify-content: center;
     display: flex;
     flex-direction: column;
@@ -61,8 +70,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: left;
-    margin-left: 10px;
-    margin-right: 10px;
     justify-content: center;
     display: flex;
     flex-direction: column;

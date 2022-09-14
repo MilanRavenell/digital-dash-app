@@ -1,28 +1,98 @@
 import React from 'react';
 import { platformToLogoUrlMap } from '../helpers';
-import Image from 'next/image';
+import Card from '@mui/material/Card';
+import CardActionArea from '@mui/material/CardActionArea';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 
 import styles from '../styles/PostsContainerPostsView.module.css';
 
-const PostsContainerPostsView = ({ posts, headers, profiles, openPopUp }) => {
+const PostsContainerPostsView = ({
+    posts,
+    headers,
+    profiles,
+    openPopUp,
+    sortOrder,
+    setSortOrder
+}) => {
     const totalHeaders = [...headers.globalHeaders, ...headers.platformHeaders];
 
+    console.log('HEADEEERRR')
+    console.log(sortOrder)
+
+    const onHeaderClicked = (field) => {
+        if (!sortOrder || sortOrder.field !== field) {
+            console.log('hi')
+            setSortOrder({
+                field,
+                order: 'desc',
+            });
+
+            return;
+        }
+
+        setSortOrder({
+            field,
+            order: (sortOrder.order === 'desc') ? 'asc' : 'desc',
+        });
+    }
+
+    const sortedPosts = posts;
+    if (sortOrder) {
+        switch(sortOrder.field) {
+            case 'datePosted':
+                sortedPosts.sort((a,b) => (
+                    (sortOrder.order === 'desc')
+                        ? new Date(b[sortOrder.field]) - new Date(a[sortOrder.field])
+                        : new Date(a[sortOrder.field]) - new Date(b[sortOrder.field])
+                ));
+                break;
+            case 'platform':
+            case 'profileName':
+            case 'caption':
+                sortedPosts.sort((a,b) => (
+                    (sortOrder.order === 'desc')
+                        ? b[sortOrder.field].localeCompare(a[sortOrder.field])
+                        : a[sortOrder.field].localeCompare(b[sortOrder.field])
+                ));
+                break;
+            default:
+                sortedPosts.sort((a,b) => (
+                    (sortOrder.order === 'desc')
+                        ? b[sortOrder.field] - a[sortOrder.field]
+                        : a[sortOrder.field] - b[sortOrder.field]
+                ));
+        }
+    }
+    
     return (
         <div className={styles.container}>
             <div className={styles.header}>
                 {
-                    totalHeaders.map(({ displayName }, keyIndex) => {
+                    totalHeaders.map(({ field, displayName }, keyIndex) => {
                         const style = displayName === 'Platform' ? styles.headerFieldShort : styles.headerFieldLong
                         return (
-                            <div className={style} key={keyIndex}>
-                                { (displayName !== 'Platform') && displayName }
+                            <div className={style}>
+                                <Card sx={{ width: '100%', height: '100%', borderRadius: 0, border: 'none' }} variant="outlined"  onClick={() => {onHeaderClicked(`${field}`)}} key={keyIndex}>
+                                    <CardActionArea sx={{ width: '100%', height: '100%' }}>
+                                        <div className={styles.headerInner}>
+                                            <div className={styles.headerName}>
+                                                { (displayName !== 'Platform') && displayName }
+                                            </div>
+                                            <div className={styles.headerIcon}>
+                                                { (sortOrder && sortOrder.field === field && sortOrder.order === 'asc') && <ExpandMore/>}
+                                                { (sortOrder && sortOrder.field === field && sortOrder.order === 'desc') && <ExpandLess/>}
+                                            </div>
+                                        </div>
+                                    
+                                    </CardActionArea>
+                                </Card>
                             </div>
                         );
                     })
                 }
             </div>
             { 
-                posts.map((post, postIndex) => {
+                sortedPosts.map((post, postIndex) => {
                     return (
                         <div className={styles.post} key={postIndex} onClick={() => {openPopUp(post)}}>
                             {

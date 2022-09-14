@@ -1,5 +1,11 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 import { Add } from '@mui/icons-material';
 import ProfilePicker from './ProfilePicker';
 import { platformToLogoUrlMap } from '../helpers';
@@ -11,11 +17,23 @@ const AddProfileSelection = ({
     user,
     profiles,
     handleProfileDelete,
-    getProfiles,
     handlePlatformClick,
     handleContinueClick,
     isFirstLogin,
 }) => {
+    const [profileIndexToDelete, setProfileIndexToDelete] = React.useState(null);
+    console.log('toDelte')
+    console.log(profileIndexToDelete)
+
+    const handleClose = () => {
+        setProfileIndexToDelete(null);
+    }
+
+    const handleDeleteConfirm = () => {
+        handleProfileDelete(user, profiles, profileIndexToDelete);
+        handleClose();
+    }
+
     const platformList = ['twitter', 'youtube', 'instagram'];
 
     return (
@@ -25,7 +43,7 @@ const AddProfileSelection = ({
                     <ProfilePicker
                         profiles={profiles}
                         user={user}
-                        handleProfileDelete={handleProfileDelete}
+                        setProfileIndexToDelete={setProfileIndexToDelete}
                         editMode
                     />
                 </div>
@@ -75,6 +93,27 @@ const AddProfileSelection = ({
                     </div>
                 </div>
             </div>
+            <Dialog
+                open={(profileIndexToDelete !== null)}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    Remove Account?
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {(profileIndexToDelete !== null) && `Stop tracking analytics for ${profiles[profileIndexToDelete].profileName}?`}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleDeleteConfirm} autoFocus>
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }

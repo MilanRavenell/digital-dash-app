@@ -1,6 +1,6 @@
 import React from 'react';
 import { MenuItem, Menu, IconButton } from '@mui/material';
-import { SettingsOutlined } from '@mui/icons-material';
+import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
 
 import styles from '../styles/Header.module.css';
 

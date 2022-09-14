@@ -17,6 +17,8 @@ const MainContentContainer = ({
     timeframe,
     setSelectedProfileNames,
     setTimeframe,
+    sortOrder,
+    setSortOrder,
 }) => {
     const timeframeNames = data.timeframes.map(timeframe => timeframe.name);
 
@@ -167,7 +169,10 @@ const MainContentContainer = ({
                             headers={getPostHeaders()}
                             profiles={data.profiles}
                             graphData={graphData}
-                            openPopUp={setPopUpPost}/>
+                            openPopUp={setPopUpPost}
+                            sortOrder={sortOrder}
+                            setSortOrder={setSortOrder}
+                        />
                     </div>
                 </div>
             </div>

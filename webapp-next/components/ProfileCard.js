@@ -4,10 +4,12 @@ import Box from '@mui/material/Box';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
+import CardActionArea from '@mui/material/CardActionArea';
+import IconButton from '@mui/material/IconButton';
 import { platformToLogoUrlMap } from '../helpers';
+import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 
-const ProfileCard = ({ profile }) => {
+const ProfileCard = ({ profile, handleDelete }) => {
     const profilePicUrl = (profile.profilePicUrl !== null && profile.profilePicUrl !== undefined) ? profile.profilePicUrl : '/';
 
     return (
@@ -26,6 +28,19 @@ const ProfileCard = ({ profile }) => {
                             justifyContent: 'flex-end',
                             height: '50%'
                         }}>
+                            {
+                                handleDelete && 
+                                    <div style={{
+                                        height: '100%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        marginRight: '2%',
+                                    }}>
+                                        <IconButton onClick={handleDelete}>
+                                            <DeleteOutlined/>
+                                        </IconButton>
+                                    </div>
+                            }
                             <CardMedia
                                 component="img"
                                 sx={{ width: '12%', objectFit: 'contain' }}

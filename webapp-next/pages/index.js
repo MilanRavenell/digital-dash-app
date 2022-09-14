@@ -24,6 +24,7 @@ export default function Home() {
   const [fetchRecentData, setFetchRecentData] = React.useState(false);
   const [selectedProfileNames, setSelectedProfileNames] = React.useState([]);
   const [timeframe, setTimeframe] = React.useState(null);
+  const [sortOrder, setSortOrder] = React.useState(null);
 
   React.useEffect(async () => {
     if (authStatus === 'unauthenticated') {
@@ -162,6 +163,8 @@ export default function Home() {
             timeframe={timeframe}
             setSelectedProfileNames={updateSelectedProfileName}
             setTimeframe={updateTimeFrame}
+            sortOrder={sortOrder}
+            setSortOrder={setSortOrder}
           />
         </div>
       )

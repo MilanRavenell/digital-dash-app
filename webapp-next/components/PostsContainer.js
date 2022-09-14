@@ -6,7 +6,15 @@ import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
 import styles from '../styles/PostsContainer.module.css'
 
-const PostsContainer = ({ posts, headers, profiles, graphData, openPopUp }) => {
+const PostsContainer = ({
+    posts,
+    headers,
+    profiles,
+    graphData,
+    openPopUp,
+    sortOrder,
+    setSortOrder,
+}) => {
     const views = ['graph', 'posts'];
 
     const [state, setState] = React.useState({
@@ -43,7 +51,9 @@ const PostsContainer = ({ posts, headers, profiles, graphData, openPopUp }) => {
                         posts={posts}
                         headers={headers}
                         profiles={profiles}
-                        openPopUp={openPopUp}/>
+                        openPopUp={openPopUp}
+                        sortOrder={sortOrder}
+                        setSortOrder={setSortOrder}/>
                     : <PostsContainerGraphView graphData={graphData}/>
             }
         </div>
