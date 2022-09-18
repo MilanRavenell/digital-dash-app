@@ -15,6 +15,7 @@ export async function getStaticPaths() {
       { params: { platform: 'twitter' } },
       { params: { platform: 'youtube' } },
       { params: { platform: 'instagram' } },
+      { params: { platform: 'tiktok' } },
     ],
     fallback: false, // can also be true or 'blocking'
   }
@@ -75,6 +76,7 @@ const AddProfile = () => {
                 variables: {
                     input: {
                         user: user.email,
+                        key: `${profile.platform}_${profile.profileName}`,
                         platform: profile.platform,
                         profileName: profile.profileName,
                         meta: profile.meta,
@@ -92,7 +94,7 @@ const AddProfile = () => {
               }
             });
         } catch (err) {
-          console.error(`Failed to add platform ${platform} for user ${user}`, err);
+          console.error(`Failed to add platform ${platform} for user ${user.email}`, err);
           router.push(`/add-profile-selection`);
         }
     }, []);

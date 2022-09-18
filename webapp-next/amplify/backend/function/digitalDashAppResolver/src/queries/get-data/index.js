@@ -103,8 +103,13 @@ async function getRecords(ctx, profiles, startDate, endDate) {
         records.push(...(await Promise.all(
             profiles
                 .map(async (profile) => {
+                    const platform = platformTableMap[profile.platform];
+                    if (platform === undefined) {
+                        return [];
+                    }
+                    
                     const items = (await ddbClient.query({
-                        TableName: `${platformTableMap[profile.platform]}-7hdw3dtfmbhhbmqwm7qi7fgbki-staging`,
+                        TableName: `${platform}-7hdw3dtfmbhhbmqwm7qi7fgbki-staging`,
                         IndexName: 'ByProfileName',
                         KeyConditionExpression: '#profileName = :profileName AND #datePosted BETWEEN :start AND :end',
                         ExpressionAttributeValues: {

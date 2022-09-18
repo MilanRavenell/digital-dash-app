@@ -1,6 +1,5 @@
 from content_data_scraper import ContentDataScraper
 
-import pandas as pd
 from time import sleep
 import sys
 import datetime
@@ -33,9 +32,6 @@ class YoutubeScraper(ContentDataScraper):
 
     async def close(self):
         await super().close()
-
-        df_metrics = pd.DataFrame.from_records(self.metrics_records)
-        df_metrics.to_csv(f'{self.data_folder}/youtube/{self.handle}.csv')
 
     ########################## YouTube Methods ##############################
     async def __process_video(self, video):

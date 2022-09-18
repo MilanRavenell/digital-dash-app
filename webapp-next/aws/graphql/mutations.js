@@ -110,6 +110,7 @@ export const createUserProfile = /* GraphQL */ `
   ) {
     createUserProfile(input: $input, condition: $condition) {
       user
+      key
       platform
       profileName
       meta
@@ -125,6 +126,7 @@ export const updateUserProfile = /* GraphQL */ `
   ) {
     updateUserProfile(input: $input, condition: $condition) {
       user
+      key
       platform
       profileName
       meta
@@ -140,6 +142,7 @@ export const deleteUserProfile = /* GraphQL */ `
   ) {
     deleteUserProfile(input: $input, condition: $condition) {
       user
+      key
       platform
       profileName
       meta
@@ -384,6 +387,81 @@ export const deleteInstagramPost = /* GraphQL */ `
       commentCount
       saveCount
       reachCount
+      updatedAt
+    }
+  }
+`;
+export const createTiktokPost = /* GraphQL */ `
+  mutation CreateTiktokPost(
+    $input: CreateTiktokPostInput!
+    $condition: ModelTiktokPostConditionInput
+  ) {
+    createTiktokPost(input: $input, condition: $condition) {
+      id
+      createdAt
+      profileName
+      datePosted
+      caption
+      link
+      media {
+        thumbnailUrl
+        type
+      }
+      viewCount
+      engagementCount
+      likeCount
+      commentCount
+      shareCount
+      updatedAt
+    }
+  }
+`;
+export const updateTiktokPost = /* GraphQL */ `
+  mutation UpdateTiktokPost(
+    $input: UpdateTiktokPostInput!
+    $condition: ModelTiktokPostConditionInput
+  ) {
+    updateTiktokPost(input: $input, condition: $condition) {
+      id
+      createdAt
+      profileName
+      datePosted
+      caption
+      link
+      media {
+        thumbnailUrl
+        type
+      }
+      viewCount
+      engagementCount
+      likeCount
+      commentCount
+      shareCount
+      updatedAt
+    }
+  }
+`;
+export const deleteTiktokPost = /* GraphQL */ `
+  mutation DeleteTiktokPost(
+    $input: DeleteTiktokPostInput!
+    $condition: ModelTiktokPostConditionInput
+  ) {
+    deleteTiktokPost(input: $input, condition: $condition) {
+      id
+      createdAt
+      profileName
+      datePosted
+      caption
+      link
+      media {
+        thumbnailUrl
+        type
+      }
+      viewCount
+      engagementCount
+      likeCount
+      commentCount
+      shareCount
       updatedAt
     }
   }

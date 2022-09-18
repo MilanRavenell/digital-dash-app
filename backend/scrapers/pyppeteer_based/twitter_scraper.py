@@ -1,5 +1,4 @@
 from content_data_scraper import ContentDataScraper
-import pandas as pd
 from time import sleep
 import datetime
 
@@ -36,12 +35,6 @@ class TwitterScraper(ContentDataScraper):
 
     async def close(self):
         await super().close()
-
-        df_metrics = pd.DataFrame.from_records(self.metrics_records)
-        df_metrics.to_csv(f'{self.data_folder}/twitter/{self.handle}.csv')
-
-        df_likes = pd.DataFrame.from_records(self.liked_users_records)
-        df_likes.to_csv(f'{self.data_folder}/twitter/{self.handle}_likes.csv')
 
     ##################### Twitter Methods ###############################
     async def login(self):

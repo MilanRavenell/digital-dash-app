@@ -72,9 +72,10 @@ export const listUsers = /* GraphQL */ `
   }
 `;
 export const getUserProfile = /* GraphQL */ `
-  query GetUserProfile($user: String!, $profileName: String!) {
-    getUserProfile(user: $user, profileName: $profileName) {
+  query GetUserProfile($user: String!, $key: String!) {
+    getUserProfile(user: $user, key: $key) {
       user
+      key
       platform
       profileName
       meta
@@ -86,7 +87,7 @@ export const getUserProfile = /* GraphQL */ `
 export const listUserProfiles = /* GraphQL */ `
   query ListUserProfiles(
     $user: String
-    $profileName: ModelStringKeyConditionInput
+    $key: ModelStringKeyConditionInput
     $filter: ModelUserProfileFilterInput
     $limit: Int
     $nextToken: String
@@ -94,7 +95,7 @@ export const listUserProfiles = /* GraphQL */ `
   ) {
     listUserProfiles(
       user: $user
-      profileName: $profileName
+      key: $key
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -102,6 +103,7 @@ export const listUserProfiles = /* GraphQL */ `
     ) {
       items {
         user
+        key
         platform
         profileName
         meta
@@ -287,6 +289,61 @@ export const listInstagramPosts = /* GraphQL */ `
     }
   }
 `;
+export const getTiktokPost = /* GraphQL */ `
+  query GetTiktokPost($id: String!) {
+    getTiktokPost(id: $id) {
+      id
+      createdAt
+      profileName
+      datePosted
+      caption
+      link
+      media {
+        thumbnailUrl
+        type
+      }
+      viewCount
+      engagementCount
+      likeCount
+      commentCount
+      shareCount
+      updatedAt
+    }
+  }
+`;
+export const listTiktokPosts = /* GraphQL */ `
+  query ListTiktokPosts(
+    $id: String
+    $filter: ModelTiktokPostFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listTiktokPosts(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        createdAt
+        profileName
+        datePosted
+        caption
+        link
+        viewCount
+        engagementCount
+        likeCount
+        commentCount
+        shareCount
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
 export const userProfilesByUserAndPlatform = /* GraphQL */ `
   query UserProfilesByUserAndPlatform(
     $user: String!
@@ -306,6 +363,7 @@ export const userProfilesByUserAndPlatform = /* GraphQL */ `
     ) {
       items {
         user
+        key
         platform
         profileName
         meta
@@ -420,6 +478,41 @@ export const igPostsByProfileName = /* GraphQL */ `
         commentCount
         saveCount
         reachCount
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const tiktokPostsByProfileName = /* GraphQL */ `
+  query TiktokPostsByProfileName(
+    $profileName: String!
+    $datePosted: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelTiktokPostFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    tiktokPostsByProfileName(
+      profileName: $profileName
+      datePosted: $datePosted
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        createdAt
+        profileName
+        datePosted
+        caption
+        link
+        viewCount
+        engagementCount
+        likeCount
+        commentCount
+        shareCount
         updatedAt
       }
       nextToken

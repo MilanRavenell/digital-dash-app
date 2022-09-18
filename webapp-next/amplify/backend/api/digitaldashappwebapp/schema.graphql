@@ -10,7 +10,8 @@ type User @model {
 }
 
 type UserProfile @model {
-  user: String! @primaryKey(sortKeyFields: ["profileName"]) @index(name: "ByUserAndPlatform", sortKeyFields: ["platform"], queryField: "userProfilesByUserAndPlatform")
+  user: String! @primaryKey(sortKeyFields: ["key"]) @index(name: "ByUserAndPlatform", sortKeyFields: ["platform"], queryField: "userProfilesByUserAndPlatform")
+  key: String! # <platform>_<profileName>
   platform: String!
   profileName: String!
   meta: String
@@ -68,6 +69,22 @@ type InstagramPost @model
   commentCount: Int
   saveCount: Int
   reachCount: Int
+}
+
+type TiktokPost @model
+{
+  id: String! @primaryKey
+  createdAt: String!
+  profileName: String! @index(name: "ByProfileName", sortKeyFields: ["datePosted"], queryField: "tiktokPostsByProfileName")
+  datePosted: String!
+  caption: String!
+  link: String!
+  media: [PostMedia!]!
+  viewCount: Int
+  engagementCount: Int
+  likeCount: Int
+  commentCount: Int
+  shareCount: Int
 }
 
 # type PostMetric @model

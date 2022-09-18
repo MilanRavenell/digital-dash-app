@@ -1,37 +1,56 @@
 import sys
-sys.path.append('/Users/milanravenell/Documents/digital_dash/backend/scrapers/pyppeteer_based')
+import os
+import json
+
+file_dir = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(os.path.join(file_dir, 'pyppeteer_based'))
 
 from pyppeteer_based import *
 
-def get_scraper_from_platform(platform):
-    match platform:
-        case 'twitter':
-            try:
-                handle = sys.argv[2]
-                password = sys.argv[3]
-                phone_number = sys.argv[4]
+def get_scraper_from_platform(platform, handle):
+    if platform == 'twitter':
+        try:
+            password = sys.argv[3]
+            phone_number = sys.argv[4]
 
-                return TwitterScraper(handle, password, phone_number)
-            except IndexError:
-                print('Not enough arguments were supplied for twitter scraper')
-                return
-        case 'youtube':
-            try:
-                handle = sys.argv[2]
+            return TwitterScraper(handle, password, phone_number)
+        except IndexError:
+            print('Not enough arguments were supplied for twitter scraper')
+            return
+    if platform == 'youtube':
+        try:
+            return YoutubeScraper(handle)
+        except IndexError:
+            print('Not enough arguments were supplied for twitter scraper')
+            return
+    if platform == 'tiktok':
+        try:
+            return TikTokScraper(handle)
+        except IndexError:
+            print('Not enough arguments were supplied for twitter scraper')
+            return
 
-                return YoutubeScraper(handle)
-            except IndexError:
-                print('Not enough arguments were supplied for twitter scraper')
-                return
-        case 'tiktok':
-            try:
-                handle = sys.argv[2]
+def handler(event, context):
+    print(event)
+    print(context)
 
-                return TikTokScraper(handle)
-            except IndexError:
-                print('Not enough arguments were supplied for twitter scraper')
-                return
-            
+    platform = event.get('platform')
+    handle = event.get('handle')
+    task = event.get('task')
 
-content_scraper = get_scraper_from_platform(sys.argv[1])
-content_scraper.run()
+    content_scraper = get_scraper_from_platform(platform, handle)
+    if task == 'full_run':
+        return content_scraper.full_run()
+    
+    if task == 'get_content':
+        return content_scraper.get_content()
+    
+    if task == 'process_single_content':
+        content_to_process = event.get('content_to_process')
+        return content_scraper.process_single_content(content_to_process)
+
+    if task == 'verify_bio_contains_token':
+        return content_scraper.verify_bio_contains_token()
+
+    if task == 'get_profile_info':
+        return content_scraper.get_profile_info()

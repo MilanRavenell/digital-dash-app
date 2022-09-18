@@ -1,10 +1,11 @@
 const fetchAnalyticsForIgProProfile = require('./populate-analytics-for-ig-pro-profile');
 const populateAnalyticsForTwitterProfile = require('./populate-analytics-for-twitter-profile');
 const populateAnalyticsForYtProfile = require('./populate-analytics-for-yt-profile');
+const populateAnalyticsForTiktokProfile = require('./populate-analytics-for-tiktok-profile');
 
 async function fetchAnalytics(ctx) {
     const { ddbClient } = ctx.resources;
-    const { username } = ctx.arguments.input;
+    const { username, debug_noUploadToDDB } = ctx.arguments.input;
 
     // Do not fetch posts if it's been less then an hour since posts were last fetched
     try {
@@ -17,8 +18,9 @@ async function fetchAnalytics(ctx) {
         const postsLastPopulated = new Date(user.postsLastPopulated);
     
         if (
-            user.postsLastPopulated
-            && (now - postsLastPopulated < 3600000)
+            (user.postsLastPopulated
+            && (now - postsLastPopulated < 3600000))
+            && !debug_noUploadToDDB
         ) {
             console.log('Too soon to fetch new data');
             return {
@@ -28,7 +30,12 @@ async function fetchAnalytics(ctx) {
             }
         }
     } catch (err) {
-        console.error('Failed to fetch user', err)
+        console.error('Failed to fetch user', err);
+        return {
+            data: [],
+            dataUpdated: false,
+            success: true,
+        }
     }
     
     console.log('Fetching data');
@@ -62,13 +69,18 @@ async function fetchAnalytics(ctx) {
                         }
                     }
                     
-                    throw new Error('hit instagram retry limit');
+                    console.error('hit instagram retry limit');
+                    return [];
                 case 'twitter':
                     return await populateAnalyticsForTwitterProfile(ctx, profile);
                 case 'youtube':
                     return await populateAnalyticsForYtProfile(ctx, profile);
+                case 'tiktok':
+                    return [];
+                    return await populateAnalyticsForTiktokProfile(ctx, profile);
                 default:
-                    throw new Error(`Platform ${profile.platform} not supported`);
+                   console.log(`Platform ${profile.platform} not supported`);
+                   return [];
             }
         }));
 
@@ -91,9 +103,11 @@ async function fetchAnalytics(ctx) {
             success: true,
         }
     } catch (err) {
-        console.error(`Failed to fetch analytics for user ${username}`, err);
+        console.error(`Failed to fetch analytics for user ${username}`);
         if (err.name === 'AxiosError' && err.response && err.response.data) {
             console.error('Error data: ', err.response.data)
+        } else {
+            console.error(err)
         }
         return {
             data: [],

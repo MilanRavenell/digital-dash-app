@@ -3,7 +3,7 @@ import { signOut } from 'next-auth/react';
 
 async function twitterLoginCallbackHandler({ sessionData, currentProfiles, setProfiles }) {
     // If the profile from the session data already exists, do not display for confirmation
-    if (currentProfiles === null || currentProfiles.map(profile => profile.profileName).includes(sessionData.profileName)) {
+    if (currentProfiles === null || currentProfiles.filter(({ platform })  => platform === 'twitter').map(profile => profile.profileName).includes(sessionData.profileName)) {
         return;
     }
 
@@ -38,7 +38,7 @@ async function igBasicLoginCallbackHandler({ code, currentProfiles, setProfiles 
         const user = (await axios.get(`https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`)).data;
 
         // If the profile from the session data already exists, do not display for confirmation
-        if (currentProfiles === null || currentProfiles.map(profile => profile.profileName).includes(user.username)) {
+        if (currentProfiles === null || currentProfiles.filter(({ platform })  => (platform === 'instagram-pro' || platform === 'instagram-basic')).map(profile => profile.profileName).includes(user.username)) {
             return;
         }
 

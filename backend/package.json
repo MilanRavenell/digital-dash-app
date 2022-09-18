@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server/index.js",
-    "run-scraper": "cd scrapers && python scrape_content.py"
+    "run-scraper": "cd scrapers && python invoke_local.py"
   },
   "author": "",
   "license": "ISC",

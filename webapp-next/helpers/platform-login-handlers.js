@@ -8,7 +8,7 @@ async function igBasicLoginHandler({ router }) {
     router.push(`https://api.instagram.com/oauth/authorize?client_id=${appId}&redirect_uri=${redirectUri}&scope=user_profile,user_media&response_type=code`)
 }
 
-async function igProLoginHandler({ setProfiles }) {
+async function igProLoginHandler({ currentProfiles, setProfiles }) {
     const onSignIn = async (shortTermToken) => {
         const accessToken = (await axios.get(`/api/auth/get-fb-long-lived-token?shortTermToken=${shortTermToken}`)).data;
 
@@ -44,7 +44,15 @@ async function igProLoginHandler({ setProfiles }) {
             }
         }));
 
-        setProfiles(profiles);
+        const curProfileNames = currentProfiles
+            .filter(({ platform })  => (platform === 'instagram-pro' || platform === 'instagram-basic'))
+            .map(profile => profile.profileName);
+
+        const filteredProfiles = profiles.filter(({ profileName }) => !curProfileNames.includes(profileName));
+
+        if (filteredProfiles.length > 0) {
+            setProfiles(filteredProfiles);
+        }
     };
 
     FB.login((response) => {
@@ -87,7 +95,10 @@ async function youtubeLoginHandler({ currentProfiles, setProfiles }) {
                 return;
             }
     
-            const curProfileNames = currentProfiles.map(profile => profile.profileName);
+            const curProfileNames = currentProfiles
+                .filter(({ platform })  => platform === 'youtube')
+                .map(profile => profile.profileName);
+
             const filteredProfiles = profiles.filter(({ profileName }) => !curProfileNames.includes(profileName));
     
             if (filteredProfiles.length > 0) {
@@ -106,10 +117,37 @@ async function youtubeLoginHandler({ currentProfiles, setProfiles }) {
     client.requestCode();
 }
 
+async function tiktokLoginHandler({ handle, currentProfiles, setProfiles }) {
+    const profileInfo = (await axios.get(`/api/auth/verify-tiktok-bio-contains-token?handle=${handle}`)).data;
+    console.log(profileInfo)
+
+    if (profileInfo) {
+        const profile = {
+            profileName: handle,
+            profilePicUrl: profileInfo.profile_pic_url,
+            platform: 'tiktok',
+        };
+
+        if (currentProfiles === null) {
+            return;
+        }
+
+        const curProfileNames = currentProfiles
+            .filter(({ platform })  => platform === 'tiktok')
+            .map(profile => profile.profileName);
+
+        if (!curProfileNames.includes(handle)) {
+            console.log('hiii')
+            setProfiles([profile]);
+        }
+    }
+}
+
 const platformLoginHandlers = Object.freeze({
     'instagram': [igBasicLoginHandler, igProLoginHandler],
     'youtube': [youtubeLoginHandler],
     'twitter': [twitterLoginHandler],
+    'tiktok': [tiktokLoginHandler],
 });
 
 module.exports = platformLoginHandlers;

@@ -57,7 +57,7 @@ async function refreshTwitterTokens(ctx, profile) {
         TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
         Key: {
             user: profile.user,
-            profileName: profile.profileName,
+            key: `${profile.platform}_${profile.profileName}`,
         },
         UpdateExpression: 'SET #meta = :meta',
         ExpressionAttributeNames: {
@@ -108,7 +108,7 @@ async function refreshYoutubeTokens(ctx, profile) {
         TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
         Key: {
             user: profile.user,
-            profileName: profile.profileName,
+            key: `${profile.platform}_${profile.profileName}`,
         },
         UpdateExpression: 'SET #meta = :meta',
         ExpressionAttributeNames: {

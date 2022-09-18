@@ -3,50 +3,109 @@ import asyncio
 from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, OperatingSystem
 import time
+import os
 
 #TODO: Optimize by opening a driver per content(limit on number of active drivers at once)
 class ContentDataScraper:
     def __init__(self):
         self.seen_content_ids = set()
         self.time_start = time.time()
+        self.no_new_content = 0
 
-        self.data_folder = '/Users/milanravenell/Documents/digital_dash/backend/data'
+    def full_run(self):
+        return asyncio.get_event_loop().run_until_complete(self.arun())
 
-    def run(self):
-        asyncio.get_event_loop().run_until_complete(self.arun())
+    def get_content(self):
+        return asyncio.get_event_loop().run_until_complete(self.arun(gather_content_only=True))
 
-    async def arun(self):
+    def process_single_content(self, content_to_process):
+        return asyncio.get_event_loop().run_until_complete(self.arun(content_to_process=content_to_process))
+
+    def verify_bio_contains_token(self):
+        return asyncio.get_event_loop().run_until_complete(self.arun(verify_bio=True))
+    
+    def get_profile_info(self):
+        return asyncio.get_event_loop().run_until_complete(self.arun(get_profile_info=True))
+
+    async def arun(self, gather_content_only=False, content_to_process=None, verify_bio=False, get_profile_info=False):
         await self.__init_page()
-        await self.open_page()
-        await self.get_analytics()
-        await self.close()
+        pageOpened = await self.open_page()
+        if not pageOpened:
+            print('Failed to open page')
+            return None
 
-    async def get_analytics(self):
+        # Only for tiktok
+        if verify_bio:
+            if (await self.verify_bio()):
+                return await self.get_profile()
+            else:
+                return None
+
+        if get_profile_info:
+            return await self.get_profile()
+
+        # Does not work for twitter
+        if content_to_process is not None:
+            result = await self.process_content(content_to_process)
+            await self.close()
+            return result
+
+        results = []
         while not self.is_finished():
             new_content = await self.filter_seen_content(await self.get_loaded_content())
 
-            for content in new_content:
-                await self.process_content(content)
-            # TODO: Get coroutines working
-            # coroutines = [self.process_content(content) for content in new_content]
-            # await asyncio.gather(*coroutines)
+            if len(new_content) == 0:
+                self.no_new_content += 1
+            else:
+                self.no_new_content = 0
+
+                if gather_content_only:
+                    results.extend(new_content)
+                else:
+                    for content in new_content:
+                        results.append(await self.process_content(content))
+                    # TODO: Get coroutines working
+                    # coroutines = [self.process_content(content) for content in new_content]
+                    # await asyncio.gather(*coroutines)
 
             await self.load_new_content()
 
+        await self.close()
+        return results
+        
     async def filter_seen_content(self, content_list):
-        content_with_ids = [(content, await self.get_content_identifier(content)) for content in content_list]
-        unseen_content = [content[0] for content in content_with_ids if content[1] not in self.seen_content_ids]
-        [self.seen_content_ids.add(content[1]) for content in content_with_ids]
+        unseen_content = [content for content in content_list if content not in self.seen_content_ids]
+        [self.seen_content_ids.add(content) for content in content_list]
 
         print(unseen_content)
         return unseen_content
 
     def is_finished(self):
-        return (time.time() - self.time_start > 200)
+        return (time.time() - self.time_start > 200) or (self.no_new_content >= 5)
     
     async def __init_page(self):
-        self.browser = await launch(headless=True, args=['--start-fullscreen'])
+        isRunningLocally = os.environ.get('AWS_EXECUTION_ENV') == None
+        chromiumPath =  os.path.join(os.getcwd(), 'headless-chromium')
+
+        self.browser = await launch(
+            headless=True,
+            args=[
+                '--start-fullscreen',
+                '--no-sandbox',
+                '--single-process',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--no-zygote',
+                '--proxy-server=gate.smartproxy.com:7000'
+            ],
+            executablePath=chromiumPath if not isRunningLocally else None,
+            userDataDir="/tmp",
+        )
         self.page = await self.get_new_page()
+        await self.page.authenticate({
+            'username': 'sp45767889',
+            'password': 'digitaldash01',
+        })
 
     def __get_headers(self):
         # software_names = [SoftwareName.CHROME.value]
@@ -76,11 +135,10 @@ class ContentDataScraper:
     async def close(self):
         await self.browser.close()
 
-    @staticmethod
-    async def find_element_with_timeout(page, query, byxpath=True):
+    async def find_element_with_timeout(self, page, query, byxpath=True):
         print('finding ' + query)
         attempts = 0
-        while attempts < 99:
+        while attempts < 3:
             results = (await page.Jx(query)) if byxpath else (await page.JJ(query))
             if not results == []:
                 if len(results) == 1:
@@ -92,6 +150,19 @@ class ContentDataScraper:
             attempts += 1
                 
         print('Failed to retrieve element')
+        await self.print_page_html(page)
+
+    async def find_elements_safe(self, page, query, byxpath=True):
+        print('finding ' + query)
+
+        results = (await page.Jx(query)) if byxpath else (await page.JJ(query))
+        if len(results) == 0:
+            return None
+
+        if len(results) == 1:
+            return results[0]
+
+        return results
 
     @staticmethod
     def get_int_from_string(num):
@@ -107,6 +178,10 @@ class ContentDataScraper:
 
         return int(num)
 
+    @staticmethod
+    async def print_page_html(page):
+        print(await page.evaluate('document.documentElement.outerHTML'))
+
     async def get_loaded_content(self):
         raise NotImplementedError()
     
@@ -121,4 +196,10 @@ class ContentDataScraper:
 
     def get_content_identifier(self, content):
         raise NotImplementedError()
+
+    async def verify_bio(self):
+        raise  NotImplementedError()
+    
+    async def get_profile(self):
+        raise  NotImplementedError()
 

@@ -1,14 +1,16 @@
 {
-  "typeName": "Query",
-  "fieldName": "getData",
+  "typeName": "Mutation",
+  "fieldName": "populateAnalytics",
   "arguments": {
     "input": {
       "platform": "instagram",
       "accessToken": "EAApFdlyGMG4BAO48fx8ZBTCVrCI8vZCSTf6ZAnPoxpu7FRMFfiqSMNaAayWQZCFM4onldAZCZBcXkvgITYpRIfZCyXzZCznGxb4gogHCnE5A83Bvx1277B6NWG50wZCZBvvsEJRxPNSNBdg6TvnGiKm8dLGAKx92YL09oeO8rV8AWMbYYZBMuJZCB1BXZC0U4EdvcEioZCLXcPEGOuAwZDZD",
       "username": "milanravenell@gmail.com",
       "selectedProfileNames": ["Yung Milly", "MillyTheYounger"],
-      "startDate": "2014-09-13T01:12:01.560Z",
-      "endDate": "2022-09-13T00:38:01.525Z"
-    }
+      "debug_noUploadToDDB": false
+    },
+
+    "startDate": "2014-09-13T01:12:01.560Z",
+    "endDate": "2022-09-13T00:38:01.525Z"
   }
 }

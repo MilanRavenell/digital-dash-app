@@ -56,7 +56,7 @@ export default function Home() {
         variables: {
           input: {
             user: user.email,
-            profileName: profiles[profileIndex].profileName,
+            key: `${profiles[profileIndex].platform}_${profiles[profileIndex].profileName}`,
           }
         }
       });

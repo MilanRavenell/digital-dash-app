@@ -31,7 +31,7 @@ function getTotalAndAverageFromRecords(records, metrics) {
 
 function getTotalFollowerCount(profiles) {
     return profiles.reduce((acc, profile) => {
-        return acc + parseInt(profile.followerCount);
+        return acc + parseInt(profile.followerCount || 0);
     }, 0);
 }
 

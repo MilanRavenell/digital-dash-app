@@ -24,6 +24,11 @@ const platformToLogoMap = Object.freeze({
         height: 1000,
         width: 1000,
     },
+    'tiktok': {
+        url: `/tik_tok_logo.png`,
+        height: 1000,
+        width: 1000,
+    },
 });
 
 module.exports = platformToLogoMap;

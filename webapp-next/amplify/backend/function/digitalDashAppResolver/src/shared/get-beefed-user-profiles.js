@@ -1,5 +1,6 @@
 const Twitter = require('twitter-lite');
 const axios = require("axios");
+const AWS = require('aws-sdk');
 const getAccessToken = require('./get-access-token');
 
 async function getBeefedUserProfiles(ctx, username) {
@@ -91,7 +92,31 @@ async function getInstagramProProfileInfo(ctx, profile) {
             profilePicUrl: response.data.profile_picture_url,
         }
     } catch (err) {
-        console.error('Failed to get innstagram profile information', err);
+        console.error('Failed to get instagram profile information', err);
+        return {};
+    }
+}
+
+async function getTikTokProfileInfo(ctx, profile) {
+    try {
+        const lambda = new AWS.Lambda({ region: 'us-west-2' });
+
+        const response = await lambda.invoke({
+            FunctionName: 'web-scraper-service-staging-scrapeContent',
+            Payload: JSON.stringify({
+                platform: 'tiktok',
+                handle: profile.profileName,
+                task: 'get_profile_info',
+            }),
+        }).promise();
+        const data = JSON.parse(response.Payload)
+
+        return {
+            followerCount: data.followers,
+            profilePicUrl: data.profile_pic_url,
+        }
+    } catch (err) {
+        console.error('Failed to get tiktok profile information', err);
         return {};
     }
 }
@@ -102,6 +127,7 @@ const platformToProfileInfoGetterMap = Object.freeze({
     'twitter': getTwitterProfileInfo,
     'youtube': getYoutubeProfileInfo, 
     'instagram-pro': getInstagramProProfileInfo,
+    'tiktok': getTikTokProfileInfo,
 });
 
 module.exports = getBeefedUserProfiles;

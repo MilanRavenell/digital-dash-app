@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -24,6 +25,11 @@ const AddProfile = ({
         screen: 'sign-in',
         profiles: [],
     });
+    const [textFieldValue, setTextFieldValue] = React.useState('');
+
+    const handleTextFieldChange = (event) => {
+        setTextFieldValue(event.target.value);
+    }
 
     const setProfiles = (profiles) => {
         setState((prevState) => ({
@@ -55,6 +61,7 @@ const AddProfile = ({
             currentProfiles,
             setProfiles,
             router,
+            handle: textFieldValue,
         });
     };
 
@@ -76,6 +83,17 @@ const AddProfile = ({
                         </div>
                         <div>
                             <Button onClick={() => { login(1); }}>Sign in with Instagram Pro</Button>
+                        </div>
+                    </div>
+                )
+            case 'tiktok':
+                return (
+                    <div>
+                        <div>
+                            <TextField id="outlined-basic" label="Tiktok handle" variant="outlined" onChange={handleTextFieldChange}/>
+                        </div>
+                        <div>
+                            <Button onClick={() => { login(0); }}>Register Tiktok account</Button>
                         </div>
                     </div>
                 )

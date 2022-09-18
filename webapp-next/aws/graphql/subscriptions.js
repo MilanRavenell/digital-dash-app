@@ -43,6 +43,7 @@ export const onCreateUserProfile = /* GraphQL */ `
   ) {
     onCreateUserProfile(filter: $filter) {
       user
+      key
       platform
       profileName
       meta
@@ -57,6 +58,7 @@ export const onUpdateUserProfile = /* GraphQL */ `
   ) {
     onUpdateUserProfile(filter: $filter) {
       user
+      key
       platform
       profileName
       meta
@@ -71,6 +73,7 @@ export const onDeleteUserProfile = /* GraphQL */ `
   ) {
     onDeleteUserProfile(filter: $filter) {
       user
+      key
       platform
       profileName
       meta
@@ -306,6 +309,78 @@ export const onDeleteInstagramPost = /* GraphQL */ `
       commentCount
       saveCount
       reachCount
+      updatedAt
+    }
+  }
+`;
+export const onCreateTiktokPost = /* GraphQL */ `
+  subscription OnCreateTiktokPost(
+    $filter: ModelSubscriptionTiktokPostFilterInput
+  ) {
+    onCreateTiktokPost(filter: $filter) {
+      id
+      createdAt
+      profileName
+      datePosted
+      caption
+      link
+      media {
+        thumbnailUrl
+        type
+      }
+      viewCount
+      engagementCount
+      likeCount
+      commentCount
+      shareCount
+      updatedAt
+    }
+  }
+`;
+export const onUpdateTiktokPost = /* GraphQL */ `
+  subscription OnUpdateTiktokPost(
+    $filter: ModelSubscriptionTiktokPostFilterInput
+  ) {
+    onUpdateTiktokPost(filter: $filter) {
+      id
+      createdAt
+      profileName
+      datePosted
+      caption
+      link
+      media {
+        thumbnailUrl
+        type
+      }
+      viewCount
+      engagementCount
+      likeCount
+      commentCount
+      shareCount
+      updatedAt
+    }
+  }
+`;
+export const onDeleteTiktokPost = /* GraphQL */ `
+  subscription OnDeleteTiktokPost(
+    $filter: ModelSubscriptionTiktokPostFilterInput
+  ) {
+    onDeleteTiktokPost(filter: $filter) {
+      id
+      createdAt
+      profileName
+      datePosted
+      caption
+      link
+      media {
+        thumbnailUrl
+        type
+      }
+      viewCount
+      engagementCount
+      likeCount
+      commentCount
+      shareCount
       updatedAt
     }
   }

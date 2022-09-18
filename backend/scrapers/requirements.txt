@@ -1,0 +1,2 @@
+pyppeteer==1.0.2
+random-user-agent==1.0.1

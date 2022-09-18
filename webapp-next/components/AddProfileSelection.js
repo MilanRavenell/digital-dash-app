@@ -34,7 +34,7 @@ const AddProfileSelection = ({
         handleClose();
     }
 
-    const platformList = ['twitter', 'youtube', 'instagram'];
+    const platformList = ['twitter', 'youtube', 'instagram', 'tiktok'];
 
     return (
         <div className={styles.container}>
