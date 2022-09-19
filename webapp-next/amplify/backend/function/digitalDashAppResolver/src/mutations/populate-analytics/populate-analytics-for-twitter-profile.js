@@ -20,45 +20,58 @@ async function fetchAnalyticsForTwitterProfile(ctx, profile) {
         extension: false,
     });
 
-    //TODO: iterate over next tokens
-    const response = await client.get(`users/${id}/tweets`, {
-        'tweet.fields': 'id,public_metrics,created_at,attachments',
-        'expansions': 'attachments.media_keys',
-        'media.fields': 'preview_image_url',
-        'max_results': 100,
-        'exclude': 'retweets', 
-    });
+    const tweets = [];
+    const mediaDict = {};
+    let nextToken = null;
+    do {
+        const response = await client.get(`users/${id}/tweets`, {
+            'tweet.fields': 'id,public_metrics,created_at,attachments',
+            'expansions': 'attachments.media_keys',
+            'media.fields': 'preview_image_url',
+            'max_results': 100,
+            'exclude': 'retweets',
+            ...(nextToken ? { 'pagination_token': nextToken } : {}),
+            
+        });
 
-    if (response.data === undefined) {
-        return;
-    }
+        if (response.includes && response.includes.media) {
+            response.includes.media.map((media) => {
+                mediaDict[media.media_key] = media
+            });
+        }
 
-    const tweetsDict = response.data.reduce((acc, tweet) => {
+        if (response.data !== undefined) {
+            tweets.push(...response.data);
+        }
+        if (response.meta !== undefined) {
+            nextToken = response.meta.next_token;
+        }
+    } while (nextToken !== undefined)
+
+    const tweetsDict = tweets.reduce((acc, tweet) => {
         acc[tweet.id] = tweet;
         return acc;
     }, {});
 
-    const mediaDict = {};
-    if (response.includes && response.includes.media) {
-        response.includes.media.map((media) => {
-            mediaDict[media.media_key] = media
+    nextToken = null;
+    do {
+        const organicMetricsResponse = await client.get(`users/${id}/tweets`, {
+            'tweet.fields': 'id,organic_metrics',
+            'max_results': 100,
+            'exclude': 'retweets', 
         });
-    }
-
-    const organicMetricsResponse = await client.get(`users/${id}/tweets`, {
-        'tweet.fields': 'id,organic_metrics',
-        'max_results': 100,
-        'exclude': 'retweets', 
-    });
-
-    if (organicMetricsResponse.data === undefined) {
-        return;
-    }
-
-    organicMetricsResponse.data.forEach((tweet) => {
-        tweetsDict[tweet.id].organic_metrics = tweet.organic_metrics;
-    });
     
+        if (organicMetricsResponse.data) {
+            organicMetricsResponse.data.forEach((tweet) => {
+                tweetsDict[tweet.id].organic_metrics = tweet.organic_metrics;
+            });
+        }
+
+        if (organicMetricsResponse.meta) {
+            nextToken = organicMetricsResponse.meta.next_token;
+        }
+    } while (nextToken !== undefined)
+
     const now = new Date().toISOString();
     const items = await Promise.all(Object.values(tweetsDict).map(async (tweet) => {
         const { like_count, reply_count, retweet_count } = tweet.public_metrics;

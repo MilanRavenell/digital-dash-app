@@ -1,4 +1,4 @@
 module.exports = {
-    getBeefedUserProfiles: require('./get-beefed-user-profiles'),
+    getProfileInfo: require('./get-profiles-info'),
     getAccessToken: require('./get-access-token'),
 };

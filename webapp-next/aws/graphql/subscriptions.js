@@ -47,6 +47,8 @@ export const onCreateUserProfile = /* GraphQL */ `
       platform
       profileName
       meta
+      profilePicUrl
+      followerCount
       createdAt
       updatedAt
     }
@@ -62,6 +64,8 @@ export const onUpdateUserProfile = /* GraphQL */ `
       platform
       profileName
       meta
+      profilePicUrl
+      followerCount
       createdAt
       updatedAt
     }
@@ -77,6 +81,8 @@ export const onDeleteUserProfile = /* GraphQL */ `
       platform
       profileName
       meta
+      profilePicUrl
+      followerCount
       createdAt
       updatedAt
     }

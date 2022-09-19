@@ -100,6 +100,24 @@ export const getData = /* GraphQL */ `
               type
             }
           }
+          ... on TiktokPost {
+            id
+            caption
+            commentCount
+            createdAt
+            datePosted
+            engagementCount
+            likeCount
+            link
+            profileName
+            shareCount
+            updatedAt
+            viewCount
+            media {
+              thumbnailUrl
+              type
+            }
+          }
         }
         timeframes {
           name

@@ -12,15 +12,19 @@ async function fetchAnalyticsForYtProfile(ctx, profile) {
     } 
 
     const videos = [];
-    let playlistItemUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=${id}&access_token=${accessToken}`;
+    let playlistItemUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=${id}&access_token=${accessToken}&maxResults=50`;
 
     do {
         const response = await axios.get(playlistItemUrl)
         videos.push(...response.data.items);
-        //TODO: Figure out paging
-        playlistItemUrl = undefined;
-        // url = response.data.paging.next;
-    } while (playlistItemUrl !== undefined)
+        console.log(response.data)
+        if (response.data.nextPageToken) {
+            playlistItemUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=${id}&pageToken=${response.data.nextPageToken}&access_token=${accessToken}&maxResults=50`;
+        } else {
+            playlistItemUrl = null;
+        }
+
+    } while (playlistItemUrl !== null)
 
     const videoIds = videos.reduce((acc, { contentDetails }, index, array) => {
         acc += contentDetails.videoId;

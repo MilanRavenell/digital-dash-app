@@ -3,32 +3,12 @@ const axios = require("axios");
 const AWS = require('aws-sdk');
 const getAccessToken = require('./get-access-token');
 
-async function getBeefedUserProfiles(ctx, username) {
-    const { ddbClient } = ctx.resources;
-
-    const profiles = [];
-
-    const params = {
-        TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
-        KeyConditionExpression: '#user = :user',
-        ExpressionAttributeValues: { ':user': username },
-        ExpressionAttributeNames: { '#user': 'user' },
-    };
-
+async function getProfileInfo(ctx, profile) {
     try {
-        profiles.push(
-            ...(await ddbClient.query(params).promise())
-                .Items
-        );
-
-        return await Promise.all(profiles.map(async (profile) => ({
-            user: profile.user,
-            platform: profile.platform,
-            profileName: profile.profileName,
-            ...(await platformToProfileInfoGetterMap[profile.platform](ctx, profile)),
-        })));
+        return await platformToProfileInfoGetterMap[profile.platform](ctx, profile);
     } catch (err) {
         console.error(`Failed to fetch profiles for user ${username}`, err);
+        return {};
     }
 }
 
@@ -98,6 +78,7 @@ async function getInstagramProProfileInfo(ctx, profile) {
 }
 
 async function getTikTokProfileInfo(ctx, profile) {
+    return {}
     try {
         const lambda = new AWS.Lambda({ region: 'us-west-2' });
 
@@ -130,4 +111,4 @@ const platformToProfileInfoGetterMap = Object.freeze({
     'tiktok': getTikTokProfileInfo,
 });
 
-module.exports = getBeefedUserProfiles;
+module.exports = getProfileInfo;

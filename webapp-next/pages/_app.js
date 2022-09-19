@@ -2,7 +2,7 @@ import { SessionProvider } from 'next-auth/react';
 import { useState, useCallback, useEffect } from 'react';
 import AppContext from '../components/AppContext';
 import { API } from 'aws-amplify';
-import { getBeefedUserProfiles } from '../aws/graphql/queries';
+import { listUserProfiles } from '../aws/graphql/queries';
 import Head from 'next/head';
 import Script from 'next/script';
 import { Authenticator } from '@aws-amplify/ui-react';
@@ -22,11 +22,11 @@ function MyApp({ Component, pageProps }) {
 
     const getUserProfiles = async (user) => {
         const profiles = (await API.graphql({
-            query: getBeefedUserProfiles,
+            query: listUserProfiles,
             variables: {
-              input: { username: user.email },
+              user: user.email,
             }
-        })).data.getBeefedUserProfiles;
+        })).data.listUserProfiles;
       
         console.log('profiles')
         console.log(profiles)

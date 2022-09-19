@@ -19,19 +19,6 @@ export const findProfiles = /* GraphQL */ `
     }
   }
 `;
-export const getBeefedUserProfiles = /* GraphQL */ `
-  query GetBeefedUserProfiles($input: GetBeefedUserProfilesInput!) {
-    getBeefedUserProfiles(input: $input) {
-      profiles {
-        user
-        platform
-        profileName
-        profilePicUrl
-        followerCount
-      }
-    }
-  }
-`;
 export const getUser = /* GraphQL */ `
   query GetUser($email: String!) {
     getUser(email: $email) {
@@ -79,6 +66,8 @@ export const getUserProfile = /* GraphQL */ `
       platform
       profileName
       meta
+      profilePicUrl
+      followerCount
       createdAt
       updatedAt
     }
@@ -107,6 +96,8 @@ export const listUserProfiles = /* GraphQL */ `
         platform
         profileName
         meta
+        profilePicUrl
+        followerCount
         createdAt
         updatedAt
       }
@@ -367,6 +358,8 @@ export const userProfilesByUserAndPlatform = /* GraphQL */ `
         platform
         profileName
         meta
+        profilePicUrl
+        followerCount
         createdAt
         updatedAt
       }

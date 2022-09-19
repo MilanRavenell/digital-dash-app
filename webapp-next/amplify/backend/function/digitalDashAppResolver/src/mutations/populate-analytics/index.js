@@ -2,6 +2,7 @@ const fetchAnalyticsForIgProProfile = require('./populate-analytics-for-ig-pro-p
 const populateAnalyticsForTwitterProfile = require('./populate-analytics-for-twitter-profile');
 const populateAnalyticsForYtProfile = require('./populate-analytics-for-yt-profile');
 const populateAnalyticsForTiktokProfile = require('./populate-analytics-for-tiktok-profile');
+const { getProfileInfo } = require('../../shared');
 
 async function fetchAnalytics(ctx) {
     const { ddbClient } = ctx.resources;
@@ -20,7 +21,7 @@ async function fetchAnalytics(ctx) {
         if (
             (user.postsLastPopulated
             && (now - postsLastPopulated < 3600000))
-            && !debug_noUploadToDDB
+            && (debug_noUploadToDDB === undefined)
         ) {
             console.log('Too soon to fetch new data');
             return {
@@ -55,6 +56,21 @@ async function fetchAnalytics(ctx) {
 
     try {
         const results = await Promise.all(profiles.map(async (profile) => {
+            // Fetch  latest profile info
+            const profileInfo = await getProfileInfo(ctx, profile);
+            if (!debug_noUploadToDDB) {
+                await ddbClient.put({
+                    TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                    Item: {
+                        ...profile,
+                        ...profileInfo,
+                    }
+                }).promise();
+            }
+            else {
+                console.log(profileInfo);
+            }
+
             switch(profile.platform) {
                 case 'instagram-pro':
                     let tries = 0;

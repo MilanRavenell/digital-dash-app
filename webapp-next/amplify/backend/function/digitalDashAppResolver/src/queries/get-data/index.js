@@ -1,12 +1,12 @@
 const getGraphData = require('./get-graph-data');
 const getAggregatedStats = require('./get-aggregated-stats');
-const { getBeefedUserProfiles } = require('../../shared');
 
 const platformTableMap = Object.freeze({
     'twitter': 'TwitterPost',
     'youtube': 'YoutubePost',
     'instagram-pro': 'InstagramPost',
     'instagram-basic': 'InstagramPost',
+    'tiktok': 'TiktokPost',
 });
 
 // Must be reverse ordered chronologically
@@ -39,7 +39,7 @@ async function getData(ctx) {
     const { username, selectedProfileNames } = ctx.arguments.input;
     const { startDate, endDate } = ctx.arguments.input.startDate ? ctx.arguments.input : timeframes[0];
 
-    const profiles = await getBeefedUserProfiles(ctx, username);
+    const profiles = await gertProfiles(ctx, username);
     const filteredProfiles = selectedProfileNames
         ? profiles.filter(({ profileName }) => (selectedProfileNames.includes(profileName)))
         : profiles;
@@ -89,10 +89,36 @@ async function getData(ctx) {
                         { displayName: 'Reach', field: 'reachCount'},
                     ]
                 },
+                {
+                    platform: 'tiktok',
+                    metrics: [
+                        { displayName: 'Likes', field: 'likeCount'},
+                        { displayName: 'Comments', field: 'commentCount'},
+                        { displayName: 'Shares', field: 'shareCount'},
+                    ]
+                },
             ]
         },
         success: true,
     };
+}
+
+async function gertProfiles(ctx, username) {
+    const { ddbClient } = ctx.resources;
+
+    try {
+        return (await ddbClient.query({
+            TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+            KeyConditionExpression: '#user = :user',
+            ExpressionAttributeValues: { ':user': username },
+            ExpressionAttributeNames: { '#user': 'user' }
+        }).promise())
+            .Items;
+    } catch (err) {
+        console.error('Failed to fetch user profiles', err);
+        return [];
+    }
+    
 }
 
 async function getRecords(ctx, profiles, startDate, endDate) {

@@ -52,6 +52,20 @@ export const populateAnalytics = /* GraphQL */ `
           reachCount
           updatedAt
         }
+        ... on TiktokPost {
+          id
+          createdAt
+          profileName
+          datePosted
+          caption
+          link
+          viewCount
+          engagementCount
+          likeCount
+          commentCount
+          shareCount
+          updatedAt
+        }
       }
       dataUpdated
       success
@@ -114,6 +128,8 @@ export const createUserProfile = /* GraphQL */ `
       platform
       profileName
       meta
+      profilePicUrl
+      followerCount
       createdAt
       updatedAt
     }
@@ -130,6 +146,8 @@ export const updateUserProfile = /* GraphQL */ `
       platform
       profileName
       meta
+      profilePicUrl
+      followerCount
       createdAt
       updatedAt
     }
@@ -146,6 +164,8 @@ export const deleteUserProfile = /* GraphQL */ `
       platform
       profileName
       meta
+      profilePicUrl
+      followerCount
       createdAt
       updatedAt
     }
