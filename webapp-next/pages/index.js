@@ -25,6 +25,7 @@ export default function Home() {
   const [selectedProfileNames, setSelectedProfileNames] = React.useState([]);
   const [timeframe, setTimeframe] = React.useState(null);
   const [sortOrder, setSortOrder] = React.useState(null);
+  const [profileToRefresh, setProfileToRefresh] = React.useState(null);
 
   React.useEffect(async () => {
     if (authStatus === 'unauthenticated') {
@@ -93,7 +94,6 @@ export default function Home() {
 
   const getData = async (username, timeframe, selectedProfileNames) => {
     const { startDate, endDate } = timeframe ?? {};
-    console.log(startDate, endDate)
 
     try {
       const response = (await API.graphql({
@@ -152,19 +152,36 @@ export default function Home() {
     router.push(`/add-profile-selection`);
   }, []);
 
+  const handleNeedsRefresh = React.useCallback((profile) => {
+    setProfileToRefresh(profile)
+  }, []);
+
+  const handleRefresh = React.useCallback(() => {
+    router.push(`/add-profile/${profileToRefresh.platform}`)
+  }, [profileToRefresh]);
+
+  const handleRefreshCancel = React.useCallback(() => {
+    setProfileToRefresh(null);
+  }, []);
+
   const getContent = () => {
-    if (context.user && data) {
+    if (context.user && context.userProfiles && data) {
       return (
         <div className='container'>
           <Header user={context.user} goToAddPlatformSelection={goToAddPlatformSelection} signOut={signOut}/>
           <MainContentContainer
             data={data}
+            profiles={context.userProfiles}
             selectedProfileNames={selectedProfileNames}
             timeframe={timeframe}
             setSelectedProfileNames={updateSelectedProfileName}
             setTimeframe={updateTimeFrame}
             sortOrder={sortOrder}
             setSortOrder={setSortOrder}
+            handleNeedsRefresh={handleNeedsRefresh}
+            handleRefresh={handleRefresh}
+            handleRefreshCancel={handleRefreshCancel}
+            profileToRefresh={profileToRefresh}
           />
         </div>
       )

@@ -14,6 +14,7 @@ export default function Home() {
   const context = React.useContext(AppContext);
   const { authStatus } = useAuthenticator(context => [context.authStatus]);
   const { user: authUser, signOut } = useAuthenticator((context) => [context.user]);
+  const [profileToRefresh, setProfileToRefresh] = React.useState(null);
 
   const isFirstLogin = (router.query.f === 1);
 
@@ -28,24 +29,15 @@ export default function Home() {
 
     context.setUserCallback(authUser);
 
-    // Append any new profiles sent in the URL query field from add-profiles
     if (router.query.profiles !== undefined && context.userProfiles) {
-      const profiles = JSON.parse(router.query.profiles);
-
-      const prevProfileNames = context.userProfiles.map(({ profileName }) => profileName);
-      const filteredProfiles = profiles
-        .filter(({ profileName }) => !prevProfileNames.includes(profileName));
-
-      if (filteredProfiles.length > 0) {
-        context.setUserProfiles(
-          context.userProfiles.concat(
-            filteredProfiles,
-          ),
-        );
-      } else {
+      if (router.query.profiles === JSON.stringify(context.userProfiles)) {
         //  Clear query parameters from the URL
-        router.push('/add-profile-selection')
+        router.push('/add-profile-selection');
+        return;
       }
+
+      const profiles = JSON.parse(router.query.profiles);
+      context.setUserProfiles(profiles);
     }
   });
 
@@ -61,15 +53,12 @@ export default function Home() {
         }
       });
 
-      console.log(response);
       const deletedProfile = response.data.deleteUserProfile;
 
       const newProfiles = [...profiles];
       newProfiles.splice(profileIndex, 1);
-      console.log(newProfiles)
-
       // If there are no more signed in instagram profiles, log the user out of facebook
-      if (deletedProfile.platform === 'instagram') {
+      if (deletedProfile.platform === 'instagram-pro') {
         const { account_id, access_token } = JSON.parse(deletedProfile.meta);
         await axios.get(`/api/auth/sign-out-instagram?id=${account_id}&accessToken=${access_token}`);
       }
@@ -96,6 +85,18 @@ export default function Home() {
     router.push(`/add-profile/${platform}`);
   }
 
+  const handleNeedsRefresh = React.useCallback((profile) => {
+    setProfileToRefresh(profile)
+  }, []);
+
+  const handleRefresh = React.useCallback(() => {
+    router.push(`/add-profile/${profileToRefresh.platform.split('-')[0]}`);
+  }, [profileToRefresh]);
+
+  const handleRefreshCancel = React.useCallback(() => {
+    setProfileToRefresh(null);
+  }, []);
+
   if (context.user) {
     return (
       <div className='container'>
@@ -107,6 +108,10 @@ export default function Home() {
           handlePlatformClick={navigateToPlatform}
           handleContinueClick={navigateToMain}
           isFirstLogin={isFirstLogin}
+          handleNeedsRefresh={handleNeedsRefresh}
+          handleRefresh={handleRefresh}
+          handleRefreshCancel={handleRefreshCancel}
+          profileToRefresh={profileToRefresh}
         />
       </div>
     )

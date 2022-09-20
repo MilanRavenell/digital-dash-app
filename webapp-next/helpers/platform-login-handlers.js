@@ -44,15 +44,7 @@ async function igProLoginHandler({ currentProfiles, setProfiles }) {
             }
         }));
 
-        const curProfileNames = currentProfiles
-            .filter(({ platform })  => (platform === 'instagram-pro' || platform === 'instagram-basic'))
-            .map(profile => profile.profileName);
-
-        const filteredProfiles = profiles.filter(({ profileName }) => !curProfileNames.includes(profileName));
-
-        if (filteredProfiles.length > 0) {
-            setProfiles(filteredProfiles);
-        }
+        setProfiles(profiles);
     };
 
     FB.login((response) => {
@@ -95,15 +87,7 @@ async function youtubeLoginHandler({ currentProfiles, setProfiles }) {
                 return;
             }
     
-            const curProfileNames = currentProfiles
-                .filter(({ platform })  => platform === 'youtube')
-                .map(profile => profile.profileName);
-
-            const filteredProfiles = profiles.filter(({ profileName }) => !curProfileNames.includes(profileName));
-    
-            if (filteredProfiles.length > 0) {
-                setProfiles(filteredProfiles);
-            }
+            setProfiles(profiles);
         }
     }
 
@@ -128,18 +112,7 @@ async function tiktokLoginHandler({ handle, currentProfiles, setProfiles }) {
             platform: 'tiktok',
         };
 
-        if (currentProfiles === null) {
-            return;
-        }
-
-        const curProfileNames = currentProfiles
-            .filter(({ platform })  => platform === 'tiktok')
-            .map(profile => profile.profileName);
-
-        if (!curProfileNames.includes(handle)) {
-            console.log('hiii')
-            setProfiles([profile]);
-        }
+        setProfiles([profile]);
     }
 }
 

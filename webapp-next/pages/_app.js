@@ -31,7 +31,7 @@ function MyApp({ Component, pageProps }) {
         console.log('profiles')
         console.log(profiles)
 
-        return profiles.profiles;
+        return profiles.items;
     }
 
     useEffect(async () => {

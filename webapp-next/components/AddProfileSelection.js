@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Add } from '@mui/icons-material';
 import ProfilePicker from './ProfilePicker';
 import { platformToLogoUrlMap } from '../helpers';
-import Image from 'next/image'
+import NeedsRefreshDialogue from './NeedsRefreshDialogue';
 
 import styles from '../styles/AddProfileSelection.module.css';
 
@@ -20,10 +20,12 @@ const AddProfileSelection = ({
     handlePlatformClick,
     handleContinueClick,
     isFirstLogin,
+    handleNeedsRefresh,
+    handleRefresh,
+    handleRefreshCancel,
+    profileToRefresh,
 }) => {
     const [profileIndexToDelete, setProfileIndexToDelete] = React.useState(null);
-    console.log('toDelte')
-    console.log(profileIndexToDelete)
 
     const handleClose = () => {
         setProfileIndexToDelete(null);
@@ -45,6 +47,7 @@ const AddProfileSelection = ({
                         user={user}
                         setProfileIndexToDelete={setProfileIndexToDelete}
                         editMode
+                        handleNeedsRefresh={handleNeedsRefresh}
                     />
                 </div>
             </div>
@@ -114,6 +117,11 @@ const AddProfileSelection = ({
                     </Button>
                 </DialogActions>
             </Dialog>
+            <NeedsRefreshDialogue
+                open={profileToRefresh !== null}
+                handleConfirm={handleRefresh}
+                handleClose={handleRefreshCancel}
+            />
         </div>
     );
 }

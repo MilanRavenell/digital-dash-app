@@ -4,7 +4,7 @@ import AddProfileComponent from '../../components/AddProfile';
 import "@aws-amplify/ui-react/styles.css";
 import { useAuthenticator } from "@aws-amplify/ui-react";
   import { API } from 'aws-amplify';
-  import { createUserProfile } from '../../aws/graphql/mutations';
+  import { createUserProfile, updateUserProfile } from '../../aws/graphql/mutations';
   import AppContext from '../../components/AppContext';
   import { platformLoginHandlers, platformLoginCallbackHandlers } from '../../helpers';
   import Header from '../../components/Header';
@@ -70,34 +70,72 @@ const AddProfile = () => {
   })
 
     const handleSubmit = React.useCallback(async (user, profiles) => {
-        try {
-            const response = await Promise.all(profiles.map(profile => API.graphql({
-                query: createUserProfile,
-                variables: {
-                    input: {
-                        user: user.email,
-                        key: `${profile.platform}_${profile.profileName}`,
-                        platform: profile.platform,
-                        profileName: profile.profileName,
-                        meta: profile.meta,
-                    },
-                }
-            })));
+      const newContextProfiles = [...context.userProfiles];
 
-            router.push({
-              pathname: `/add-profile-selection`,
-              query: {
-                profiles: JSON.stringify(response.map(({ data }, index) => ({
-                  ...data.createUserProfile,
-                  profilePicUrl: profiles[index].profilePicUrl,
-                }))),
+      const profileIndicesToModify = profiles
+        .map(
+          profile => context.userProfiles.findIndex(
+            contextProfile => (contextProfile.key === `${profile.platform}_${profile.profileName}`)
+          )
+        );
+
+      const profilesToAdd = profileIndicesToModify
+        .filter(profileIndex => (profileIndex === -1));
+
+      try {
+        await Promise.all(
+          profileIndicesToModify
+            .map(async (contextProfileIndex, newProfileIndex) => {
+              if (contextProfileIndex === -1) {
+                return;
               }
-            });
-        } catch (err) {
-          console.error(`Failed to add platform ${platform} for user ${user.email}`, err);
-          router.push(`/add-profile-selection`);
-        }
-    }, []);
+
+              // Update DDB item
+              const response = await API.graphql({
+                query: updateUserProfile,
+                variables: {
+                  input: {
+                    user: user.email,
+                    key: newContextProfiles[contextProfileIndex].key,
+                    meta: profiles[newProfileIndex].meta,
+                    needsRefresh: false,
+                  },
+                },
+              });
+
+              newContextProfiles[contextProfileIndex] = response.data.updateUserProfile;
+            })
+        );
+      
+        const response = await Promise.all(profilesToAdd.map(profile => API.graphql({
+            query: createUserProfile,
+            variables: {
+                input: {
+                    user: user.email,
+                    key: `${profile.platform}_${profile.profileName}`,
+                    platform: profile.platform,
+                    profileName: profile.profileName,
+                    meta: profile.meta,
+                    profilePicUrl: profile.profilePicUrl,
+                },
+            }
+        })));
+
+        response.map(({ data }) => {
+          newContextProfiles.push(data.createUserProfile);
+        });
+
+        router.push({
+          pathname: `/add-profile-selection`,
+          query: {
+            profiles: JSON.stringify(newContextProfiles),
+          }
+        });
+      } catch (err) {
+        console.error(`Failed to add platform ${platform} for user ${user.email}`, err);
+        router.push(`/add-profile-selection`);
+      }
+    }, [context]);
 
     const cancel = () => {
       router.push(`/add-profile-selection`);

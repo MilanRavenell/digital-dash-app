@@ -8,17 +8,23 @@ import Header from './Header';
 import { Select, MenuItem, FormControl, InputLabel, Menu, IconButton } from '@mui/material';
 import { SettingsOutlined } from '@mui/icons-material';
 import Popover from '@mui/material/Popover';
+import NeedsRefreshDialogue from './NeedsRefreshDialogue';
 
 import styles from '../styles/MainContentContainer.module.css';
 
 const MainContentContainer = ({
     data,
+    profiles,
     selectedProfileNames,
     timeframe,
     setSelectedProfileNames,
     setTimeframe,
     sortOrder,
     setSortOrder,
+    handleNeedsRefresh,
+    handleRefresh,
+    handleRefreshCancel,
+    profileToRefresh,
 }) => {
     const timeframeNames = data.timeframes.map(timeframe => timeframe.name);
 
@@ -81,18 +87,18 @@ const MainContentContainer = ({
     const dateOptions = { year:"numeric", month:"short", day:"numeric" };
 
     const getPostHeaders = () => {
-        if (data.profiles === null) {
+        if (profiles === null) {
             return []
         }
 
         const globalHeaders = data.postHeaders.find((postHeader => postHeader.platform === 'global')).metrics;
         const platformHeaders = [];
 
-        const selectedProfiles = data.profiles.filter(profile => (selectedProfileNames.includes(profile.profileName)));
+        const selectedProfiles = profiles.filter(profile => (selectedProfileNames.includes(profile.profileName)));
         const hasSinglePlatform = (new Set(selectedProfiles.map(profile => profile.platform)).size === 1);
 
         if (hasSinglePlatform) {
-            const platform = data.profiles.find(profile => (profile.profileName === selectedProfileNames[0])).platform;
+            const platform = profiles.find(profile => (profile.profileName === selectedProfileNames[0])).platform;
             platformHeaders.push(
                 ...data.postHeaders.find((postHeader => postHeader.platform === platform)).metrics
             );
@@ -112,11 +118,13 @@ const MainContentContainer = ({
                 }}>
                     <div className={styles.contentLeftPicker}>
                         <ProfilePicker
-                            profiles={data.profiles}
+                            profiles={profiles}
                             selectedProfileNames={selectedProfileNames}
                             handleProfileClick={setSelectedProfileNames}
                             expanded={state.profilePickerExpanded}
-                            toggleExpanded={toggleProfilePickerExpanded}/>
+                            toggleExpanded={toggleProfilePickerExpanded}
+                            handleNeedsRefresh={handleNeedsRefresh}
+                        />
                     </div>
                 </div>
                 <div className={styles.contentRight} style={{
@@ -184,6 +192,11 @@ const MainContentContainer = ({
                     </div>)
                 ]
             }
+            <NeedsRefreshDialogue
+                open={profileToRefresh !== null}
+                handleConfirm={handleRefresh}
+                handleClose={handleRefreshCancel}
+            />
         </div>
     );
 }

@@ -2,11 +2,6 @@ import axios from "axios";
 import { signOut } from 'next-auth/react';
 
 async function twitterLoginCallbackHandler({ sessionData, currentProfiles, setProfiles }) {
-    // If the profile from the session data already exists, do not display for confirmation
-    if (currentProfiles === null || currentProfiles.filter(({ platform })  => platform === 'twitter').map(profile => profile.profileName).includes(sessionData.profileName)) {
-        return;
-    }
-
     // Get profile pic
     let profilePicUrl = null;
     try {
@@ -36,11 +31,6 @@ async function igBasicLoginCallbackHandler({ code, currentProfiles, setProfiles 
         const { access_token, user_id, expires_in } = (await axios.get(`/api/auth/get-ig-basic-access-token?code=${code}`)).data;
 
         const user = (await axios.get(`https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`)).data;
-
-        // If the profile from the session data already exists, do not display for confirmation
-        if (currentProfiles === null || currentProfiles.filter(({ platform })  => (platform === 'instagram-pro' || platform === 'instagram-basic')).map(profile => profile.profileName).includes(user.username)) {
-            return;
-        }
 
         const profile = {
             profileName: user.username,

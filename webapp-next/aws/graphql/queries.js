@@ -68,6 +68,7 @@ export const getUserProfile = /* GraphQL */ `
       meta
       profilePicUrl
       followerCount
+      needsRefresh
       createdAt
       updatedAt
     }
@@ -98,6 +99,7 @@ export const listUserProfiles = /* GraphQL */ `
         meta
         profilePicUrl
         followerCount
+        needsRefresh
         createdAt
         updatedAt
       }
@@ -360,6 +362,7 @@ export const userProfilesByUserAndPlatform = /* GraphQL */ `
         meta
         profilePicUrl
         followerCount
+        needsRefresh
         createdAt
         updatedAt
       }

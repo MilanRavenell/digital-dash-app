@@ -17,7 +17,8 @@ const ProfilePicker = ({
     expanded,
     toggleExpanded,
     editMode,
-    setProfileIndexToDelete
+    setProfileIndexToDelete,
+    handleNeedsRefresh,
 }) => {
     const onProfileClick = (profile) => {
         if (editMode) {
@@ -89,11 +90,12 @@ const ProfilePicker = ({
                     return (
                         <div className={styles.profileContainerExpanded} key={index}>
                             <div className={styles.profileExpanded}
-                                onClick={() => {onProfileClick(profile.profileName)}}
                                 style={selectedStyle(profile.profileName)}>
                                 <ProfileCard
                                     profile={profile}
+                                    handleClick={() => {onProfileClick(profile.profileName)}}
                                     handleDelete={editMode ? () =>{setProfileIndexToDelete(index)} : null}
+                                    handleNeedsRefresh={handleNeedsRefresh}
                                 />
                             </div>
                         </div>
