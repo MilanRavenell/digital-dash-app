@@ -23,7 +23,7 @@ const NeedsRefreshDialogue = ({
             </DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    Something went wrong and we have lost access to this account, please click 'Confirm' if you would like to re-authenticate
+                    Something went wrong and we have lost access to this account, please click 'Refresh' if you would like to re-authenticate
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
