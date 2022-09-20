@@ -1,6 +1,7 @@
 const axios = require("axios");
 const Twitter = require('twitter-lite');
 const { getAccessToken } = require('../../shared');
+const { makeApiRequest } = require('../../shared');
 
 async function fetchAnalyticsForTwitterProfile(ctx, profile) {
     const { ddbClient } = ctx.resources;
@@ -12,27 +13,23 @@ async function fetchAnalyticsForTwitterProfile(ctx, profile) {
         return;
     } 
 
-    const client = new Twitter({
-        consumer_key: 'dTAwRDBqOFl3ZmpkOGw4RmpIT1c6MTpjaQ',
-        consumer_secret: 'FaIS5ICp0qvbrRO30zSvngjZLyVU8VEY4V0lsklrsvu0CkK384',
-        bearer_token: accessToken,
-        version: '2',
-        extension: false,
-    });
-
     const tweets = [];
     const mediaDict = {};
     let nextToken = null;
+
     do {
-        const response = await client.get(`users/${id}/tweets`, {
+        const response = await makeApiRequest(ctx, profile, `users/${id}/tweets`, accessToken, {
             'tweet.fields': 'id,public_metrics,created_at,attachments',
             'expansions': 'attachments.media_keys',
             'media.fields': 'preview_image_url',
             'max_results': 100,
             'exclude': 'retweets',
             ...(nextToken ? { 'pagination_token': nextToken } : {}),
-            
         });
+
+        if (!response) {
+            return [];
+        }
 
         if (response.includes && response.includes.media) {
             response.includes.media.map((media) => {
@@ -55,13 +52,14 @@ async function fetchAnalyticsForTwitterProfile(ctx, profile) {
 
     nextToken = null;
     do {
-        const organicMetricsResponse = await client.get(`users/${id}/tweets`, {
+        const organicMetricsResponse = await makeApiRequest(ctx, profile, `users/${id}/tweets`, accessToken, {
             'tweet.fields': 'id,organic_metrics',
             'max_results': 100,
-            'exclude': 'retweets', 
+            'exclude': 'retweets',
+            ...(nextToken ? { 'pagination_token': nextToken } : {}),
         });
     
-        if (organicMetricsResponse.data) {
+        if (organicMetricsResponse && organicMetricsResponse.data) {
             organicMetricsResponse.data.forEach((tweet) => {
                 tweetsDict[tweet.id].organic_metrics = tweet.organic_metrics;
             });

@@ -17,6 +17,7 @@ type UserProfile @model {
   meta: String
   profilePicUrl: String
   followerCount: Int
+  needsRefresh: Boolean
 }
 
 type TwitterPost @model

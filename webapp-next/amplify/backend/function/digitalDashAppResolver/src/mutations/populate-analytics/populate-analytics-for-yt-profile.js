@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { getAccessToken } = require('../../shared');
+const { makeApiRequest } = require('../../shared');
 
 async function fetchAnalyticsForYtProfile(ctx, profile) {
     const { ddbClient } = ctx.resources;
@@ -12,19 +13,25 @@ async function fetchAnalyticsForYtProfile(ctx, profile) {
     } 
 
     const videos = [];
-    let playlistItemUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=${id}&access_token=${accessToken}&maxResults=50`;
+    let nextToken = null;
 
     do {
-        const response = await axios.get(playlistItemUrl)
-        videos.push(...response.data.items);
-        console.log(response.data)
-        if (response.data.nextPageToken) {
-            playlistItemUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=contentDetails&playlistId=${id}&pageToken=${response.data.nextPageToken}&access_token=${accessToken}&maxResults=50`;
-        } else {
-            playlistItemUrl = null;
-        }
+        const response = await makeApiRequest(ctx, profile, 'playlistItems', accessToken, {
+            'part': 'contentDetails',
+            'playlistId': id,
+            'maxResults': 50,
+            ...(nextToken ? { 'pageToken': nextToken } : {}),
+        });
 
-    } while (playlistItemUrl !== null)
+        if (!response) {
+            return [];
+        }
+        videos.push(...response.items);
+        console.log(response)
+
+        nextToken = response.nextPageToken ?? null;
+
+    } while (nextToken !== null)
 
     const videoIds = videos.reduce((acc, { contentDetails }, index, array) => {
         acc += contentDetails.videoId;
@@ -34,11 +41,18 @@ async function fetchAnalyticsForYtProfile(ctx, profile) {
         return acc;
     }, '');
 
-    const videosUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoIds}&access_token=${accessToken}`;
-    const response = await axios.get(videosUrl);
+    const response = await makeApiRequest(ctx, profile, 'videos', accessToken, {
+        'part': 'snippet,statistics',
+        'id': videoIds,
+    });
+
+    if (!response) {
+        return [];
+    }
+
     const now = new Date().toISOString();
 
-    const items = await Promise.all(response.data.items.map(async (video) => {
+    const items = await Promise.all(response.items.map(async (video) => {
         const item = {
             id: video.id,
             profileName: profile.profileName,

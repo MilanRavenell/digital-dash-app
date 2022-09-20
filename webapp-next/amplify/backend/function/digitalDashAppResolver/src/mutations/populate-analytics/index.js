@@ -73,11 +73,13 @@ async function fetchAnalytics(ctx) {
 
             switch(profile.platform) {
                 case 'instagram-pro':
+                    return []
                     let tries = 0;
                     while (tries < 10) {
                         try {
                             return await fetchAnalyticsForIgProProfile(ctx, profile);
                         } catch (err) {
+                            console.log(err)
                             tries += 1;
                             // sleep for 2 seconds
                             console.log(`hit timeout, retrying (${tries})`)
@@ -90,6 +92,7 @@ async function fetchAnalytics(ctx) {
                 case 'twitter':
                     return await populateAnalyticsForTwitterProfile(ctx, profile);
                 case 'youtube':
+                    return []
                     return await populateAnalyticsForYtProfile(ctx, profile);
                 case 'tiktok':
                     return [];

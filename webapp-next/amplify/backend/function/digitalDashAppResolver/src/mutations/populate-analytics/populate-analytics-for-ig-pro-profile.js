@@ -1,9 +1,4 @@
-const axios = require("axios");
-const rateLimit = require( 'axios-rate-limit');
-
-const http = rateLimit(axios.create(), {
-    maxRPS: 50,
-})
+const { makeApiRequest } = require('../../shared');
 
 async function fetchAnalyticsForIgProProfile (ctx, profile) {
     const { ddbClient } = ctx.resources;
@@ -11,63 +6,83 @@ async function fetchAnalyticsForIgProProfile (ctx, profile) {
     const { account_id: accountId, access_token: accessToken } = JSON.parse(profile.meta);
 
     const mediaObjects = [];
-    let url = `https://graph.facebook.com/v14.0/${accountId}/media?access_token=${accessToken}`;
+    let nextToken = null;
 
     do {
-        const response = await http.get(url)
-        mediaObjects.push(...response.data.data);
-        url = response.data.paging.next;
-    } while (url !== undefined)
+        const response = await makeApiRequest(ctx, profile, `${accountId}/media`, accessToken, {
+            ...(nextToken ? { 'after': nextToken } : {}),
+        });
+
+        if (!response) {
+            return [];
+        }
+
+        mediaObjects.push(...response.data);
+
+        nextToken = response.paging.next ? response.paging.next.split('after=')[1] : null;
+    } while (nextToken !== null)
 
     const now = new Date().toISOString();
     const items = await Promise.all(mediaObjects.map(async ({ id }) => {
-        // get basic analyitcs
-        const response = await http.get(`https://graph.facebook.com/v14.0/${id}?fields=caption,comments_count,like_count,media_url,timestamp,permalink,thumbnail_url,media_type&access_token=${accessToken}`);
-
-        const media = await getMedia(id, response.data, accessToken);
-
-        let item = {
-            id,
-            profileName: profile.profileName,
-            caption: response.data.caption || '',
-            commentCount: response.data.comments_count,
-            likeCount: response.data.like_count,
-            link: response.data.permalink,
-            media,
-            engagementCount: response.data.comments_count + response.data.like_count,
-            datePosted: response.data.timestamp,
-            createdAt: now,
-            updatedAt: now,
-            __typename: 'InstagramPost',
-        };
-
         try {
-            // get creator account analytics if exists for post
-            const response = await http.get(`https://graph.facebook.com/v14.0/${id}/insights?metric=impressions,reach,saved,engagement&access_token=${accessToken}`)
-            item = {
-                ...item,
-                viewCount: response.data.data[0].values[0].value,
-                reachCount: response.data.data[1].values[0].value,
-                saveCount: response.data.data[2].values[0].value,
-                engagementCount: response.data.data[3].values[0].value,
+            // get basic analyitcs
+            const response = await makeApiRequest(ctx, profile, id, accessToken, {
+                'fields': 'caption,comments_count,like_count,media_url,timestamp,permalink,thumbnail_url,media_type',
+            });
+
+            const media = await getMedia(ctx, profile, id, response, accessToken);
+
+            const item = {
+                id,
+                profileName: profile.profileName,
+                caption: response.caption || '',
+                commentCount: response.comments_count,
+                likeCount: response.like_count,
+                link: response.permalink,
+                media,
+                engagementCount: response.comments_count + response.like_count,
+                datePosted: response.timestamp,
+                createdAt: now,
+                updatedAt: now,
+                __typename: 'InstagramPost',
             };
-        } catch(err) {
-        }
 
-        if (!debug_noUploadToDDB) {
-            await ddbClient.put({
-                TableName: 'InstagramPost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
-                Item: item
-            }).promise();
-        }
+            // get creator account analytics if exists for post
+            const businessResponse = await makeApiRequest(ctx, profile, `${id}/insights`, accessToken, {
+                'metric': 'impressions,reach,saved,engagement',
+            });
 
-        return item;
+            if (businessResponse) {
+                item.viewCount = businessResponse.data[0].values[0].value;
+                item.reachCount = businessResponse.data[1].values[0].value;
+                item.saveCount = businessResponse.data[2].values[0].value;
+                item.engagementCount = businessResponse.data[3].values[0].value;
+            }
+
+            if (!debug_noUploadToDDB) {
+                await ddbClient.put({
+                    TableName: 'InstagramPost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                    Item: item
+                }).promise();
+            }
+
+            return item;
+        } catch (err) {
+            console.error(`Failed to fecth data for media object ${id}`)
+            if (err.name === 'AxiosError' && err.response && err.response.data) {
+                console.error(err.response.data)
+            } else {
+                console.error(err)
+            }
+            return null;
+        }
+        
     }));
 
-    return items;
+    return items.filter(item => (item !== null));
 }
 
-async function getMedia(id, responseData, accessToken) {
+async function getMedia(ctx, profile, id, responseData, accessToken) {
     if (responseData.media_type === 'VIDEO') {
         return [{
             thumbnailUrl: responseData.thumbnail_url,
@@ -83,11 +98,13 @@ async function getMedia(id, responseData, accessToken) {
     }
 
     // media_type is CAROUSEL_ALBUM
-    const album_objects = (await http.get(`https://graph.facebook.com/v14.0/${id}/children?access_token=${accessToken}`)).data.data;
+    const album_objects = (await makeApiRequest(ctx, profile, `${id}/children`, accessToken)).data;
 
     return (await Promise.all(album_objects.map(async (object) => {
-        const mediaObject = (await http.get(`https://graph.facebook.com/v14.0/${object.id}?fields=media_url,thumbnail_url,media_type&access_token=${accessToken}`)).data;
-        return await getMedia(id, mediaObject, accessToken);
+        const mediaObject = await makeApiRequest(ctx, profile, object.id, accessToken, {
+            'fields': 'media_url,thumbnail_url,media_type',
+        });
+        return await getMedia(ctx, profile, id, mediaObject, accessToken);
     }))).flat();
 }
 

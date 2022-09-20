@@ -65,7 +65,7 @@ async function refreshTwitterTokens(ctx, profile) {
         },
         ExpressionAttributeValues: {
             ":meta": newMeta,
-        }
+        },
     }).promise();
 
     return access_token;
