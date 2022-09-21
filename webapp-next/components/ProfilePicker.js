@@ -55,7 +55,7 @@ const ProfilePicker = ({
         if (selectedProfileNames.includes(profile)) {
             return {
                 color: 'blue',
-                border: '2px solid blue',
+                border: '2px solid var(--theme-light-blue)',
             }
         }
     }
