@@ -34,4 +34,16 @@ code {
     box-shadow: none !important;
     border-color: lightgrey !important
 }
+
+[data-amplify-authenticator] {
+    --amplify-components-tabs-item-active-border-color: #7cabf7;
+    --amplify-components-tabs-item-active-color: #7cabf7;
+    --amplify-components-button-primary-background-color: #7cabf7;
+    --amplify-components-button-link-color: #7cabf7;
+    --amplify-components-tabs-item-focus-color: #7cabf7;
+}
+
+.amplify-textfield {
+    --amplify-components-fieldcontrol-focus-border-color: #7cabf7 !important;
+}
   
