@@ -2,6 +2,7 @@ import axios from 'axios';
 import { signIn } from 'next-auth/react';
 
 async function igBasicLoginHandler({ router }) {
+    // Use this command to locally test ig basic - ngrok http https://localhost:3000
     const appId = '582112473702622';
     const redirectUri = 'https://c54c-38-34-126-58.ngrok.io/add-profile/instagram';
 

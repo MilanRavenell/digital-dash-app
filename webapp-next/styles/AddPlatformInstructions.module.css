@@ -3,12 +3,28 @@
     margin: 3%;
     margin-top: 5%;
     margin-bottom: 5%;
+    color: grey;
 }
 
 .instructionsHeader {
     color: grey;
+    display: flex;
 }
 
 .body {
     font-size: large;
+}
+
+.infoLogo {
+    color: blue;
+    margin-left: 1%;
+}
+
+.popover {
+    width: 40vw;
+}
+
+.popoverContent {
+    margin: 10px;
+    color: grey;
 }

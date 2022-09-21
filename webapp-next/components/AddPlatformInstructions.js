@@ -1,8 +1,22 @@
+import React from 'react';
+import InfoOutlined from '@mui/icons-material/InfoOutlined';
+import Popover from '@mui/material/Popover';
+
 import styles from '../styles/AddPlatformInstructions.module.css';
 
 const AddPlatformInstructions = ({
     platform,
 }) => {
+    const [popoverAnchorEl, setPopoverAnchorEl] = React.useState(null);
+
+    const handlePopoverOpen = (event) => {
+        setPopoverAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = () => {
+        setPopoverAnchorEl(null);
+    };
+
     const twitter = (
         <div className={styles.container}>
             <div className={styles.instructionsHeader}>
@@ -39,7 +53,7 @@ const AddPlatformInstructions = ({
     const instagram = (
         <div className={styles.container}>
             <div className={styles.instructionsHeader}>
-                {`How to add a Instagram Basic account`}
+                {`How to add an Instagram Basic account`}
             </div>
             <div className={styles.body}>
                 <ol>
@@ -51,7 +65,12 @@ const AddPlatformInstructions = ({
                 </ol>
             </div>
             <div className={styles.instructionsHeader}>
-                {`How to add a Instagram Professional account`}
+                {`How to add an Instagram Professional account`}
+                <InfoOutlined
+                    sx={{ color: 'blue' }}
+                    onMouseEnter={handlePopoverOpen}
+                    onMouseLeave={handlePopoverClose}
+                />
             </div>
             <div className={styles.body}>
                 <ol>
@@ -72,6 +91,31 @@ const AddPlatformInstructions = ({
                     <li>Confirm</li>
                 </ol>
             </div>
+            <Popover
+                id="mouse-over-popover"
+                sx={{
+                    pointerEvents: 'none',
+                }}
+                open={popoverAnchorEl !== null}
+                anchorEl={popoverAnchorEl}
+                anchorOrigin={{
+                    vertical: 'center',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                onClose={handlePopoverClose}
+                disableRestoreFocus
+            >
+                <div className={styles.popover}>
+                    <div className={styles.popoverContent}>
+                        With an Instagram Professional Account, you get access to the number of users who have viewed and save a given post, and how many individual accounts have reached a given post (Only applies to posts made after the account was upgraded to professional). Upgrading your account is free and encouraged for anyone serious about growing their brand!
+                    </div>
+                </div>
+                
+            </Popover>
         </div>
     );
 
