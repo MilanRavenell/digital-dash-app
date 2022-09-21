@@ -16,7 +16,6 @@ Amplify.configure(config);
 
 export default function Home() {
   const router = useRouter();
-  const { authStatus } = useAuthenticator(context => [context.authStatus]);
   const { user: authUser, signOut } = useAuthenticator((context) => [context.user]);
   const context = React.useContext(AppContext);
 
@@ -28,12 +27,9 @@ export default function Home() {
   const [profileToRefresh, setProfileToRefresh] = React.useState(null);
 
   React.useEffect(async () => {
-    if (authStatus === 'unauthenticated') {
+    if (!authUser) {
         router.push('/sign-in')
-    }
-
-    if (authStatus === 'configuring') {
-      return;
+        return;
     }
 
     if (context.user === null) {
