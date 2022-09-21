@@ -11,7 +11,7 @@ class StatContainer extends React.Component {
                         <div className={styles.inner}>
                             <div className={styles.content}>
                                 <div className={styles.title}> { this.props.name } </div>
-                                <div className={styles.value}> { this.props.value } </div>
+                                <div className={styles.value}> { this.props.value.toLocaleString() } </div>
                                 <div className={styles.footer}/>
                             </div>
                         </div>

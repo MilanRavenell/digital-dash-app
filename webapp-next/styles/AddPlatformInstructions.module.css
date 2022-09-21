@@ -1,0 +1,14 @@
+.container {
+    text-align: left;
+    margin: 3%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.instructionsHeader {
+    color: grey;
+}
+
+.body {
+    font-size: large;
+}

@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { platformToLogoUrlMap } from '../helpers';
 import ProfileCard from './ProfileCard';
+import AddPlatformInstructions from './AddPlatformInstructions';
 
 import styles from '../styles/AddProfile.module.css';
 
@@ -152,10 +153,12 @@ const AddProfile = ({
     return (
         <div className={styles.container}>
             <div className={styles.left}>
-
+                <div className={styles.contentLeft}>
+                    <AddPlatformInstructions platform={platform}/>
+                </div>
             </div>
             <div className={styles.right}>
-                <div className={styles.content}>
+                <div className={styles.contentRight}>
                     <div className={styles.header}>
                         <div className={styles.logo}>
                             <img

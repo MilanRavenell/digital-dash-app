@@ -106,32 +106,34 @@ const ProfilePicker = ({
     );
     
     const getMinimizedContent = () => (
-        <div className={styles.containerMinimized}>
-            <div className={styles.expandMinimized} onClick={toggleExpanded}>
+        <div className={styles.containerMinimized} onClick={toggleExpanded}>
+            <div className={styles.expandMinimized}>
                 <IconButton>
                     <ArrowForwardIos/>
                 </IconButton>
             </div>
             {
-                profiles.map((profile, index) => {
-                    const profilePicUrl = (profile.profilePicUrl !== null && profile.profilePicUrl !== undefined) ? profile.profilePicUrl : '/';
-                    return (
-                        <div className={styles.profileMinimized} key={index}>
-                            <div className={styles.profilePicMinimized} style={selectedStyle(profile.profileName)}>
-                                <img
-                                    src={profilePicUrl}
-                                    alt='profile pic'
-                                    style={{
-                                        height: '100%',
-                                        width: '100%',
-                                        objectFit: 'contain',
-                                    }}
-                                    referrerPolicy="no-referrer"
-                                />
+                profiles
+                    .filter(profile => selectedProfileNames.includes(profile.profileName))
+                    .map((profile, index) => {
+                        const profilePicUrl = (profile.profilePicUrl !== null && profile.profilePicUrl !== undefined) ? profile.profilePicUrl : '/';
+                        return (
+                            <div className={styles.profileMinimized} key={index}>
+                                <div className={styles.profilePicMinimized}>
+                                    <img
+                                        src={profilePicUrl}
+                                        alt='profile pic'
+                                        style={{
+                                            height: '100%',
+                                            width: '100%',
+                                            objectFit: 'contain',
+                                        }}
+                                        referrerPolicy="no-referrer"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    )
-                })
+                        )
+                    })
             }
         </div>
     );
