@@ -11,24 +11,24 @@ const platformTableMap = Object.freeze({
 
 // Must be reverse ordered chronologically
 const now = new Date();
-const timeframes = [
+const timeframes = (timezoneOffset) => ([
     {
         name: 'Past Week',
-        endDate: now.toISOString(),
-        startDate: new Date(new Date().setDate(now.getDate() - 7)).toISOString(),
+        endDate: getDateWithTimezoneOffset(now, timezoneOffset).toISOString(),
+        startDate: getDateWithTimezoneOffset(new Date(new Date().setDate(now.getDate() - 6)), timezoneOffset).toISOString(),
     },
     {
         name: 'Past Month',
-        endDate: now.toISOString(),
-        startDate: new Date(new Date().setDate(now.getDate() - 30)).toISOString(),
+        endDate: getDateWithTimezoneOffset(now, timezoneOffset).toISOString(),
+        startDate: getDateWithTimezoneOffset(new Date(new Date().setDate(now.getDate() - 29)), timezoneOffset).toISOString(),
     },
     {
         name: 'Past Year',
-        endDate: now.toISOString(),
-        startDate: new Date(new Date().setDate(now.getDate() - 365)).toISOString(),
+        endDate: getDateWithTimezoneOffset(now, timezoneOffset).toISOString(),
+        startDate: getDateWithTimezoneOffset(new Date(new Date().setDate(now.getDate() - 364)), timezoneOffset).toISOString(),
     },
     { name: 'Custom' }
-];
+]);
 
 const metrics = [
     { displayName: 'Views', field: 'viewCount'},
@@ -36,14 +36,14 @@ const metrics = [
 ];
 
 async function getData(ctx) {
-    const { username, selectedProfileNames } = ctx.arguments.input;
-    const { startDate, endDate } = ctx.arguments.input.startDate ? ctx.arguments.input : timeframes[0];
+    const { username, selectedProfileNames, timezoneOffset=0 } = ctx.arguments.input;
+    const { startDate, endDate } = ctx.arguments.input.startDate ? ctx.arguments.input : timeframes(timezoneOffset)[0];
 
     const profiles = await gertProfiles(ctx, username);
     const filteredProfiles = selectedProfileNames
         ? profiles.filter(({ profileName }) => (selectedProfileNames.includes(profileName)))
         : profiles;
-    const records = await getRecords(ctx, filteredProfiles, startDate, endDate);
+    const records = await getRecords(ctx, filteredProfiles, startDate, endDate, timezoneOffset);
     
     return {
         data: {
@@ -51,7 +51,7 @@ async function getData(ctx) {
             graph: getGraphData(records, startDate, endDate),
             aggregated: getAggregatedStats(records, metrics, filteredProfiles),
             records,
-            timeframes,
+            timeframes: timeframes(timezoneOffset),
             postHeaders: [
                 {
                     platform: 'global',
@@ -121,7 +121,7 @@ async function gertProfiles(ctx, username) {
     
 }
 
-async function getRecords(ctx, profiles, startDate, endDate) {
+async function getRecords(ctx, profiles, startDate, endDate, timezoneOffset) {
     const { ddbClient } = ctx.resources;
     
     const records = [];
@@ -150,7 +150,10 @@ async function getRecords(ctx, profiles, startDate, endDate) {
                     }).promise())
                         .Items;
 
-                    return items;
+                    return items.map(item => ({
+                        ...item,
+                        datePosted: getDateWithTimezoneOffset(item.datePosted, timezoneOffset).toISOString(),
+                    }));
                 })
             ))
             .flat())
@@ -163,6 +166,10 @@ async function getRecords(ctx, profiles, startDate, endDate) {
     });
 
     return records;
+}
+
+function getDateWithTimezoneOffset(date, timezoneOffset) {
+    return new Date(new Date(date) - (timezoneOffset * 60 * 1000));
 }
 
 module.exports = getData;

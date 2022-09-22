@@ -1,27 +1,25 @@
+const moment = require('moment');
+
 function getGraphData(records, start, end) {
     const partitions = getGraphPartitions(start, end);
     const viewsPartitoned = partitions.reduce((acc, partition) => ({ ...acc, [partition]: 0 }), {});
     const engagementPartitioned = partitions.reduce((acc, partition) => ({ ...acc, [partition]: 0 }), {});
 
     let partitionIndex = 0;
-    records.every((record) => {
-        while (new Date(record.datePosted) < new Date(partitions[partitionIndex])) {
+    records.forEach((record) => {
+        while (new Date(record.datePosted) < new Date(partitions[partitionIndex]) && (partitionIndex < partitions.length - 1)) {
             ++partitionIndex;
-            if (partitionIndex >= partitions.length) {
-                return false;
-            }
         }
 
         const partition = partitions[partitionIndex];
         viewsPartitoned[partition] += parseInt(record.viewCount || 0);
         engagementPartitioned[partition] += parseInt(record.engagementCount || 0);
-        return true;
     });
 
     return {
         labels: partitions
             .reverse()
-            .map(partition => new Date(partition).toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric" })),
+            .map(partition => moment(partition).format('MMM D, YYYY')),
         datasets: [
             {
                 label: 'Views',
@@ -46,7 +44,7 @@ function getGraphPartitions(start, end) {
 
     const partitions = [];
 
-    while (date > startDate) {
+    while (date >= startDate) {
         partitions.push(date.toISOString());
         date.setDate(date.getDate() - 1);
     }
