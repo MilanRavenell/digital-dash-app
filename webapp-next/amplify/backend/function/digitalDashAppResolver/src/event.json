@@ -1,6 +1,6 @@
 {
-  "typeName": "Mutation",
-  "fieldName": "populateAnalytics",
+  "typeName": "Query",
+  "fieldName": "getData",
   "arguments": {
     "input": {
       "platform": "instagram",

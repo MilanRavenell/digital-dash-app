@@ -37,10 +37,10 @@ function getGraphData(records, start, end) {
 
 function getGraphPartitions(start, end) {
     const date = new Date(end);
-    date.setMinutes(0, 0, 0);
+    date.setHours(0, 0, 0, 0);
 
     const startDate = new Date(start);
-    startDate.setMinutes(0, 0, 0);
+    startDate.setHours(0, 0, 0, 0);
 
     const partitions = [];
 

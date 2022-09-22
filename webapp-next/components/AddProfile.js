@@ -40,15 +40,17 @@ const AddProfile = ({
         }));
     }
 
-    React.useEffect(async () => {
+    React.useEffect(() => {
         console.log(state.profiles)
         if (loginCallbackHandler) {
             if (session && session.status === 'authenticated' && state.profiles.length === 0) {
-                await loginCallbackHandler({ sessionData: session.data, currentProfiles, setProfiles });
+                loginCallbackHandler({ sessionData: session.data, currentProfiles, setProfiles });
+                return;
             }
             if (router.query.code  && state.profiles.length === 0) {
                 const code = router.query.code.split('#_')[0];
-                await loginCallbackHandler({ code, currentProfiles, setProfiles });
+                loginCallbackHandler({ code, currentProfiles, setProfiles });
+                return;
             }
         }
     });
