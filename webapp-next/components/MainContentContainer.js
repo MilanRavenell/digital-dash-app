@@ -9,6 +9,7 @@ import { Select, MenuItem, FormControl, InputLabel, Menu, IconButton } from '@mu
 import { SettingsOutlined } from '@mui/icons-material';
 import Popover from '@mui/material/Popover';
 import NeedsRefreshDialogue from './NeedsRefreshDialogue';
+import moment from 'moment';
 
 import styles from '../styles/MainContentContainer.module.css';
 
@@ -84,8 +85,6 @@ const MainContentContainer = ({
     const aggregatedData = data.aggregated
     const graphData = data.graph;
 
-    const dateOptions = { year:"numeric", month:"short", day:"numeric" };
-
     const getPostHeaders = () => {
         if (profiles === null) {
             return []
@@ -134,7 +133,7 @@ const MainContentContainer = ({
                         <div className={styles.dateLabel}>
                             {
                                 (timeframe.startDate && timeframe.endDate)
-                                && `${new Date(timeframe.startDate).toLocaleDateString('en-us', dateOptions) } - ${new Date(timeframe.endDate).toLocaleDateString('en-us', dateOptions)}`
+                                && `${moment(timeframe.startDate).format('MMM D, YYYY') } - ${moment(timeframe.endDate).format('MMM D, YYYY')}`
                             }
                         </div>
                         <FormControl sx={{ m: 1, minWidth: 120, height: '100%' }} ref={popoverAnchorEl}>

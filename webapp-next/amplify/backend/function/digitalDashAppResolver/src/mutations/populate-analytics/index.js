@@ -6,26 +6,26 @@ const { getProfileInfo } = require('../../shared');
 
 async function fetchAnalytics(ctx) {
     const { ddbClient } = ctx.resources;
-    const { username, debug_noUploadToDDB } = ctx.arguments.input;
+    const { username, profileKey, debug_noUploadToDDB } = ctx.arguments.input;
 
     // Do not fetch posts if it's been less then an hour since posts were last fetched
+    let profile = null;
     try {
-        const user = (await ddbClient.get({
-            TableName: 'User-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
-            Key: { email: username },
+        profile = (await ddbClient.get({
+            TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+            Key: { user: username, key: profileKey },
         }).promise()).Item;
     
         const now = new Date();
-        const postsLastPopulated = new Date(user.postsLastPopulated);
+        const postsLastPopulated = new Date(profile.postsLastPopulated);
     
         if (
-            (user.postsLastPopulated
+            (profile.postsLastPopulated
             && (now - postsLastPopulated < 3600000))
             && (debug_noUploadToDDB === undefined)
         ) {
             console.log('Too soon to fetch new data');
             return {
-                data: [],
                 dataUpdated: false,
                 success: true,
             }
@@ -33,7 +33,6 @@ async function fetchAnalytics(ctx) {
     } catch (err) {
         console.error('Failed to fetch user', err);
         return {
-            data: [],
             dataUpdated: false,
             success: true,
         }
@@ -41,72 +40,61 @@ async function fetchAnalytics(ctx) {
     
     console.log('Fetching data');
 
-    const profiles = [];
     try {
-        profiles.push(...(await ddbClient.query({
-            TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
-            KeyConditionExpression: '#user = :user',
-            ExpressionAttributeValues: { ':user': username },
-            ExpressionAttributeNames: { '#user': 'user' }
-        }).promise())
-            .Items);
-    } catch (err) {
-        console.error(`Failed to fetch profiles for user ${username}`, err);
-    }
+        // Fetch  latest profile info
+        const profileInfo = await getProfileInfo(ctx, profile);
+        if (!debug_noUploadToDDB) {
+            await ddbClient.put({
+                TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                Item: {
+                    ...profile,
+                    ...profileInfo,
+                }
+            }).promise();
+        }
+        else {
+            console.log(profileInfo);
+        }
 
-    try {
-        const results = await Promise.all(profiles.map(async (profile) => {
-            // Fetch  latest profile info
-            const profileInfo = await getProfileInfo(ctx, profile);
-            if (!debug_noUploadToDDB) {
-                await ddbClient.put({
-                    TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
-                    Item: {
-                        ...profile,
-                        ...profileInfo,
+        switch(profile.platform) {
+            case 'instagram-pro':
+                let tries = 0;
+                let success = false;
+                while (tries < 10 && !success) {
+                    try {
+                        await fetchAnalyticsForIgProProfile(ctx, profile);
+                        success = true;
+                    } catch (err) {
+                        console.log(err)
+                        tries += 1;
+                        // sleep for 2 seconds
+                        console.log(`hit timeout, retrying (${tries})`)
+                        await new Promise(r => setTimeout(r, 2000));
                     }
-                }).promise();
-            }
-            else {
-                console.log(profileInfo);
-            }
-
-            switch(profile.platform) {
-                case 'instagram-pro':
-                    return []
-                    let tries = 0;
-                    while (tries < 10) {
-                        try {
-                            return await fetchAnalyticsForIgProProfile(ctx, profile);
-                        } catch (err) {
-                            console.log(err)
-                            tries += 1;
-                            // sleep for 2 seconds
-                            console.log(`hit timeout, retrying (${tries})`)
-                            await new Promise(r => setTimeout(r, 2000));
-                        }
-                    }
-                    
+                }
+                
+                if (tries >= 10) {
                     console.error('hit instagram retry limit');
-                    return [];
-                case 'twitter':
-                    return await populateAnalyticsForTwitterProfile(ctx, profile);
-                case 'youtube':
-                    return []
-                    return await populateAnalyticsForYtProfile(ctx, profile);
-                case 'tiktok':
-                    return [];
-                    return await populateAnalyticsForTiktokProfile(ctx, profile);
-                default:
-                   console.log(`Platform ${profile.platform} not supported`);
-                   return [];
-            }
-        }));
+                }
+                break;
+            case 'twitter':
+                await populateAnalyticsForTwitterProfile(ctx, profile);
+                break;
+            case 'youtube':
+                await populateAnalyticsForYtProfile(ctx, profile);
+                break;
+            case 'tiktok':
+                break;
+                await populateAnalyticsForTiktokProfile(ctx, profile);
+                break;
+            default:
+                console.log(`Platform ${profile.platform} not supported`);
+        };
 
         // Set postsLastPopulated for the user to now
         await ddbClient.update({
-            TableName: 'User-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
-            Key: { email: username },
+            TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+            Key: { user: username, key: profileKey },
             UpdateExpression: 'SET #postsLastPopulated = :postsLastPopulated',
             ExpressionAttributeNames: { 
                 '#postsLastPopulated': 'postsLastPopulated',
@@ -117,7 +105,6 @@ async function fetchAnalytics(ctx) {
         }).promise();
 
         return {
-            data: results.flat(),
             dataUpdated: true,
             success: true,
         }
@@ -129,7 +116,6 @@ async function fetchAnalytics(ctx) {
             console.error(err)
         }
         return {
-            data: [],
             dataUpdated: false,
             success: false,
         }

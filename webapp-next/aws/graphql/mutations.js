@@ -4,69 +4,6 @@
 export const populateAnalytics = /* GraphQL */ `
   mutation PopulateAnalytics($input: PopulateAnalyticsInput!) {
     populateAnalytics(input: $input) {
-      data {
-        ... on TwitterPost {
-          id
-          createdAt
-          profileName
-          datePosted
-          caption
-          link
-          viewCount
-          engagementCount
-          profileClickCount
-          likeCount
-          detailExpandCount
-          mediaEngagementCount
-          replyCount
-          retweetCount
-          updatedAt
-        }
-        ... on YoutubePost {
-          id
-          createdAt
-          profileName
-          datePosted
-          caption
-          link
-          viewCount
-          engagementCount
-          likeCount
-          commentCount
-          dislikeCount
-          favoriteCount
-          updatedAt
-        }
-        ... on InstagramPost {
-          id
-          createdAt
-          profileName
-          datePosted
-          caption
-          link
-          viewCount
-          engagementCount
-          likeCount
-          commentCount
-          saveCount
-          reachCount
-          updatedAt
-        }
-        ... on TiktokPost {
-          id
-          createdAt
-          profileName
-          datePosted
-          caption
-          link
-          viewCount
-          engagementCount
-          likeCount
-          commentCount
-          shareCount
-          updatedAt
-        }
-      }
       dataUpdated
       success
     }
@@ -81,7 +18,6 @@ export const createUser = /* GraphQL */ `
       email
       firstName
       lastName
-      postsLastPopulated
       createdAt
       updatedAt
     }
@@ -96,7 +32,6 @@ export const updateUser = /* GraphQL */ `
       email
       firstName
       lastName
-      postsLastPopulated
       createdAt
       updatedAt
     }
@@ -111,7 +46,6 @@ export const deleteUser = /* GraphQL */ `
       email
       firstName
       lastName
-      postsLastPopulated
       createdAt
       updatedAt
     }
@@ -131,6 +65,7 @@ export const createUserProfile = /* GraphQL */ `
       profilePicUrl
       followerCount
       needsRefresh
+      postsLastPopulated
       createdAt
       updatedAt
     }
@@ -150,6 +85,7 @@ export const updateUserProfile = /* GraphQL */ `
       profilePicUrl
       followerCount
       needsRefresh
+      postsLastPopulated
       createdAt
       updatedAt
     }
@@ -169,6 +105,7 @@ export const deleteUserProfile = /* GraphQL */ `
       profilePicUrl
       followerCount
       needsRefresh
+      postsLastPopulated
       createdAt
       updatedAt
     }

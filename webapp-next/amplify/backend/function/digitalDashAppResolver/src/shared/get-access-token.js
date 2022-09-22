@@ -1,6 +1,7 @@
 const axios = require("axios");
 
 async function getAccessToken(ctx, profile) {
+    const { ddbClient } = ctx.resources;
     const { accessToken, expires } = JSON.parse(profile.meta);
 
     if (new Date() < new Date(expires)) {
@@ -15,9 +16,30 @@ async function getAccessToken(ctx, profile) {
     });
 
     try {
-        return platformRefresherMap[profile.platform](ctx, profile);
+        return await platformRefresherMap[profile.platform](ctx, profile);
     } catch (err) {
-        console.error('Failed to fetch access token', err);
+        console.error('Failed to fetch access token');
+        if (err.name === 'AxiosError' && err.response && err.response.data) {
+            console.error(err.response.data)
+        } else {
+            console.error(err);
+        }
+
+        console.log('profile needs refresh')
+        await ddbClient.update({
+            TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+            Key: {
+                user: profile.user,
+                key: `${profile.platform}_${profile.profileName}`,
+            },
+            UpdateExpression: 'SET #needsRefresh = :needsRefresh',
+            ExpressionAttributeNames: {
+                "#needsRefresh": "needsRefresh"
+            },
+            ExpressionAttributeValues: {
+                ":needsRefresh": true,
+            },
+        }).promise();
     }
     
     return null;
@@ -43,7 +65,7 @@ async function refreshTwitterTokens(ctx, profile) {
     )
 
     const { access_token, refresh_token, expires_in } = response.data;
-    const expires = new Date(new Date().getTime() + (1000 * expires_in)).toISOString();
+    const expires = new Date(new Date() + (1000 * expires_in)).toISOString();
 
     const newMeta = JSON.stringify({
         id,

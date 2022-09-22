@@ -83,6 +83,10 @@ async function fetchAnalyticsForIgProProfile (ctx, profile) {
 }
 
 async function getMedia(ctx, profile, id, responseData, accessToken) {
+    if (!responseData) {
+        return [];
+    }
+
     if (responseData.media_type === 'VIDEO') {
         return [{
             thumbnailUrl: responseData.thumbnail_url,

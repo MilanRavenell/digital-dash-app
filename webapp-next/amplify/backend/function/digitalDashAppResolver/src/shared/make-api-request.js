@@ -27,6 +27,8 @@ async function makeApiRequest(ctx, profile, endpoint, accessToken, params = {}) 
         }
 
         if (err.message === 'InvalidAccessToken') {
+            console.log('profile needs refresh')
+            
             await ddbClient.update({
                 TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
                 Key: {
@@ -52,7 +54,7 @@ async function makeTwitterApiRequest(endpoint, accessToken, params) {
         const client = new Twitter({
             consumer_key: 'dTAwRDBqOFl3ZmpkOGw4RmpIT1c6MTpjaQ',
             consumer_secret: 'FaIS5ICp0qvbrRO30zSvngjZLyVU8VEY4V0lsklrsvu0CkK384',
-            bearer_token: accessToken + 'k',
+            bearer_token: accessToken,
             version: '2',
             extension: false,
         });
@@ -83,10 +85,10 @@ async function makeYoutubeApiRequest(endpoint, accessToken, params) {
             && err.response
             && err.response.data
             && err.response.data.error
+            && err.response.data.error.message
+            && err.response.data.error.message.includes('The request is missing a valid API key.')
         ) {            
-            if (err.response.data.error.message.includes('The request is missing a valid API key.')) {
                 throw new Error('InvalidAccessToken');
-            } 
         }
 
         throw err;

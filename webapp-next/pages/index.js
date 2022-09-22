@@ -14,21 +14,26 @@ import Amplify from 'aws-amplify';
 import config from '../aws/aws-exports';
 Amplify.configure(config);
 
-export default function Home() {
+export default function App() {
   const router = useRouter();
-  const { user: authUser, signOut } = useAuthenticator((context) => [context.user]);
+  const { user: authUser, signOut, authStatus } = useAuthenticator((context) => [context.user, context.authStatus]);
   const context = React.useContext(AppContext);
 
   const [data, setData] = React.useState(null);
+  const [init, setInit] = React.useState(true);
   const [fetchRecentData, setFetchRecentData] = React.useState(false);
   const [selectedProfileNames, setSelectedProfileNames] = React.useState([]);
   const [timeframe, setTimeframe] = React.useState(null);
   const [sortOrder, setSortOrder] = React.useState(null);
   const [profileToRefresh, setProfileToRefresh] = React.useState(null);
 
-  React.useEffect(async () => {
+  React.useEffect(() => {
+    if (authStatus === 'configuring') {
+      return;
+    }
+
     if (!authUser) {
-        router.push('/sign-in')
+        router.push('/sign-in');
         return;
     }
 
@@ -37,22 +42,25 @@ export default function Home() {
       return;
     }
 
-    if (context.user && data === null) {
-      await initialize();
-      return
+    if (context.user && init) {
+      setInit(false);
+      initialize();
+      return;
     }
 
     if (context.user && data && fetchRecentData) {
-      await fetchMostRecentPostData();
+      fetchMostRecentPostData();
+      return;
     }
-  });
+  }, [fetchRecentData, authUser, context, data]);
 
   const initialize = async () => {
+    console.log('init')
     try {
       const response = await getData(context.user.email);
 
       if (response && response.success) {
-        setSelectedProfileNames(response.data.profiles.map(profile => profile.profileName))
+        setSelectedProfileNames(response.data.profiles.map(profile => profile.profileName));
         setTimeframe(response.data.timeframes[0]);
         setData(response.data);
         setFetchRecentData(true);
@@ -63,33 +71,39 @@ export default function Home() {
     }
   }
 
-  const fetchMostRecentPostData = async () => {
-    console.log('fetching data')
-    try {
-      const response = (await API.graphql({
-        query: populateAnalytics,
-        variables: {
-          username: context.user.email
-        }
-      })).data.populateAnalytics;
-      
-      console.log('done fetching');
-      console.log(response)
+  const fetchMostRecentPostData = () => {
+    console.log('fetching data');
+    setFetchRecentData(false);
 
-      if (response.success) {
-        setData((prevData) => ({
-          ...prevData,
-          records: response.dataUpdated ? response.data : prevData.records,
-        }));
-        setFetchRecentData(false);
+    context.userProfiles.map(async (profile) => {
+      try {
+        const response = (await API.graphql({
+          query: populateAnalytics,
+          variables: {
+            username: context.user.email,
+            profileKey: profile.key
+          }
+        })).data.populateAnalytics;
+        
+        console.log(`done fetching for ${profile.key}`);
+        console.log(response)
+  
+        if (response.success && response.dataUpdated) {
+          const response = await getData(context.user.email);
+          if (response && response.success) {
+            console.log('Updating')
+            setData(response.data);
+          }
+        }
+      } catch (err) {
+        console.error(`Failed to fetch most recent post data for ${profile.key}`, err);
       }
-    } catch (err) {
-      console.error('Failed to fetch most recent post data', err);
-    }
+    });
   }
 
   const getData = async (username, timeframe, selectedProfileNames) => {
     const { startDate, endDate } = timeframe ?? {};
+    const timezoneOffset = new Date().getTimezoneOffset();
 
     try {
       const response = (await API.graphql({
@@ -99,6 +113,7 @@ export default function Home() {
           startDate,
           endDate,
           selectedProfileNames,
+          timezoneOffset,
         }
       })).data.getData;
 

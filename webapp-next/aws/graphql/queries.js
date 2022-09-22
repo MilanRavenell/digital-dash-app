@@ -25,7 +25,6 @@ export const getUser = /* GraphQL */ `
       email
       firstName
       lastName
-      postsLastPopulated
       createdAt
       updatedAt
     }
@@ -50,7 +49,6 @@ export const listUsers = /* GraphQL */ `
         email
         firstName
         lastName
-        postsLastPopulated
         createdAt
         updatedAt
       }
@@ -69,6 +67,7 @@ export const getUserProfile = /* GraphQL */ `
       profilePicUrl
       followerCount
       needsRefresh
+      postsLastPopulated
       createdAt
       updatedAt
     }
@@ -100,6 +99,7 @@ export const listUserProfiles = /* GraphQL */ `
         profilePicUrl
         followerCount
         needsRefresh
+        postsLastPopulated
         createdAt
         updatedAt
       }
@@ -363,6 +363,7 @@ export const userProfilesByUserAndPlatform = /* GraphQL */ `
         profilePicUrl
         followerCount
         needsRefresh
+        postsLastPopulated
         createdAt
         updatedAt
       }

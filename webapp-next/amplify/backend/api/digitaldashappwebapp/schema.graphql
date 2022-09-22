@@ -6,7 +6,6 @@ type User @model {
   email: String! @primaryKey
   firstName: String!
   lastName: String!
-  postsLastPopulated: String
 }
 
 type UserProfile @model {
@@ -18,6 +17,7 @@ type UserProfile @model {
   profilePicUrl: String
   followerCount: Int
   needsRefresh: Boolean
+  postsLastPopulated: String
 }
 
 type TwitterPost @model
@@ -105,6 +105,7 @@ input GetDataInput {
   selectedProfileNames: [String!]
   startDate: String
   endDate: String
+  timezoneOffset: Int
 }
 
 type GetDataGraph {
@@ -173,10 +174,10 @@ type FindProfilesResponse {
 
 input PopulateAnalyticsInput {
   username: String!
+  profileKey: String!
 }
 
 type PopulateAnalyticsResponse {
-  data: [Post]!
   dataUpdated: Boolean!
   success: Boolean!
 }

@@ -34,12 +34,16 @@ function MyApp({ Component, pageProps }) {
         return profiles.items;
     }
 
-    useEffect(async () => {
+    useEffect(() => {
         if (user === null || userProfiles) {
             return;
         }
 
-        setUserProfiles(await getUserProfiles(user));
+        const setProfilesAsync = async () => {
+            setUserProfiles(await getUserProfiles(user));
+        }
+        
+        setProfilesAsync();
     });
 
     const setUserCallback = useCallback(async (authUser) => {

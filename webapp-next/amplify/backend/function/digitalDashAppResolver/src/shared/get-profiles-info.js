@@ -2,12 +2,13 @@ const Twitter = require('twitter-lite');
 const axios = require("axios");
 const AWS = require('aws-sdk');
 const getAccessToken = require('./get-access-token');
+const makeApiRequest = require('./make-api-request');
 
 async function getProfileInfo(ctx, profile) {
     try {
         return await platformToProfileInfoGetterMap[profile.platform](ctx, profile);
     } catch (err) {
-        console.error(`Failed to fetch profiles for user ${username}`, err);
+        console.error(`Failed to fetch profile for user ${username}`, err);
         return {};
     }
 }
@@ -17,16 +18,11 @@ async function getTwitterProfileInfo(ctx, profile) {
 
     try {
         const accessToken = await getAccessToken(ctx, profile);
+        if (!accessToken) {
+            return {}
+        }
 
-        const client = new Twitter({
-            consumer_key: 'dTAwRDBqOFl3ZmpkOGw4RmpIT1c6MTpjaQ',
-            consumer_secret: 'FaIS5ICp0qvbrRO30zSvngjZLyVU8VEY4V0lsklrsvu0CkK384',
-            bearer_token: accessToken,
-            version: '2',
-            extension: false,
-        });
-
-        const response = await client.get(`users/${id}`, {
+        const response = await makeApiRequest(ctx, profile, `users/${id}`, accessToken, {
             'user.fields': 'public_metrics,profile_image_url,created_at',
         });
     
@@ -35,7 +31,6 @@ async function getTwitterProfileInfo(ctx, profile) {
             profilePicUrl: response.data.profile_image_url,
         }
     } catch (err) {
-
         console.error('Failed to get twitter profile information', err);
         return {};
     }
@@ -47,8 +42,15 @@ async function getYoutubeProfileInfo(ctx, profile) {
     
     try {
         const accessToken = await getAccessToken(ctx, profile);
-        const response = await axios.get(`https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${id}&access_token=${accessToken}`);
-        const item = response.data.items[0];
+        if (!accessToken) {
+            return {}
+        }
+        
+        const response = await makeApiRequest(ctx, profile, 'channels', accessToken, {
+            'part': 'snippet,statistics',
+            id,
+        });
+        const item = response.items[0];
         const pic = item.snippet.thumbnails['default'];
 
         return {
@@ -65,11 +67,14 @@ async function getInstagramProProfileInfo(ctx, profile) {
     const { account_id: accountId, access_token: accessToken } = JSON.parse(profile.meta);
 
     try {
-        const response = await axios.get(`https://graph.facebook.com/v14.0/${accountId}?fields=followers_count,profile_picture_url&access_token=${accessToken}`);
+        const response = await makeApiRequest(ctx, profile, accountId, accessToken, {
+            'fields': 'followers_count,profile_picture_url',
+
+        });
 
         return {
-            followerCount: response.data.followers_count,
-            profilePicUrl: response.data.profile_picture_url,
+            followerCount: response.followers_count,
+            profilePicUrl: response.profile_picture_url,
         }
     } catch (err) {
         console.error('Failed to get instagram profile information', err);

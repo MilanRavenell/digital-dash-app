@@ -7,7 +7,6 @@ export const onCreateUser = /* GraphQL */ `
       email
       firstName
       lastName
-      postsLastPopulated
       createdAt
       updatedAt
     }
@@ -19,7 +18,6 @@ export const onUpdateUser = /* GraphQL */ `
       email
       firstName
       lastName
-      postsLastPopulated
       createdAt
       updatedAt
     }
@@ -31,7 +29,6 @@ export const onDeleteUser = /* GraphQL */ `
       email
       firstName
       lastName
-      postsLastPopulated
       createdAt
       updatedAt
     }
@@ -50,6 +47,7 @@ export const onCreateUserProfile = /* GraphQL */ `
       profilePicUrl
       followerCount
       needsRefresh
+      postsLastPopulated
       createdAt
       updatedAt
     }
@@ -68,6 +66,7 @@ export const onUpdateUserProfile = /* GraphQL */ `
       profilePicUrl
       followerCount
       needsRefresh
+      postsLastPopulated
       createdAt
       updatedAt
     }
@@ -86,6 +85,7 @@ export const onDeleteUserProfile = /* GraphQL */ `
       profilePicUrl
       followerCount
       needsRefresh
+      postsLastPopulated
       createdAt
       updatedAt
     }
