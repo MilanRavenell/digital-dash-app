@@ -17,6 +17,7 @@
     display: flex;
     margin-left: 10px;
     flex: 1;
+    color: grey;
 }
 
 .headerMinimizeExpanded {

@@ -150,7 +150,7 @@ class ContentDataScraper:
             attempts += 1
                 
         print('Failed to retrieve element')
-        await self.print_page_html(page)
+        await self.handle_failure(page)
 
     async def find_elements_safe(self, page, query, byxpath=True):
         print('finding ' + query)
@@ -179,8 +179,12 @@ class ContentDataScraper:
         return int(num)
 
     @staticmethod
-    async def print_page_html(page):
-        print(await page.evaluate('document.documentElement.outerHTML'))
+    async def handle_failure(page):
+        page_html = await page.evaluate('document.documentElement.outerHTML')
+        if ('To protect users from unusual network activity, we use Captcha to verify that you are not a robot.' in page_html):
+            print('Caught by CAPTCHA')
+        else:
+            print(page_html)
 
     async def get_loaded_content(self):
         raise NotImplementedError()
