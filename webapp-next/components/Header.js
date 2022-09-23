@@ -19,7 +19,7 @@ const Header = ({ user, goToAddPlatformSelection, signOut }) => {
         <div className={styles.container}>
             <div className={styles.left}>
                 <div className={styles.leftBanner}>
-                    Digital Dash App
+                    {'[Name here]'}
                 </div>
             </div>
             <div className={styles.right}>

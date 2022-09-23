@@ -11,10 +11,7 @@ import styles from '../styles/SignIn.module.css';
 
 const platforms = ['twitter', 'youtube', 'instagram', 'tiktok']
 
-const SignIn = ({}) => {
-    const router = useRouter();
-    const { authStatus } = useAuthenticator(context => [context.authStatus]);
-
+const SignIn = ({}) => {  
     const authenticatorFormFields = {
         signUp: {
             given_name: {
@@ -36,12 +33,6 @@ const SignIn = ({}) => {
             }
         },
     };
-
-    React.useEffect(() => {
-        if (authStatus === 'authenticated') {
-            router.push('/')
-        }
-    });
 
     return (
         <div className={styles.container}>

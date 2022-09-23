@@ -2,7 +2,6 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import AddProfileSelection from '../components/AddProfileSelection';
 import "@aws-amplify/ui-react/styles.css";
-import { useAuthenticator } from "@aws-amplify/ui-react";
 import { API } from 'aws-amplify';
 import { deleteUserProfile } from '../aws/graphql/mutations';
 import AppContext from '../components/AppContext';
@@ -12,23 +11,11 @@ import Header from '../components/Header';
 export default function Home() {
   const router = useRouter();
   const context = React.useContext(AppContext);
-  const { authStatus } = useAuthenticator(context => [context.authStatus]);
-  const { user: authUser, signOut } = useAuthenticator((context) => [context.user]);
   const [profileToRefresh, setProfileToRefresh] = React.useState(null);
 
   const isFirstLogin = (router.query.f === 1);
 
   React.useEffect(() => {
-    if (authStatus === 'unauthenticated') {
-      router.push('/sign-in')
-    }
-
-    if (authStatus === 'configuring') {
-      return;
-    }
-
-    context.setUserCallback(authUser);
-
     if (router.query.profiles !== undefined && context.userProfiles) {
       if (router.query.profiles === JSON.stringify(context.userProfiles)) {
         //  Clear query parameters from the URL
@@ -100,7 +87,7 @@ export default function Home() {
   if (context.user) {
     return (
       <div className='container'>
-        <Header user={context.user} signOut={signOut}/>
+        <Header user={context.user} signOut={context.signOut}/>
         <AddProfileSelection
           user={context.user}
           profiles={context.userProfiles}

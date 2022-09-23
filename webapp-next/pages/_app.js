@@ -8,6 +8,7 @@ import Script from 'next/script';
 import { Authenticator } from '@aws-amplify/ui-react';
 import { getUser } from '../graphql/queries';
 import { useRouter } from 'next/router';
+import { Auth } from 'aws-amplify';
 
 import Amplify from 'aws-amplify';
 import config from '../aws/aws-exports';
@@ -19,6 +20,40 @@ function MyApp({ Component, pageProps }) {
     const router = useRouter();
     const [userProfiles, setUserProfiles] = useState(null);
     const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        if (user === null) {
+            getAuthUser();
+            return;
+        }
+
+        if (userProfiles) {
+            return;
+        }
+
+        const setProfilesAsync = async () => {
+            setUserProfiles(await getUserProfiles(user));
+        }
+        
+        setProfilesAsync();
+    });
+
+    const getAuthUser = async () => {
+        try {
+            const user = await Auth.currentAuthenticatedUser();
+            setUserCallback(user);
+
+            if (router.pathname === '/sign-in') {
+                router.push('/');
+            }
+        } catch (err) {
+            if (err === 'The user is not authenticated') {
+                router.push('/sign-in');
+            } else {
+                console.error(err);
+            }
+        }
+    }
 
     const getUserProfiles = async (user) => {
         const profiles = (await API.graphql({
@@ -34,17 +69,7 @@ function MyApp({ Component, pageProps }) {
         return profiles.items;
     }
 
-    useEffect(() => {
-        if (user === null || userProfiles) {
-            return;
-        }
-
-        const setProfilesAsync = async () => {
-            setUserProfiles(await getUserProfiles(user));
-        }
-        
-        setProfilesAsync();
-    });
+    
 
     const setUserCallback = useCallback(async (authUser) => {
         if (user) {
@@ -71,10 +96,15 @@ function MyApp({ Component, pageProps }) {
         } else {
             setUser(ddbUser);
         }
-    }, [user])
+    }, [user]);
+
+    const signOut = useCallback(() => {
+        Auth.signOut();
+        setUser(null);
+    }, []);
 
     return (
-        <AppContext.Provider value={{ user, userProfiles, setUserProfiles, setUserCallback }}>
+        <AppContext.Provider value={{ user, userProfiles, setUserProfiles, setUserCallback, signOut }}>
             <Head>
                 <title>Create Next App</title>
                 <link rel="icon" href="/favicon.ico" />
@@ -102,7 +132,6 @@ function MyApp({ Component, pageProps }) {
                         gapi.client.init({
                             'apiKey': 'AIzaSyC09ooSdhzZjl6WPBA_OI_EwnRbzFOnyUE'
                         }).then(function(response) {
-                            console.log(response);
                         }, function(reason) {
                             console.log(reason);
                         });

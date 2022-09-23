@@ -2,12 +2,11 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import AddProfileComponent from '../../components/AddProfile';
 import "@aws-amplify/ui-react/styles.css";
-import { useAuthenticator } from "@aws-amplify/ui-react";
-  import { API } from 'aws-amplify';
-  import { createUserProfile, updateUserProfile } from '../../aws/graphql/mutations';
-  import AppContext from '../../components/AppContext';
-  import { platformLoginHandlers, platformLoginCallbackHandlers } from '../../helpers';
-  import Header from '../../components/Header';
+import { API } from 'aws-amplify';
+import { createUserProfile, updateUserProfile } from '../../aws/graphql/mutations';
+import AppContext from '../../components/AppContext';
+import { platformLoginHandlers, platformLoginCallbackHandlers } from '../../helpers';
+import Header from '../../components/Header';
 
 export async function getStaticPaths() {
   return {
@@ -34,20 +33,7 @@ const AddProfile = () => {
     const { platform } = router.query;
     const context = React.useContext(AppContext);
 
-    const { authStatus } = useAuthenticator(context => [context.authStatus]);
-    const { user: authUser, signOut } = useAuthenticator((context) => [context.user]);
-
     React.useEffect(() => {
-    if (authStatus === 'unauthenticated') {
-      router.push('/sign-in')
-    }
-
-    if (authStatus === 'configuring') {
-      return;
-    }
-
-    context.setUserCallback(authUser);
-
     // Append any new profiles sent in the URL query field from add-profiles
     if (router.query.profiles !== undefined && context.userProfiles) {
       const profiles = JSON.parse(router.query.profiles);
@@ -144,7 +130,7 @@ const AddProfile = () => {
     if (context.user) {
       return (
         <div className='container'>
-          <Header user={context.user} signOut={signOut}/>
+          <Header user={context.user} signOut={context.signOut}/>
           <AddProfileComponent
               user={context.user}
               currentProfiles={context.userProfiles}

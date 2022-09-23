@@ -16,7 +16,6 @@ Amplify.configure(config);
 
 export default function App() {
   const router = useRouter();
-  const { user: authUser, signOut, authStatus } = useAuthenticator((context) => [context.user, context.authStatus]);
   const context = React.useContext(AppContext);
 
   const [data, setData] = React.useState(null);
@@ -28,20 +27,6 @@ export default function App() {
   const [profileToRefresh, setProfileToRefresh] = React.useState(null);
 
   React.useEffect(() => {
-    if (authStatus === 'configuring') {
-      return;
-    }
-
-    if (!authUser) {
-        router.push('/sign-in');
-        return;
-    }
-
-    if (context.user === null) {
-      context.setUserCallback(authUser);
-      return;
-    }
-
     if (context.user && init) {
       setInit(false);
       initialize();
@@ -52,7 +37,7 @@ export default function App() {
       fetchMostRecentPostData();
       return;
     }
-  }, [fetchRecentData, authUser, context, data]);
+  }, [context]);
 
   const initialize = async () => {
     console.log('init')
@@ -179,7 +164,7 @@ export default function App() {
     if (context.user && context.userProfiles && data) {
       return (
         <div className='container'>
-          <Header user={context.user} goToAddPlatformSelection={goToAddPlatformSelection} signOut={signOut}/>
+          <Header user={context.user} goToAddPlatformSelection={goToAddPlatformSelection} signOut={context.signOut}/>
           <MainContentContainer
             data={data}
             profiles={context.userProfiles}
