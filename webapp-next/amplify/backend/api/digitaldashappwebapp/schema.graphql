@@ -121,7 +121,7 @@ type GetDataGraphDataset {
 
 type GetDataAggregated {
   name: String!
-  value: Float!
+  value: String!
 }
 
 type GetDataDataTimeframe {

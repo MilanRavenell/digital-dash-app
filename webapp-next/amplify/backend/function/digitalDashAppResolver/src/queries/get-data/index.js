@@ -32,7 +32,7 @@ const timeframes = (timezoneOffset) => ([
 
 const metrics = [
     { displayName: 'Views', field: 'viewCount'},
-    { displayName: 'Engagment', field: 'engagementCount' }
+    { displayName: 'Engagement', field: 'engagementCount' }
 ];
 
 async function getData(ctx) {

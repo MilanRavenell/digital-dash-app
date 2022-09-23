@@ -2,11 +2,11 @@ function getAggregatedStats(records, metrics, profiles) {
     return [
         { name: 'Total Followers', value: getTotalFollowerCount(profiles) },
         { name: 'Total Posts', value: records.length },
-        ...getTotalAndAverageFromRecords(records, metrics),
+        ...getCalculations(records, metrics),
     ];
 }
 
-function getTotalAndAverageFromRecords(records, metrics) {
+function getCalculations(records, metrics) {
     const calculations = metrics.reduce((acc, metric) => {
         acc[`Total ${metric.displayName}`] = 0
         return acc
@@ -23,6 +23,8 @@ function getTotalAndAverageFromRecords(records, metrics) {
     metrics.forEach((metric) => {
         calculations[`Average ${metric.displayName} per Post`] = (len === 0) ? 0 : (calculations[`Total ${metric.displayName}`] / len).toFixed(2)
     });
+
+    calculations['Engagement Rate'] = `${(calculations['Total Engagement']/calculations['Total Views'] * 100).toFixed(2) }%`;
 
     return Object.keys(calculations).map(key => (
         { name: key, value: calculations[key] }
