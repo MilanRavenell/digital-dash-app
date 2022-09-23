@@ -13,10 +13,62 @@
     flex: 5;
 }
 
+.postFieldLong {
+    font-size: small;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    flex: 5;
+}
+
+
 .headerFieldShort {
     font-size: large;
     text-align: left;
     flex: 1;
+}
+
+.postFieldShort {
+    font-size: small;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.headerFieldProfileName {
+    font-size: large;
+    text-align: left;
+    flex: 3;
+}
+
+.postFieldProfileName {
+    font-size: small;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    flex: 3;
+}
+
+.fieldContent {
+    flex: 1;
+    overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin-right: 10%
 }
 
 .headerInner {
@@ -49,31 +101,6 @@
     box-shadow: 1px gray;
     border: 1px solid black;
     border-radius: 4px;
-}
-
-
-.postFieldLong {
-    font-size: small;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    text-align: left;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    flex: 5;
-}
-
-.postFieldShort {
-    font-size: small;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    text-align: left;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
 }
 
 .logo {

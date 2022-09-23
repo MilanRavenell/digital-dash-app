@@ -58,8 +58,8 @@ async function getData(ctx) {
                     metrics: [
                         { displayName: 'Platform', field: '__typename'},
                         { displayName: 'Profile', field: 'profileName'},
-                        { displayName: 'Date', field: 'datePosted'},
                         { displayName: 'Caption', field: 'caption'},
+                        { displayName: 'Date', field: 'datePosted'},
                         { displayName: 'Views', field: 'viewCount'},
                         { displayName: 'Total Engagement', field: 'engagementCount'},
                     ],

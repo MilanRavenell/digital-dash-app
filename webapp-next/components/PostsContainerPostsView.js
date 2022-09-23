@@ -63,15 +63,25 @@ const PostsContainerPostsView = ({
                 ));
         }
     }
+
+    const getStyle = (fieldName, isHeader) => {
+        switch(fieldName) {
+            case 'Platform':
+                return isHeader ? styles.headerFieldShort : styles.postFieldShort;
+            case 'Profile':
+                return isHeader ? styles.headerFieldProfileName : styles.postFieldProfileName;
+            default:
+                return isHeader ? styles.headerFieldLong : styles.postFieldLong;
+        }
+    }
     
     return (
         <div className={styles.container}>
             <div className={styles.header}>
                 {
                     totalHeaders.map(({ field, displayName }, keyIndex) => {
-                        const style = displayName === 'Platform' ? styles.headerFieldShort : styles.headerFieldLong
                         return (
-                            <div className={style}>
+                            <div className={getStyle(displayName, true)}>
                                 <Card sx={{ width: '100%', height: '100%', borderRadius: 0, border: 'none' }} variant="outlined"  onClick={() => {onHeaderClicked(`${field}`)}} key={keyIndex}>
                                     <CardActionArea sx={{ width: '100%', height: '100%' }}>
                                         <div className={styles.headerInner}>
@@ -97,10 +107,9 @@ const PostsContainerPostsView = ({
                         <div className={styles.post} key={postIndex} onClick={() => {openPopUp(post)}}>
                             {
                                 totalHeaders.map(({ field, displayName }, keyIndex) => {
-                                    const style = displayName === 'Platform' ? styles.postFieldShort : styles.postFieldLong;
                                     const platform = profiles.find((profile => (profile.profileName === post.profileName))).platform;
                                     return (
-                                        <div className={style} key={keyIndex}>
+                                        <div className={getStyle(displayName, false)} key={keyIndex}>
                                             {
                                                 (() => {
                                                     switch(displayName) {
@@ -119,12 +128,10 @@ const PostsContainerPostsView = ({
                                                                     />
                                                                 </div>
                                                             );
-                                                        case 'Caption':
-                                                            return (<a href={post['Link']} target="_blank" rel="noreferrer">{post[field]}</a>);
                                                         case 'Date':
                                                             return new Date(post[field]).toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric" });
                                                         default:
-                                                            return post[field];
+                                                            return <div className={styles.fieldContent}>{post[field]}</div>;
                                                     }
                                                 })()
                                             }
