@@ -7,7 +7,7 @@ sys.path.append(os.path.join(file_dir, 'pyppeteer_based'))
 
 from pyppeteer_based import *
 
-def get_scraper_from_platform(platform, handle):
+def get_scraper_from_platform(platform, use_tor, handle, content_to_process):
     if platform == 'twitter':
         try:
             password = sys.argv[3]
@@ -25,7 +25,7 @@ def get_scraper_from_platform(platform, handle):
             return
     if platform == 'tiktok':
         try:
-            return TikTokScraper(handle)
+            return TikTokScraper(use_tor, handle, content_to_process)
         except IndexError:
             print('Not enough arguments were supplied for twitter scraper')
             return
@@ -37,8 +37,10 @@ def handler(event, context):
     platform = event.get('platform')
     handle = event.get('handle')
     task = event.get('task')
+    content_to_process = event.get('content_to_process')
+    use_tor = event.get('use_tor', False)
 
-    content_scraper = get_scraper_from_platform(platform, handle)
+    content_scraper = get_scraper_from_platform(platform, use_tor, handle, content_to_process)
     if task == 'full_run':
         return content_scraper.full_run()
     
@@ -46,7 +48,6 @@ def handler(event, context):
         return content_scraper.get_content()
     
     if task == 'process_single_content':
-        content_to_process = event.get('content_to_process')
         return content_scraper.process_single_content(content_to_process)
 
     if task == 'verify_bio_contains_token':

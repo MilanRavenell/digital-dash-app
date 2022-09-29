@@ -53,6 +53,12 @@ async function fetchAnalyticsForYtProfile(ctx, profile) {
     const now = new Date().toISOString();
 
     const items = await Promise.all(response.items.map(async (video) => {
+        const viewCount = parseInt(video.statistics.viewCount);
+        const commentCount = parseInt(video.statistics.commentCount);
+        const likeCount = parseInt(video.statistics.likeCount);
+        const favoriteCount = parseInt(video.statistics.favoriteCount);
+        const engagementCount = commentCount + likeCount + favoriteCount;
+
         const item = {
             id: video.id,
             profileName: profile.profileName,
@@ -61,13 +67,14 @@ async function fetchAnalyticsForYtProfile(ctx, profile) {
                 thumbnailUrl: video.snippet.thumbnails.default.url,
                 type: 'video',
             }],
-            viewCount: parseInt(video.statistics.viewCount),
-            commentCount: parseInt(video.statistics.commentCount),
-            likeCount: parseInt(video.statistics.likeCount),
+            viewCount,
+            commentCount,
+            likeCount,
             dislikeCount: parseInt(video.statistics.dislikeCount),
             link: `https://youtube.com/watch?v=${video.id}`,
-            engagementCount: parseInt(video.statistics.commentCount) + parseInt(video.statistics.likeCount) + parseInt(video.statistics.favoriteCount),
-            favoriteCount: parseInt(video.statistics.favoriteCount),
+            engagementCount,
+            engagementRate: (viewCount > 0) ? engagementCount / parseFloat(viewCount) : null,
+            favoriteCount,
             datePosted: video.snippet.publishedAt,
             createdAt: now,
             updatedAt: now,

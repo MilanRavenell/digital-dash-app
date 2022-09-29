@@ -3,17 +3,13 @@ import datetime
 import time
 
 class TikTokScraper(ContentDataScraper):
-    def __init__(self, handle):
-        super().__init__()
+    def __init__(self, use_tor, handle, content_id=None):
+        super().__init__(use_tor)
 
         self.handle = handle
         self.metrics_records = []
-        self.profile_url = (f'https://www.tiktok.com/@{self.handle}')
-    
-    async def open_page(self):
-        await self.page.goto(self.profile_url, {'timeout': 60000})
-        user_page_div = await self.find_element_with_timeout(self.page, '//div[@data-e2e="user-avatar"]')
-        return (user_page_div is not None)
+        self.url = f'https://www.tiktok.com/@{self.handle}/video/{content_id}' if content_id else f'https://www.tiktok.com/@{self.handle}'
+        self.page_test_el = '//strong[@data-e2e="like-count"]' if content_id else '//div[@data-e2e="user-avatar"]'
 
     async def load_new_content(self):
         await self.page.evaluate('window.scrollTo(0, document.body.scrollHeight);')
@@ -22,8 +18,7 @@ class TikTokScraper(ContentDataScraper):
         return await self.__process_video(content)
 
     async def get_loaded_content(self):
-        content_list =  await self.page.Jx('//div[@data-e2e="user-post-item"]')
-        return [await self.get_content_identifier(content) for content in content_list]
+        return await self.page.Jx('//div[@data-e2e="user-post-item"]')
 
     async def get_content_identifier(self, content):
         return (await (await (await content.J('a')).getProperty('href')).jsonValue()).split('video/')[1]
@@ -46,51 +41,38 @@ class TikTokScraper(ContentDataScraper):
             'followers': followers, 
         }
 
+    async def process_content_page(self):
+        await self.find_element_with_timeout(self.page, '//strong[@data-e2e="like-count"]')
+
+        record = {}
+        record['likes'] = self.get_int_from_string(await self.__extract_attribute(self.page, '//strong[@data-e2e="like-count"]'))
+        record['comments'] = self.get_int_from_string(await self.__extract_attribute(self.page, '//strong[@data-e2e="comment-count"]'))
+        record['shares'] = self.get_int_from_string(await self.__extract_attribute(self.page, '//strong[@data-e2e="share-count"]'))
+        record['date'] = await self.get_date(self.page)
+
+        print(record)
+        return record
+
     async def close(self):
         await super().close()
 
     ########################## TikTok Methods ##############################
-    async def __process_video(self, video_id):
+    async def __process_video(self, video):
         record = {}
-        url = f'https://www.tiktok.com/@{self.handle}/video/{video_id}'
 
         record['profile'] = self.handle
-        record['id'] = video_id
-
-        video = await self.find_elements_safe(self.page, f'//a[@href="{url}"]')
-        attempts = 0
-        while video == None and attempts < 10:
-            print('next page')
-            await self.load_new_content()
-            video = await self.find_elements_safe(self.page, f'//a[@href="{url}"]')
-            time.sleep(1)
-
+        record['id'] = await self.get_content_identifier(video)
         record['views'] = self.get_int_from_string(await self.__extract_attribute(video, './/strong[@data-e2e="video-views"]'))
 
         thumbnail_img = await self.find_elements_safe(video, 'img', byxpath=False)
         record['thumbnail_url'] = await (await thumbnail_img.getProperty('src')).jsonValue()
         record['caption'] = await (await thumbnail_img.getProperty('alt')).jsonValue()
 
-        new_page = await self.get_new_page()
-        await new_page.goto(url , {'timeout': 60000})
-        await self.find_element_with_timeout(new_page, '//strong[@data-e2e="like-count"]')
-
-        record['likes'] = self.get_int_from_string(await self.__extract_attribute(new_page, '//strong[@data-e2e="like-count"]'))
-        record['comments'] = self.get_int_from_string(await self.__extract_attribute(new_page, '//strong[@data-e2e="comment-count"]'))
-        record['shares'] = self.get_int_from_string(await self.__extract_attribute(new_page, '//strong[@data-e2e="share-count"]'))
-        record['date'] = await self.get_date(new_page)
-
-        await new_page.close()
-
-        print(record)
         return record
 
     async def __extract_attribute(self, page, xpath):
         element =  await self.find_element_with_timeout(page, xpath)
-
-        for key in (await element.getProperties()):
-            if '__reactProps' in key:
-                return (await (await element.getProperty(key)).jsonValue())['children']
+        return await self.page.evaluate('e => e.textContent', element)
     
     async def get_date(self, page):
         browser_nickname_span = await self.find_elements_safe(page, '//span[@data-e2e="browser-nickname"]')

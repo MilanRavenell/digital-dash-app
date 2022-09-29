@@ -32,12 +32,17 @@ export const getData = /* GraphQL */ `
           profilePicUrl
           followerCount
         }
-        graph {
-          labels
-          datasets {
-            label
-            data
-            backgroundColor
+        graphs {
+          name
+          type
+          graph {
+            labels
+            datasets {
+              label
+              data
+              backgroundColor
+              borderColor
+            }
           }
         }
         aggregated {

@@ -4,13 +4,21 @@ from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, OperatingSystem
 import time
 import os
+import requests
+import platform
+import subprocess
+
+SOCKS_PORT = 9050
 
 #TODO: Optimize by opening a driver per content(limit on number of active drivers at once)
 class ContentDataScraper:
-    def __init__(self):
+    def __init__(self, use_tor):
         self.seen_content_ids = set()
         self.time_start = time.time()
         self.no_new_content = 0
+        self.use_tor = use_tor
+        self.tor_process = None
+        self.browser = None
 
     def full_run(self):
         return asyncio.get_event_loop().run_until_complete(self.arun())
@@ -28,12 +36,33 @@ class ContentDataScraper:
         return asyncio.get_event_loop().run_until_complete(self.arun(get_profile_info=True))
 
     async def arun(self, gather_content_only=False, content_to_process=None, verify_bio=False, get_profile_info=False):
-        await self.__init_page()
-        pageOpened = await self.open_page()
-        if not pageOpened:
-            print('Failed to open page')
-            return None
+        tries = 0
+        success = False
+        result = None
 
+        while not success and tries < 10:
+            tries = tries + 1
+
+            try:
+                if self.use_tor:
+                    self.__start_tor_proxy()
+                await self.__init_page()
+
+                if await self.open_page():
+                    result = await self.main(gather_content_only, content_to_process, verify_bio, get_profile_info)
+                    success = True
+                    print('Done :DD')
+                else:
+                    print('Failed to open page')
+            except Exception as e:
+                print(f'attempt {tries} failed to run')
+                print(str(e))
+            
+            await self.close()
+
+        return result        
+
+    async def main(self, gather_content_only, content_to_process, verify_bio, get_profile_info):
         # Only for tiktok
         if verify_bio:
             if (await self.verify_bio()):
@@ -46,8 +75,7 @@ class ContentDataScraper:
 
         # Does not work for twitter
         if content_to_process is not None:
-            result = await self.process_content(content_to_process)
-            await self.close()
+            result = await self.process_content_page()
             return result
 
         results = []
@@ -62,20 +90,17 @@ class ContentDataScraper:
                 if gather_content_only:
                     results.extend(new_content)
                 else:
-                    for content in new_content:
-                        results.append(await self.process_content(content))
-                    # TODO: Get coroutines working
-                    # coroutines = [self.process_content(content) for content in new_content]
-                    # await asyncio.gather(*coroutines)
+                    coroutines = [self.process_content(content) for content in new_content]
+                    results.extend(await asyncio.gather(*coroutines))
 
             await self.load_new_content()
 
-        await self.close()
         return results
         
     async def filter_seen_content(self, content_list):
-        unseen_content = [content for content in content_list if content not in self.seen_content_ids]
-        [self.seen_content_ids.add(content) for content in content_list]
+        content_with_ids = [(content, await self.get_content_identifier(content)) for content in content_list]
+        unseen_content = [content[0] for content in content_with_ids if content[1] not in self.seen_content_ids]
+        [self.seen_content_ids.add(content[1]) for content in content_with_ids]
 
         print(unseen_content)
         return unseen_content
@@ -83,9 +108,50 @@ class ContentDataScraper:
     def is_finished(self):
         return (time.time() - self.time_start > 200) or (self.no_new_content >= 5)
     
+    def __start_tor_proxy(self):
+        oper_sys = platform.system()
+
+        if oper_sys == 'Linux':
+            tor_path = os.path.join(os.getcwd(), 'Tor_linux', 'Tor', 'tor') 
+            torrc_path = os.path.join(os.getcwd(), 'tor_config', 'torrc')
+            self.tor_process = subprocess.Popen([tor_path, '-f', torrc_path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        else:
+            tor_path = os.path.join(os.getcwd(), 'Tor_mac', 'tor.real')
+            self.tor_process = subprocess.Popen([tor_path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+        print('starting tor')
+
+        proxy_launch_start = time.time()
+        while self.tor_process.stdout.readable():
+            line = self.tor_process.stdout.readline()
+
+            if not line:
+                break
+
+            print(line.strip())
+            
+            if 'Bootstrapped 100% (done): Done' in line.strip().decode('utf-8'):
+                break
+
+            # Give the machine 30 seconds to boot tor service
+            if time.time() - proxy_launch_start > 30:
+                raise 'Tor service timed out'
+
+        print('Tor started')
+
+        # print origin IP
+        r = requests.Session()
+        proxies = {
+            'http': 'socks5://localhost:' + str(SOCKS_PORT),
+            'https': 'socks5://localhost:' + str(SOCKS_PORT)
+        }
+        response = r.get("http://ip-api.com/json/", proxies=proxies)
+        print('exit node: ', response.json())
+    
     async def __init_page(self):
         isRunningLocally = os.environ.get('AWS_EXECUTION_ENV') == None
         chromiumPath =  os.path.join(os.getcwd(), 'headless-chromium')
+        proxyServer = f'--proxy-server={"socks5://localhost:9050" if self.use_tor else "gate.smartproxy.com:7000"}'
 
         self.browser = await launch(
             headless=True,
@@ -96,16 +162,20 @@ class ContentDataScraper:
                 '--disable-dev-shm-usage',
                 '--disable-gpu',
                 '--no-zygote',
-                '--proxy-server=gate.smartproxy.com:7000'
+                proxyServer,
             ],
             executablePath=chromiumPath if not isRunningLocally else None,
             userDataDir="/tmp",
         )
+
+        print('browser launched')
         self.page = await self.get_new_page()
-        await self.page.authenticate({
-            'username': 'sp45767889',
-            'password': 'digitaldash01',
-        })
+
+        if not self.use_tor:
+            await self.page.authenticate({
+                'username': 'sp45767889',
+                'password': 'digitaldash01',
+            })
 
     def __get_headers(self):
         # software_names = [SoftwareName.CHROME.value]
@@ -126,6 +196,11 @@ class ContentDataScraper:
             "upgrade-insecure-requests": "1",
             "user-agent": user_agent,
         }
+
+    async def open_page(self):
+        await self.page.goto(self.url)
+        user_page_div = await self.find_element_with_timeout(self.page, self.page_test_el)
+        return (user_page_div is not None)
     
     async def get_new_page(self):
         page = await self.browser.newPage()
@@ -133,14 +208,18 @@ class ContentDataScraper:
         return page
 
     async def close(self):
-        await self.browser.close()
+        print('closing')
+        if self.browser:
+            await self.browser.close()
+        if self.tor_process:
+            self.tor_process.kill()
 
     async def find_element_with_timeout(self, page, query, byxpath=True):
         print('finding ' + query)
         attempts = 0
         while attempts < 3:
             results = (await page.Jx(query)) if byxpath else (await page.JJ(query))
-            if not results == []:
+            if results and not len(results) == 0:
                 if len(results) == 1:
                     return results[0]
 
@@ -183,6 +262,8 @@ class ContentDataScraper:
         page_html = await page.evaluate('document.documentElement.outerHTML')
         if ('To protect users from unusual network activity, we use Captcha to verify that you are not a robot.' in page_html):
             print('Caught by CAPTCHA')
+        if ('TTGCaptcha' in page_html):
+            print('Caught by CAPTCHA')
         else:
             print(page_html)
 
@@ -194,8 +275,8 @@ class ContentDataScraper:
 
     async def process_content(self, content):
         raise NotImplementedError()
-
-    async def open_page(self):
+        
+    async def process_content_page(self, content_id):
         raise NotImplementedError()
 
     def get_content_identifier(self, content):

@@ -108,6 +108,7 @@ export const onCreateTwitterPost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       profileClickCount
       likeCount
       detailExpandCount
@@ -135,6 +136,7 @@ export const onUpdateTwitterPost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       profileClickCount
       likeCount
       detailExpandCount
@@ -162,6 +164,7 @@ export const onDeleteTwitterPost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       profileClickCount
       likeCount
       detailExpandCount
@@ -189,6 +192,7 @@ export const onCreateYoutubePost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       likeCount
       commentCount
       dislikeCount
@@ -214,6 +218,7 @@ export const onUpdateYoutubePost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       likeCount
       commentCount
       dislikeCount
@@ -239,6 +244,7 @@ export const onDeleteYoutubePost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       likeCount
       commentCount
       dislikeCount
@@ -264,6 +270,7 @@ export const onCreateInstagramPost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       likeCount
       commentCount
       saveCount
@@ -289,6 +296,7 @@ export const onUpdateInstagramPost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       likeCount
       commentCount
       saveCount
@@ -314,6 +322,7 @@ export const onDeleteInstagramPost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       likeCount
       commentCount
       saveCount
@@ -339,6 +348,7 @@ export const onCreateTiktokPost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       likeCount
       commentCount
       shareCount
@@ -363,6 +373,7 @@ export const onUpdateTiktokPost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       likeCount
       commentCount
       shareCount
@@ -387,9 +398,52 @@ export const onDeleteTiktokPost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       likeCount
       commentCount
       shareCount
+      updatedAt
+    }
+  }
+`;
+export const onCreateMetricHistory = /* GraphQL */ `
+  subscription OnCreateMetricHistory(
+    $filter: ModelSubscriptionMetricHistoryFilterInput
+  ) {
+    onCreateMetricHistory(filter: $filter) {
+      key
+      profileKey
+      metric
+      createdAt
+      value
+      updatedAt
+    }
+  }
+`;
+export const onUpdateMetricHistory = /* GraphQL */ `
+  subscription OnUpdateMetricHistory(
+    $filter: ModelSubscriptionMetricHistoryFilterInput
+  ) {
+    onUpdateMetricHistory(filter: $filter) {
+      key
+      profileKey
+      metric
+      createdAt
+      value
+      updatedAt
+    }
+  }
+`;
+export const onDeleteMetricHistory = /* GraphQL */ `
+  subscription OnDeleteMetricHistory(
+    $filter: ModelSubscriptionMetricHistoryFilterInput
+  ) {
+    onDeleteMetricHistory(filter: $filter) {
+      key
+      profileKey
+      metric
+      createdAt
+      value
       updatedAt
     }
   }

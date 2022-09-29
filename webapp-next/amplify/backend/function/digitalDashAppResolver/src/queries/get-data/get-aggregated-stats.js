@@ -1,7 +1,7 @@
 function getAggregatedStats(records, metrics, profiles) {
     return [
         { name: 'Total Followers', value: getTotalFollowerCount(profiles) },
-        { name: 'Total Posts', value: records.length },
+        { name: 'Total Posts', value: records.length.toLocaleString() },
         ...getCalculations(records, metrics),
     ];
 }
@@ -21,20 +21,21 @@ function getCalculations(records, metrics) {
     }
 
     metrics.forEach((metric) => {
-        calculations[`Average ${metric.displayName} per Post`] = (len === 0) ? 0 : (calculations[`Total ${metric.displayName}`] / len).toFixed(2)
+        calculations[`Average ${metric.displayName} per Post`] = (len === 0) ? 0 : (calculations[`Total ${metric.displayName}`] / len)
     });
 
     calculations['Engagement Rate'] = `${(calculations['Total Engagement']/calculations['Total Views'] * 100).toFixed(2) }%`;
 
     return Object.keys(calculations).map(key => (
-        { name: key, value: calculations[key] }
+        { name: key, value: calculations[key].toLocaleString() }
     ));
 }
 
 function getTotalFollowerCount(profiles) {
     return profiles.reduce((acc, profile) => {
         return acc + parseInt(profile.followerCount || 0);
-    }, 0);
+    }, 0)
+        .toLocaleString();
 }
 
 module.exports = getAggregatedStats;

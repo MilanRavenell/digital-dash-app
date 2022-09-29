@@ -4,9 +4,11 @@ import PostsContainer from './PostsContainer';
 import IndividualPostPopUp from './IndividualPostPopUp';
 import ProfilePicker from './ProfilePicker';
 import DatePicker from './DatePicker';
-import Header from './Header';
-import { Select, MenuItem, FormControl, InputLabel, Menu, IconButton } from '@mui/material';
-import { SettingsOutlined } from '@mui/icons-material';
+import PostsContainerPostsView from './PostsContainerPostsView';
+import PostsContainerGraphView from './PostsContainerGraphView';
+import { Select, MenuItem, FormControl, InputLabel, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
+import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import Popover from '@mui/material/Popover';
 import NeedsRefreshDialogue from './NeedsRefreshDialogue';
 import moment from 'moment';
@@ -36,6 +38,7 @@ const MainContentContainer = ({
 
     const popoverAnchorEl = React.useRef();
     const [popoverOpen, setPopoverOpen] = React.useState(false);
+    const [bottomView, setBottomView] = React.useState('graph');
 
     const handleTimeFrameChange = React.useCallback((event) => {
         const value = event.target.value;
@@ -82,8 +85,12 @@ const MainContentContainer = ({
         }))
     }, []);
 
+    const handleBottomViewChange = (event, newValue) => {
+        setBottomView(newValue)
+    }
+
     const aggregatedData = data.aggregated
-    const graphData = data.graph;
+    const graphData = data.graphs;
 
     const getPostHeaders = () => {
         if (profiles === null) {
@@ -171,15 +178,33 @@ const MainContentContainer = ({
                             data={aggregatedData}/>
                     </div>
                     <div className={styles.contentBottom}>
-                        <PostsContainer
-                            posts={data.records}
-                            headers={getPostHeaders()}
-                            profiles={data.profiles}
-                            graphData={graphData}
-                            openPopUp={setPopUpPost}
-                            sortOrder={sortOrder}
-                            setSortOrder={setSortOrder}
-                        />
+                        <div className={styles.viewPicker}>
+                            <ToggleButtonGroup
+                                color="primary"
+                                aria-label="button group"
+                                exclusive
+                                onChange={handleBottomViewChange}
+                                value={bottomView}
+                            >
+                                <ToggleButton value="graph">
+                                    <AssessmentOutlinedIcon/>
+                                </ToggleButton>
+                                <ToggleButton value="posts">
+                                    <FormatListBulletedOutlinedIcon/>
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        </div>
+                        {
+                            bottomView === 'posts'
+                                ? <PostsContainerPostsView
+                                    posts={data.records}
+                                    headers={getPostHeaders()}
+                                    profiles={profiles}
+                                    openPopUp={setPopUpPost}
+                                    sortOrder={sortOrder}
+                                    setSortOrder={setSortOrder}/>
+                                : <PostsContainerGraphView graphData={graphData}/>
+                        }
                     </div>
                 </div>
             </div>
@@ -187,7 +212,23 @@ const MainContentContainer = ({
                 (state.popUpPost !== null) && [
                     (<div className={styles.popupBackground} onClick={clearPopUpPost}/>),
                     (<div className={styles.popup}>
-                        <IndividualPostPopUp post={state.popUpPost} headers={data.postHeaders.find(header => (header.platform === data.profiles.find(profile => (profile.profileName === state.popUpPost.profileName)).platform)).metrics}/>
+                        <IndividualPostPopUp
+                            post={state.popUpPost}
+                            headers={
+                                data
+                                    .postHeaders
+                                    .find(header => (
+                                        header.platform ===
+                                        data
+                                            .profiles
+                                            .find(profile => (
+                                                profile.profileName === state.popUpPost.profileName
+                                            ))
+                                            .platform
+                                    ))
+                                    .metrics
+                            }
+                            />
                     </div>)
                 ]
             }

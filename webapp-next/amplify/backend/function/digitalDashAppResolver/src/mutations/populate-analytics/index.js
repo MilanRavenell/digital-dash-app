@@ -41,55 +41,8 @@ async function fetchAnalytics(ctx) {
     console.log('Fetching data');
 
     try {
-        // Fetch  latest profile info
-        const profileInfo = await getProfileInfo(ctx, profile);
-        if (!debug_noUploadToDDB) {
-            await ddbClient.put({
-                TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
-                Item: {
-                    ...profile,
-                    ...profileInfo,
-                }
-            }).promise();
-        }
-        else {
-            console.log(profileInfo);
-        }
-
-        switch(profile.platform) {
-            case 'instagram-pro':
-                let tries = 0;
-                let success = false;
-                while (tries < 10 && !success) {
-                    try {
-                        await fetchAnalyticsForIgProProfile(ctx, profile);
-                        success = true;
-                    } catch (err) {
-                        console.log(err)
-                        tries += 1;
-                        // sleep for 2 seconds
-                        console.log(`hit timeout, retrying (${tries})`)
-                        await new Promise(r => setTimeout(r, 2000));
-                    }
-                }
-                
-                if (tries >= 10) {
-                    console.error('hit instagram retry limit');
-                }
-                break;
-            case 'twitter':
-                await populateAnalyticsForTwitterProfile(ctx, profile);
-                break;
-            case 'youtube':
-                await populateAnalyticsForYtProfile(ctx, profile);
-                break;
-            case 'tiktok':
-                break;
-                await populateAnalyticsForTiktokProfile(ctx, profile);
-                break;
-            default:
-                console.log(`Platform ${profile.platform} not supported`);
-        };
+        
+        await Promise.all([populateProfile(ctx, profile), populatePosts(ctx, profile)])
 
         // Set postsLastPopulated for the user to now
         await ddbClient.update({
@@ -120,6 +73,62 @@ async function fetchAnalytics(ctx) {
             success: false,
         }
     }
+}
+
+// Fetch  latest profile info
+async function populateProfile(ctx, profile) {
+    const { ddbClient } = ctx.resources;
+    const { debug_noUploadToDDB } = ctx.arguments.input;
+
+    const profileInfo = await getProfileInfo(ctx, profile);
+        if (!debug_noUploadToDDB) {
+            await ddbClient.put({
+                TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                Item: {
+                    ...profile,
+                    ...profileInfo,
+                }
+            }).promise();
+        }
+        else {
+            console.log(profileInfo);
+        }
+}
+
+async function populatePosts(ctx, profile) {
+    switch(profile.platform) {
+        case 'instagram-pro':
+            let tries = 0;
+            let success = false;
+            while (tries < 10 && !success) {
+                try {
+                    await fetchAnalyticsForIgProProfile(ctx, profile);
+                    success = true;
+                } catch (err) {
+                    console.log(err)
+                    tries += 1;
+                    // sleep for 2 seconds
+                    console.log(`hit timeout, retrying (${tries})`)
+                    await new Promise(r => setTimeout(r, 2000));
+                }
+            }
+            
+            if (tries >= 10) {
+                console.error('hit instagram retry limit');
+            }
+            break;
+        case 'twitter':
+            await populateAnalyticsForTwitterProfile(ctx, profile);
+            break;
+        case 'youtube':
+            await populateAnalyticsForYtProfile(ctx, profile);
+            break;
+        case 'tiktok':
+            await populateAnalyticsForTiktokProfile(ctx, profile);
+            break;
+        default:
+            console.log(`Platform ${profile.platform} not supported`);
+    };
 }
 
 module.exports = fetchAnalytics;

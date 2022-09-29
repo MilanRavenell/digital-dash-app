@@ -27,7 +27,28 @@ ChartJS.register(
 const PostsContainerGraphView = ({ graphData }) => {
     return (
         <div className={styles.container}>
-            <Bar data={graphData} options={{ responsive: true, maintainAspectRatio: false }}/>
+            {
+                graphData.map(({ name, type, graph }, index) => (
+                    <div className={styles.graphContainer} key={index}>
+                        <div className={styles.graphName}>
+                            { name }
+                        </div>
+                        <div className={styles.graph}>
+                            {
+                                (() => {
+                                    switch(type) {
+                                        case 'bar':
+                                            return <Bar data={graph} options={{ responsive: true, maintainAspectRatio: false }}/>;
+                                        case 'line':
+                                        default:
+                                            return <Line data={graph} options={{ responsive: true, maintainAspectRatio: false }}/>;
+                                    }
+                                })()
+                            }
+                        </div>
+                    </div>
+                ))
+            }
         </div>
     );
 }

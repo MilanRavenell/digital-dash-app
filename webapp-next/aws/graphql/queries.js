@@ -122,6 +122,7 @@ export const getTwitterPost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       profileClickCount
       likeCount
       detailExpandCount
@@ -156,6 +157,7 @@ export const listTwitterPosts = /* GraphQL */ `
         link
         viewCount
         engagementCount
+        engagementRate
         profileClickCount
         likeCount
         detailExpandCount
@@ -183,6 +185,7 @@ export const getYoutubePost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       likeCount
       commentCount
       dislikeCount
@@ -215,6 +218,7 @@ export const listYoutubePosts = /* GraphQL */ `
         link
         viewCount
         engagementCount
+        engagementRate
         likeCount
         commentCount
         dislikeCount
@@ -240,6 +244,7 @@ export const getInstagramPost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       likeCount
       commentCount
       saveCount
@@ -272,6 +277,7 @@ export const listInstagramPosts = /* GraphQL */ `
         link
         viewCount
         engagementCount
+        engagementRate
         likeCount
         commentCount
         saveCount
@@ -297,6 +303,7 @@ export const getTiktokPost = /* GraphQL */ `
       }
       viewCount
       engagementCount
+      engagementRate
       likeCount
       commentCount
       shareCount
@@ -328,9 +335,51 @@ export const listTiktokPosts = /* GraphQL */ `
         link
         viewCount
         engagementCount
+        engagementRate
         likeCount
         commentCount
         shareCount
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getMetricHistory = /* GraphQL */ `
+  query GetMetricHistory($key: String!, $createdAt: String!) {
+    getMetricHistory(key: $key, createdAt: $createdAt) {
+      key
+      profileKey
+      metric
+      createdAt
+      value
+      updatedAt
+    }
+  }
+`;
+export const listMetricHistories = /* GraphQL */ `
+  query ListMetricHistories(
+    $key: String
+    $createdAt: ModelStringKeyConditionInput
+    $filter: ModelMetricHistoryFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listMetricHistories(
+      key: $key
+      createdAt: $createdAt
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        key
+        profileKey
+        metric
+        createdAt
+        value
         updatedAt
       }
       nextToken
@@ -397,6 +446,7 @@ export const twitterPostsByProfileName = /* GraphQL */ `
         link
         viewCount
         engagementCount
+        engagementRate
         profileClickCount
         likeCount
         detailExpandCount
@@ -435,6 +485,7 @@ export const youtubePostsByProfileName = /* GraphQL */ `
         link
         viewCount
         engagementCount
+        engagementRate
         likeCount
         commentCount
         dislikeCount
@@ -471,6 +522,7 @@ export const igPostsByProfileName = /* GraphQL */ `
         link
         viewCount
         engagementCount
+        engagementRate
         likeCount
         commentCount
         saveCount
@@ -507,6 +559,7 @@ export const tiktokPostsByProfileName = /* GraphQL */ `
         link
         viewCount
         engagementCount
+        engagementRate
         likeCount
         commentCount
         shareCount

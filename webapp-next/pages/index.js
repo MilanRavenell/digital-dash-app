@@ -37,7 +37,7 @@ export default function App() {
       fetchMostRecentPostData();
       return;
     }
-  }, [context]);
+  }, [context, data, fetchRecentData]);
 
   const initialize = async () => {
     console.log('init')

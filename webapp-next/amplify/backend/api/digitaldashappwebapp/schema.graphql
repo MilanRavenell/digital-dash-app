@@ -32,6 +32,7 @@ type TwitterPost @model
   media: [PostMedia!]!
   viewCount: Int
   engagementCount: Int
+  engagementRate: Float
   profileClickCount: Int
   likeCount: Int
   detailExpandCount: Int
@@ -51,6 +52,7 @@ type YoutubePost @model
   media: [PostMedia!]!
   viewCount: Int
   engagementCount: Int
+  engagementRate: Float
   likeCount: Int
   commentCount: Int
   dislikeCount: Int
@@ -68,6 +70,7 @@ type InstagramPost @model
   media: [PostMedia!]!
   viewCount: Int
   engagementCount: Int
+  engagementRate: Float
   likeCount: Int
   commentCount: Int
   saveCount: Int
@@ -85,15 +88,20 @@ type TiktokPost @model
   media: [PostMedia!]!
   viewCount: Int
   engagementCount: Int
+  engagementRate: Float
   likeCount: Int
   commentCount: Int
   shareCount: Int
 }
 
-# type PostMetric @model
-# {
-#   postId: String! 
-# }
+type MetricHistory @model
+{
+  key: String! @primaryKey(sortKeyFields: ["createdAt"]) #<platform>_<profileName/postId>_<metric>
+  profileKey: String! 
+  metric: String!
+  createdAt: String!
+  value: String!
+}
 
 type PostMedia {
   thumbnailUrl: String!
@@ -109,14 +117,21 @@ input GetDataInput {
 }
 
 type GetDataGraph {
+  name: String!
+  type: String!
+  graph: GetDataGraphGraph!
+}
+
+type GetDataGraphGraph {
   labels: [String!]!
   datasets: [GetDataGraphDataset!]!
 }
 
 type GetDataGraphDataset {
   label: String!
-  data: [Int!]!
-  backgroundColor: String!
+  data: [Float!]!
+  backgroundColor: String
+  borderColor: String
 }
 
 type GetDataAggregated {
@@ -144,7 +159,7 @@ union Post = TwitterPost | YoutubePost | InstagramPost | TiktokPost
 
 type getDataData {
   profiles: [UserProfile!]
-  graph: GetDataGraph
+  graphs: [GetDataGraph!]
   aggregated: [GetDataAggregated!]
   timeframes: [GetDataDataTimeframe!]
   metrics: [GetDataDataMetric!]

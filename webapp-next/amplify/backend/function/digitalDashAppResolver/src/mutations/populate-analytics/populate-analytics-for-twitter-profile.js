@@ -93,6 +93,8 @@ async function fetchAnalyticsForTwitterProfile(ctx, profile) {
             )
         }
 
+        const engagementCount = (user_profile_clicks || 0) + like_count + reply_count + retweet_count;
+
         let item = {
             id: tweet.id,
             profileName: profile.profileName,
@@ -101,7 +103,8 @@ async function fetchAnalyticsForTwitterProfile(ctx, profile) {
             link: `https://twitter.com/${profile.profileName}/status/${tweet.id}`,
             media,
             viewCount: impression_count,
-            engagementCount: (user_profile_clicks || 0) + like_count + reply_count + retweet_count,
+            engagementCount,
+            engagementRate: (impression_count && impression_count > 0) ? engagementCount / parseFloat(impression_count) : null,
             profileClickCount: user_profile_clicks,
             likeCount: like_count,
             replyCount: reply_count,

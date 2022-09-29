@@ -25,9 +25,6 @@
 }
 
 .contentRight {
-    /* border: 1px solid black; */
-    flex-grow: 1;
-    flex-shrink: 2;
     height: 100%;
 }
 
@@ -46,13 +43,21 @@
 
 .contentTop {
     display: flex;
-    height: 34%;
+    height: 30vh;
     align-items: center;
 }
 
 .contentBottom {
     min-height: 55%;
-    /* border: 1px solid black; */
+    margin: 10px;
+    margin-left:20px;
+}
+
+.viewPicker {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1%;
 }
 
 .popup {

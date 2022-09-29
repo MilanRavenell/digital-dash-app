@@ -24,3 +24,5 @@ yarn-error.log*
 
 # web-scraper-service
 headless-chromium
+Tor_linux
+Tor_mac

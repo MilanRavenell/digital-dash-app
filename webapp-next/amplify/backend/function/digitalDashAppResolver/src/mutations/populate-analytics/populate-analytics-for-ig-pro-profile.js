@@ -31,16 +31,19 @@ async function fetchAnalyticsForIgProProfile (ctx, profile) {
             });
 
             const media = await getMedia(ctx, profile, id, response, accessToken);
+            const likeCount = response.like_count;
+            const commentCount = response.comments_count;
+            const engagementCount = likeCount + commentCount;
 
             const item = {
                 id,
                 profileName: profile.profileName,
                 caption: response.caption || '',
-                commentCount: response.comments_count,
-                likeCount: response.like_count,
+                commentCount,
+                likeCount,
                 link: response.permalink,
                 media,
-                engagementCount: response.comments_count + response.like_count,
+                engagementCount,
                 datePosted: response.timestamp,
                 createdAt: now,
                 updatedAt: now,
@@ -57,12 +60,13 @@ async function fetchAnalyticsForIgProProfile (ctx, profile) {
                 item.reachCount = businessResponse.data[1].values[0].value;
                 item.saveCount = businessResponse.data[2].values[0].value;
                 item.engagementCount = businessResponse.data[3].values[0].value;
+                item.engagementRate = (viewCount > 0) ? item.engagementCount / parseFloat(item.viewCount) : null;
             }
 
             if (!debug_noUploadToDDB) {
                 await ddbClient.put({
                     TableName: 'InstagramPost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
-                    Item: item
+                    Item: item,
                 }).promise();
             }
 

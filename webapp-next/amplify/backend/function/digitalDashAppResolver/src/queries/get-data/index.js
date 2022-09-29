@@ -35,6 +35,54 @@ const metrics = [
     { displayName: 'Engagement', field: 'engagementCount' }
 ];
 
+const postHeaders = [
+    {
+        platform: 'global',
+        metrics: [
+            { displayName: 'Platform', field: '__typename'},
+            { displayName: 'Profile', field: 'profileName'},
+            { displayName: 'Caption', field: 'caption'},
+            { displayName: 'Date', field: 'datePosted'},
+            { displayName: 'Views', field: 'viewCount'},
+            { displayName: 'Total Engagement', field: 'engagementCount'},
+            { displayName: 'Engagement Rate', field: 'engagementRate'},
+        ],
+    },
+    {
+        platform: 'twitter',
+        metrics: [
+            { displayName: 'Profile Clicks', field: 'profileClickCount'},
+            { displayName: 'Likes', field: 'likeCount'},
+            { displayName: 'Replies', field: 'replyCount'},
+            { displayName: 'Retweets', field: 'retweetCount'},
+        ],
+    },
+    {
+        platform: 'youtube',
+        metrics: [
+            { displayName: 'Likes', field: 'likeCount'},
+            { displayName: 'Comments', field: 'commentCount'},
+        ]
+    },
+    {
+        platform: 'instagram-pro',
+        metrics: [
+            { displayName: 'Likes', field: 'likeCount'},
+            { displayName: 'Comments', field: 'commentCount'},
+            { displayName: 'Saves', field: 'saveCount'},
+            { displayName: 'Reach', field: 'reachCount'},
+        ]
+    },
+    {
+        platform: 'tiktok',
+        metrics: [
+            { displayName: 'Likes', field: 'likeCount'},
+            { displayName: 'Comments', field: 'commentCount'},
+            { displayName: 'Shares', field: 'shareCount'},
+        ]
+    },
+]
+
 async function getData(ctx) {
     const { username, selectedProfileNames, timezoneOffset=0 } = ctx.arguments.input;
     const { startDate, endDate } = ctx.arguments.input.startDate ? ctx.arguments.input : timeframes(timezoneOffset)[0];
@@ -48,56 +96,11 @@ async function getData(ctx) {
     return {
         data: {
             profiles,
-            graph: getGraphData(records, startDate, endDate),
+            graphs: getGraphData(records, profiles, startDate, endDate),
             aggregated: getAggregatedStats(records, metrics, filteredProfiles),
             records,
             timeframes: timeframes(timezoneOffset),
-            postHeaders: [
-                {
-                    platform: 'global',
-                    metrics: [
-                        { displayName: 'Platform', field: '__typename'},
-                        { displayName: 'Profile', field: 'profileName'},
-                        { displayName: 'Caption', field: 'caption'},
-                        { displayName: 'Date', field: 'datePosted'},
-                        { displayName: 'Views', field: 'viewCount'},
-                        { displayName: 'Total Engagement', field: 'engagementCount'},
-                    ],
-                },
-                {
-                    platform: 'twitter',
-                    metrics: [
-                        { displayName: 'Profile Clicks', field: 'profileClickCount'},
-                        { displayName: 'Likes', field: 'likeCount'},
-                        { displayName: 'Replies', field: 'replyCount'},
-                        { displayName: 'Retweets', field: 'retweetCount'},
-                    ],
-                },
-                {
-                    platform: 'youtube',
-                    metrics: [
-                        { displayName: 'Likes', field: 'likeCount'},
-                        { displayName: 'Comments', field: 'commentCount'},
-                    ]
-                },
-                {
-                    platform: 'instagram-pro',
-                    metrics: [
-                        { displayName: 'Likes', field: 'likeCount'},
-                        { displayName: 'Comments', field: 'commentCount'},
-                        { displayName: 'Saves', field: 'saveCount'},
-                        { displayName: 'Reach', field: 'reachCount'},
-                    ]
-                },
-                {
-                    platform: 'tiktok',
-                    metrics: [
-                        { displayName: 'Likes', field: 'likeCount'},
-                        { displayName: 'Comments', field: 'commentCount'},
-                        { displayName: 'Shares', field: 'shareCount'},
-                    ]
-                },
-            ]
+            postHeaders,
         },
         success: true,
     };

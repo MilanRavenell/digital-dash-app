@@ -83,7 +83,7 @@ async function getInstagramProProfileInfo(ctx, profile) {
 }
 
 async function getTikTokProfileInfo(ctx, profile) {
-    return {}
+    console.log('getting tiktok profile')
     try {
         const lambda = new AWS.Lambda({ region: 'us-west-2' });
 
@@ -93,8 +93,10 @@ async function getTikTokProfileInfo(ctx, profile) {
                 platform: 'tiktok',
                 handle: profile.profileName,
                 task: 'get_profile_info',
+                use_tor: true,
             }),
         }).promise();
+        console.log(response)
         const data = JSON.parse(response.Payload)
 
         return {
