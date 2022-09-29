@@ -3,6 +3,7 @@ import { platformToLogoUrlMap } from '../helpers';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import moment from 'moment';
 
 import styles from '../styles/PostsContainerPostsView.module.css';
 
@@ -129,9 +130,9 @@ const PostsContainerPostsView = ({
                                                                 </div>
                                                             );
                                                         case 'Date':
-                                                            return new Date(post[field]).toLocaleDateString('en-us', { year:"numeric", month:"short", day:"numeric" });
+                                                            return moment(post[field]).format('MMM D, YYYY');
                                                         default:
-                                                            return <div className={styles.fieldContent}>{post[field]}</div>;
+                                                            return <div className={styles.fieldContent}>{(post[field] || '').toLocaleString()}</div>;
                                                     }
                                                 })()
                                             }
