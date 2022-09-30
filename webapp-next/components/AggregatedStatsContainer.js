@@ -12,7 +12,7 @@ const AggregatedStatsContainer = ({ data }) => {
                 <div className={styles.row} key={batchIndex}>
                     {
                         batch.map((stat, keyIndex) => (
-                            <StatContainer name={(stat || {}).name} value={(stat || {}).value} key={keyIndex}/>
+                            <StatContainer name={(stat || {}).name} value={(stat || {}).value} percentDiff={(stat || {}).percentDiff} key={keyIndex}/>
                         ))
                     }
                 </div>

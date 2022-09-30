@@ -1,3 +1,4 @@
+const moment = require('moment');
 const getGraphData = require('./get-graph-data');
 const getAggregatedStats = require('./get-aggregated-stats');
 
@@ -92,12 +93,29 @@ async function getData(ctx) {
         ? profiles.filter(({ profileName }) => (selectedProfileNames.includes(profileName)))
         : profiles;
     const records = await getRecords(ctx, filteredProfiles, startDate, endDate, timezoneOffset);
+
+    const previousComparisonTimeframe = getPreviousComparisonTimeframe(startDate, endDate);
+    const previousComparisonRecords = await getRecords(ctx, filteredProfiles, previousComparisonTimeframe[0], previousComparisonTimeframe[1], timezoneOffset);
+
+    const aggregatedCurrent = getAggregatedStats(records, metrics, filteredProfiles);
+    const aggregatedPrevious = getAggregatedStats(previousComparisonRecords, metrics, filteredProfiles);
+
+    const aggregated = aggregatedCurrent.map((stat, index) => {
+        const prevValue = parseFloat(aggregatedPrevious[index].value.replace(/[^0-9.]/g, ''));
+        const curValue = parseFloat(stat.value.replace(/[^0-9.]/g, ''));
+        const percentDiff = (prevValue === 0) ? null : (curValue - prevValue) / prevValue;
+
+        return {
+            ...stat,
+            percentDiff,
+        }
+    });
     
     return {
         data: {
             profiles,
             graphs: getGraphData(records, profiles, startDate, endDate),
-            aggregated: getAggregatedStats(records, metrics, filteredProfiles),
+            aggregated,
             records,
             timeframes: timeframes(timezoneOffset),
             postHeaders,
@@ -173,6 +191,14 @@ async function getRecords(ctx, profiles, startDate, endDate, timezoneOffset) {
 
 function getDateWithTimezoneOffset(date, timezoneOffset) {
     return new Date(new Date(date) - (timezoneOffset * 60 * 1000));
+}
+
+function getPreviousComparisonTimeframe(start, end) {
+    nDays = new Date(end).getDate() - new Date(start).getDate()
+    newEnd = moment(start).subtract(1, 'days')
+    newStart = moment(newEnd).subtract(nDays, 'days');
+
+    return [newStart.toISOString(), newEnd.toISOString()]
 }
 
 module.exports = getData;

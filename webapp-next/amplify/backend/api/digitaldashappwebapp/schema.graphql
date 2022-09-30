@@ -137,6 +137,8 @@ type GetDataGraphDataset {
 type GetDataAggregated {
   name: String!
   value: String!
+  percentDiff: Float
+
 }
 
 type GetDataDataTimeframe {

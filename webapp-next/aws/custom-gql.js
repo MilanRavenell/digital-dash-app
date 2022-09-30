@@ -48,6 +48,7 @@ export const getData = /* GraphQL */ `
         aggregated {
           name
           value
+          percentDiff
         }
         records {
           __typename

@@ -35,10 +35,17 @@
     flex: 4;
 }
 
-.value {
+.values {
     flex: 16;
     display: flex;
     justify-content: center;
+    align-items: center;
+}
+
+.diff {
+    margin-left: 5px;
+    font-size: medium;
+    display: flex;
     align-items: center;
 }
 
