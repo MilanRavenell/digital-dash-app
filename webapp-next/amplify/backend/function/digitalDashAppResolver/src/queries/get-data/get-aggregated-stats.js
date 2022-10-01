@@ -1,6 +1,6 @@
-function getAggregatedStats(records, metrics, profiles) {
+async function getAggregatedStats(ctx, records, metrics, profiles, end, timezoneOffset) {
     return [
-        { name: 'Total Followers', value: getTotalFollowerCount(profiles) },
+        { name: 'Total Followers', value: await getTotalFollowerCount(ctx, profiles, end, timezoneOffset) },
         { name: 'Total Posts', value: records.length.toLocaleString() },
         ...getCalculations(records, metrics),
     ];
@@ -31,11 +31,43 @@ function getCalculations(records, metrics) {
     ));
 }
 
-function getTotalFollowerCount(profiles) {
-    return profiles.reduce((acc, profile) => {
-        return acc + parseInt(profile.followerCount || 0);
-    }, 0)
-        .toLocaleString();
+async function getTotalFollowerCount(ctx, profiles, end, timezoneOffset) {
+    const { ddbClient } = ctx.resources;
+
+    try {
+        const results = await Promise.all(profiles.map(async (profile) => {
+                return (await ddbClient.query({
+                    TableName: 'MetricHistory-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                    KeyConditionExpression: '#key = :key AND #createdAt < :end',
+                    ExpressionAttributeNames: {
+                        '#key': 'key',
+                        '#createdAt': 'createdAt',
+                    },
+                    ExpressionAttributeValues: {
+                        ':key': `${profile.key}_followerCount`,
+                        ':end': getDateWithTimezoneOffset(end, -1 * timezoneOffset).toISOString(),
+                    },
+                    ScanIndexForward: true,
+                    Limit: 1,
+                }).promise())
+                    .Items
+                    .map(item => ({
+                        ...item,
+                        createdAt: getDateWithTimezoneOffset(end, timezoneOffset),
+                    }));
+        }));
+
+        return results
+            .flat()
+            .reduce((sum, { value }) => { return sum + parseInt(value || 0) }, 0)
+            .toLocaleString();
+    } catch (err) {
+        console.log('Failed to get follower count', err);
+    }       
+}
+
+function getDateWithTimezoneOffset(date, timezoneOffset) {
+    return new Date(new Date(date) - (timezoneOffset * 60 * 1000));
 }
 
 module.exports = getAggregatedStats;

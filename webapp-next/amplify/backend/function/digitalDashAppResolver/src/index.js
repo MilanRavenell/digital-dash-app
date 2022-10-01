@@ -28,7 +28,12 @@ const functions = {
 exports.handler = async (event) => {
   console.log(`EVENT: ${JSON.stringify(event)}`);
 
-  const { typeName, fieldName, arguments } = event;
+  let objToParse = event;
+  if (event.Records) {
+    objToParse = JSON.parse(event.Records[0].body);
+  }
+
+  const { typeName, fieldName, arguments } = objToParse;
 
   const response = functions[typeName][fieldName]({
     resources: {

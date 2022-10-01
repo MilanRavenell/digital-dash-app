@@ -109,6 +109,7 @@ const PostsContainerPostsView = ({
                             {
                                 totalHeaders.map(({ field, displayName }, keyIndex) => {
                                     const platform = profiles.find((profile => (profile.profileName === post.profileName))).platform;
+                                    const timezoneOffset = new Date().getTimezoneOffset();
                                     return (
                                         <div className={getStyle(displayName, false)} key={keyIndex}>
                                             {
@@ -130,7 +131,9 @@ const PostsContainerPostsView = ({
                                                                 </div>
                                                             );
                                                         case 'Date':
-                                                            return moment(post[field]).format('MMM D, YYYY');
+                                                            const date = moment(post[field]);
+                                                            date.subtract(timezoneOffset, 'minutes');
+                                                            return date.format('MMM D, YYYY');
                                                         default:
                                                             return <div className={styles.fieldContent}>{(post[field] || '').toLocaleString()}</div>;
                                                     }

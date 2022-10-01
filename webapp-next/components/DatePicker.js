@@ -14,6 +14,21 @@ const DatePicker = ({
     const [startDate, setStartDate] = React.useState((dayjs()));
     const [endDate, setEndDate] = React.useState((dayjs()));
 
+    const handleApply = () => {
+        // convert to UTC
+        const timezoneOffset = new Date().getTimezoneOffset();
+
+        const start = startDate.toDate();
+        const end = endDate.toDate();
+        
+        start.setTime(start.getTime() + (timezoneOffset * 60 * 1000));
+
+        end.setHours(23, 59, 59);
+        end.setTime(emd.getTime() + (timezoneOffset * 60 * 1000));
+
+        submit(start, end);
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.top}>
@@ -49,7 +64,7 @@ const DatePicker = ({
                 </div>
             </div>
             <div className={styles.bottom}>
-                <Button onClick={()=>{submit(startDate.toDate(), endDate.toDate())}} variant="contained">Apply</Button>
+                <Button onClick={handleApply} variant="contained">Apply</Button>
             </div>
         </div>
     )

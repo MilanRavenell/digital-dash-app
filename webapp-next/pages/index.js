@@ -20,7 +20,6 @@ export default function App() {
 
   const [data, setData] = React.useState(null);
   const [init, setInit] = React.useState(true);
-  const [fetchRecentData, setFetchRecentData] = React.useState(false);
   const [selectedProfileNames, setSelectedProfileNames] = React.useState([]);
   const [timeframe, setTimeframe] = React.useState(null);
   const [sortOrder, setSortOrder] = React.useState(null);
@@ -32,12 +31,7 @@ export default function App() {
       initialize();
       return;
     }
-
-    if (context.user && data && fetchRecentData) {
-      fetchMostRecentPostData();
-      return;
-    }
-  }, [context, data, fetchRecentData]);
+  }, [context, data]);
 
   const initialize = async () => {
     console.log('init')
@@ -48,7 +42,6 @@ export default function App() {
         setSelectedProfileNames(response.data.profiles.map(profile => profile.profileName));
         setTimeframe(response.data.timeframes[0]);
         setData(response.data);
-        setFetchRecentData(true);
       }
     } catch (err) {
       console.error('Failed to initialize user', err);

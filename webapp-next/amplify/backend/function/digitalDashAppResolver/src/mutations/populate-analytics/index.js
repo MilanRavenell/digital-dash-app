@@ -81,7 +81,9 @@ async function populateProfile(ctx, profile) {
     const { debug_noUploadToDDB } = ctx.arguments.input;
 
     const profileInfo = await getProfileInfo(ctx, profile);
-        if (!debug_noUploadToDDB) {
+
+    if (!debug_noUploadToDDB) {
+        try {
             await ddbClient.put({
                 TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
                 Item: {
@@ -89,10 +91,24 @@ async function populateProfile(ctx, profile) {
                     ...profileInfo,
                 }
             }).promise();
+    
+            await ddbClient.put({
+                TableName: 'MetricHistory-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                Item: {
+                    key: `${profile.key}_followerCount`,
+                    profileKey: profile.key,
+                    metric: 'followerCount',
+                    createdAt: new Date().toISOString(),
+                    value: profileInfo.followerCount,
+                }
+            }).promise();
+        } catch (err) {
+            console.error('Failed to update profile info')
         }
-        else {
-            console.log(profileInfo);
-        }
+    }
+    else {
+        console.log(profileInfo);
+    }
 }
 
 async function populatePosts(ctx, profile) {

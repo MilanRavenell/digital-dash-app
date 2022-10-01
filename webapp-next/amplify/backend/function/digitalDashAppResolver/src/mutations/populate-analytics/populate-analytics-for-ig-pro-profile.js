@@ -60,7 +60,7 @@ async function fetchAnalyticsForIgProProfile (ctx, profile) {
                 item.reachCount = businessResponse.data[1].values[0].value;
                 item.saveCount = businessResponse.data[2].values[0].value;
                 item.engagementCount = businessResponse.data[3].values[0].value;
-                item.engagementRate = (viewCount > 0) ? item.engagementCount / parseFloat(item.viewCount) : null;
+                item.engagementRate = (item.viewCount > 0) ? item.engagementCount / parseFloat(item.viewCount) : null;
             }
 
             if (!debug_noUploadToDDB) {

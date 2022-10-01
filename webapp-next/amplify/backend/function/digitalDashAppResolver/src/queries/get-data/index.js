@@ -97,8 +97,8 @@ async function getData(ctx) {
     const previousComparisonTimeframe = getPreviousComparisonTimeframe(startDate, endDate);
     const previousComparisonRecords = await getRecords(ctx, filteredProfiles, previousComparisonTimeframe[0], previousComparisonTimeframe[1], timezoneOffset);
 
-    const aggregatedCurrent = getAggregatedStats(records, metrics, filteredProfiles);
-    const aggregatedPrevious = getAggregatedStats(previousComparisonRecords, metrics, filteredProfiles);
+    const aggregatedCurrent = await getAggregatedStats(ctx, records, metrics, filteredProfiles, endDate, timezoneOffset);
+    const aggregatedPrevious = await getAggregatedStats(ctx, previousComparisonRecords, metrics, filteredProfiles, previousComparisonTimeframe[1], timezoneOffset);
 
     const aggregated = aggregatedCurrent.map((stat, index) => {
         const prevValue = parseFloat(aggregatedPrevious[index].value.replace(/[^0-9.]/g, ''));
@@ -114,7 +114,7 @@ async function getData(ctx) {
     return {
         data: {
             profiles,
-            graphs: getGraphData(records, profiles, startDate, endDate),
+            graphs: await getGraphData(ctx, records, profiles, startDate, endDate, timezoneOffset),
             aggregated,
             records,
             timeframes: timeframes(timezoneOffset),

@@ -14,5 +14,10 @@
     "startDate": "2014-09-13T01:12:01.560Z",
     "endDate": "2022-09-13T00:38:01.525Z",
     "selectedProfileNames": ["Yung Milly", "MillyTheYounger"]
-  }
+  },
+  "Recordsx": [
+    {
+      "body": "{\"typeName\":\"Mutation\",\"fieldName\":\"populateAnalytics\",\"arguments\":{\"input\":{\"username\":\"milanravenell@gmail.com\",\"profileKey\":\"instagram-pro_Yung Milly\",\"debug_noUploadToDDB\":false}}}"
+    }
+  ]
 }

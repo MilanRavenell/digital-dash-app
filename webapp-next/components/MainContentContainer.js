@@ -1,17 +1,14 @@
 import React from 'react';
 import AggregatedStatsContainer from './AggregatedStatsContainer';
-import PostsContainer from './PostsContainer';
 import IndividualPostPopUp from './IndividualPostPopUp';
 import ProfilePicker from './ProfilePicker';
-import DatePicker from './DatePicker';
 import PostsContainerPostsView from './PostsContainerPostsView';
 import PostsContainerGraphView from './PostsContainerGraphView';
-import { Select, MenuItem, FormControl, InputLabel, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { ToggleButtonGroup, ToggleButton } from '@mui/material';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
-import Popover from '@mui/material/Popover';
 import NeedsRefreshDialogue from './NeedsRefreshDialogue';
-import moment from 'moment';
+import TimeframePicker from './TimeframePicker';
 
 import styles from '../styles/MainContentContainer.module.css';
 
@@ -29,40 +26,12 @@ const MainContentContainer = ({
     handleRefreshCancel,
     profileToRefresh,
 }) => {
-    const timeframeNames = data.timeframes.map(timeframe => timeframe.name);
-
     const [state, setState] = React.useState({
         popUpPost: null,
         profilePickerExpanded: true,
     });
 
-    const popoverAnchorEl = React.useRef();
-    const [popoverOpen, setPopoverOpen] = React.useState(false);
     const [bottomView, setBottomView] = React.useState('graph');
-
-    const handleTimeFrameChange = React.useCallback((event) => {
-        const value = event.target.value;
-
-        if (value === 'Custom') {
-            setPopoverOpen(true);
-        }
-
-        const timeframeIndex = timeframeNames.indexOf(event.target.value);
-        setTimeframe(data.timeframes[timeframeIndex]);
-    }, []);
-
-    const handleCustomTimeframe = React.useCallback((startDate, endDate) => {
-        setPopoverOpen(false);
-        setTimeframe({
-            name: 'CustomSelected',
-            startDate,
-            endDate,
-        });
-    }, []);
-
-    const handlePopoverClose = () => {
-        setPopoverOpen(false);
-    }
 
     const setPopUpPost = React.useCallback((post) => {
         setState((prevState) => ({
@@ -136,43 +105,11 @@ const MainContentContainer = ({
                 <div className={styles.contentRight} style={{
                     width: state.profilePickerExpanded ? '82%' : '97%',
                 }}>
-                    <div className={styles.date}>
-                        <div className={styles.dateLabel}>
-                            {
-                                (timeframe.startDate && timeframe.endDate)
-                                && `${moment(timeframe.startDate).format('MMM D, YYYY') } - ${moment(timeframe.endDate).format('MMM D, YYYY')}`
-                            }
-                        </div>
-                        <FormControl sx={{ m: 1, minWidth: 120, height: '100%' }} ref={popoverAnchorEl}>
-                            <InputLabel>Timeframe</InputLabel>
-                            <Select
-                                label="Timeframe"
-                                value={timeframe.name}
-                                onChange={handleTimeFrameChange}
-                            >
-                            {
-                                data.timeframes.map((timeframe, index) => (
-                                    <MenuItem value={timeframe.name} key={index}>{timeframe.name}</MenuItem>
-                                ))
-                            }
-                            </Select>
-                        </FormControl>
-                    </div>
-                    <Popover
-                        open={popoverOpen}
-                        anchorEl={popoverAnchorEl.current}
-                        onClose={handlePopoverClose}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'right',
-                        }}
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                    >
-                        <DatePicker submit={handleCustomTimeframe}/>
-                    </Popover>
+                    <TimeframePicker
+                        timeframes={data.timeframes}
+                        timeframe={timeframe}
+                        setTimeframe={setTimeframe}
+                    />
                     <div className={styles.contentTop}>
                         <AggregatedStatsContainer
                             data={aggregatedData}/>

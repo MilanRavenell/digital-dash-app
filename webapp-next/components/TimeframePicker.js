@@ -1,27 +1,91 @@
 import React from 'react';
+import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import Popover from '@mui/material/Popover';
+import DatePicker from './DatePicker';
+import moment from 'moment';
 
-const TimeFramePicker = ({ timeframe, onChange }) => {
-    const onClick = (value) => {
-        onChange(value)
-    }
+import styles from '../styles/TimeframePicker.module.css';
 
-    const style = (value) => {
-        return (value === timeframe)
-        ? {
-            color: 'red'
-        } : {
-            color: 'black'
+const TimeframePicker = ({
+    timeframes,
+    timeframe,
+    setTimeframe,
+}) => {
+    const popoverAnchorEl = React.useRef();
+    const [popoverOpen, setPopoverOpen] = React.useState(false);
+
+    const timeframeNames = timeframes.map(timeframe => timeframe.name);
+
+    const handleTimeFrameChange = React.useCallback((event) => {
+        const value = event.target.value;
+
+        if (value === 'Custom') {
+            setPopoverOpen(true);
         }
+
+        const timeframeIndex = timeframeNames.indexOf(event.target.value);
+        setTimeframe(timeframes[timeframeIndex]);
+    }, []);
+
+    const handleCustomTimeframe = React.useCallback((startDate, endDate) => {
+        setPopoverOpen(false);
+        setTimeframe({
+            name: 'CustomSelected',
+            startDate,
+            endDate,
+        });
+    }, []);
+
+    const handlePopoverClose = () => {
+        setPopoverOpen(false);
     }
+
+    const timezoneOffset = new Date().getTimezoneOffset();
+
+    const start = moment(timeframe.startDate);
+    start.subtract(timezoneOffset, 'minutes');
+    const end = moment(timeframe.endDate);
+    end.subtract(timezoneOffset, 'minutes');
 
     return (
-        <div style={{ border:"1px solid black", borderRadius: '5px', margin: '10px', flex: 1 }}>
-            <div onClick={() => onClick('day')} style={style('day')}> 1 Day </div>
-            <div onClick={() => onClick('week')} style={style('week')}> 1 Week </div>
-            <div onClick={() => onClick('month')} style={style('month')}> 1 Month </div>
-            <div onClick={() => onClick('year')} style={style('year')}> 1 Year </div>
+        <div className={styles.container}>
+            <div className={styles.dateLabel}>
+                {
+                    (timeframe.startDate && timeframe.endDate)
+                    && `${start.format('MMM D, YYYY') } - ${end.format('MMM D, YYYY')}`
+                }
+            </div>
+            <FormControl sx={{ m: 1, minWidth: 120, height: '100%' }} ref={popoverAnchorEl}>
+                <InputLabel>Timeframe</InputLabel>
+                <Select
+                    label="Timeframe"
+                    value={timeframe.name}
+                    onChange={handleTimeFrameChange}
+                >
+                {
+                    timeframes.map((timeframe, index) => (
+                        <MenuItem value={timeframe.name} key={index}>{timeframe.name}</MenuItem>
+                    ))
+                }
+                </Select>
+            </FormControl>
+            <Popover
+                open={popoverOpen}
+                anchorEl={popoverAnchorEl.current}
+                onClose={handlePopoverClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+            >
+                <DatePicker submit={handleCustomTimeframe}/>
+            </Popover>
         </div>
     );
 }
 
-export default TimeFramePicker;
+export default TimeframePicker;

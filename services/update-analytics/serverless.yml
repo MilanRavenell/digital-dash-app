@@ -1,0 +1,29 @@
+service: update-analytics
+provider:
+  name: aws
+  stage: staging
+  region: us-west-2
+  profile: milan
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - sqs:SendMessage
+          Resource: arn:aws:sqs:us-west-2:125288872271:update-analytics-queue
+        - Effect: Allow
+          Action:
+            - dynamodb:Scan
+          Resource: arn:aws:dynamodb:us-west-2:125288872271:table/UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging
+
+functions:
+  updateAnalytics:
+    handler: src/index.handler
+    events:
+      - eventBridge:
+          schedule: cron(0 * * * ? *)
+custom:
+  bucket: ${self:service}-${self:provider.stage}-demo
+# Function level environment variables
+  environment:
+    BUCKET: ${self:custom.bucket}

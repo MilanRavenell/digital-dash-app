@@ -13,8 +13,9 @@ const graphColors = [
     '#bb00ff',
 ]
 
-function getGraphData(records, profiles, start, end) {
+async function getGraphData(ctx, records, profiles, start, end, timezoneOffset) {
     const partitions = getGraphPartitions(start, end);
+    const followerHistory = await getFollowerHistory(ctx, profiles, start, end, timezoneOffset);
 
     const totalViewsPartitoned = partitions.map(() => 0);
     const totalEngagementPartitioned = partitions.map(() => 0);
@@ -34,38 +35,42 @@ function getGraphData(records, profiles, start, end) {
         [profileName]: partitions.map(() => 0),
     }), {});
 
-    let partitionIndex = 0;
-    records.forEach((record) => {
-        while (new Date(record.datePosted) < new Date(partitions[partitionIndex]) && (partitionIndex < partitions.length - 1)) {
-            profiles.forEach(({ profileName }) => {
-                if (profileViewsPartitioned[profileName][partitionIndex] > 0) {
-                    profileEngagementRatePartitioned[profileName][partitionIndex] = 
-                        parseFloat(profileEngagementPartitioned[profileName][partitionIndex])
-                        / profileViewsPartitioned[profileName][partitionIndex];
-                }
-            })
-            ++partitionIndex;
+    const profileFollowerCountPartitioned = profiles.reduce((acc, { profileName }) => ({
+        ...acc,
+        [profileName]: partitions.map(() => 0),
+    }), {});
+
+    let recordIndex = 0;
+    partitions.forEach((partition, partitionIndex) => {
+        while (new Date(records[recordIndex].datePosted) > new Date(partition) && (recordIndex < records.length - 1)) {
+            const record = records[recordIndex];
+            totalViewsPartitoned[partitionIndex] += parseInt(record.viewCount || 0);
+            totalEngagementPartitioned[partitionIndex] += parseInt(record.engagementCount || 0);
+
+            profileViewsPartitioned[record.profileName][partitionIndex] += parseInt(record.viewCount || 0);
+            profileEngagementPartitioned[record.profileName][partitionIndex] += parseInt(record.engagementCount || 0);
+
+            ++recordIndex;
         }
 
-        totalViewsPartitoned[partitionIndex] += parseInt(record.viewCount || 0);
-        totalEngagementPartitioned[partitionIndex] += parseInt(record.engagementCount || 0);
+        profiles.forEach(({ profileName }, profileIndex) => {
+            if (profileViewsPartitioned[profileName][partitionIndex] > 0) {
+                profileEngagementRatePartitioned[profileName][partitionIndex] = 
+                    parseFloat(profileEngagementPartitioned[profileName][partitionIndex])
+                    / profileViewsPartitioned[profileName][partitionIndex];
+            }
 
-        profileViewsPartitioned[record.profileName][partitionIndex] += parseInt(record.viewCount || 0);
-        profileEngagementPartitioned[record.profileName][partitionIndex] += parseInt(record.engagementCount || 0);
+            const followerHistoryFiltered = followerHistory[profileIndex]
+                .filter(history => (new Date(history.createdAt).getDate() === new Date(partition).getDate()));
+
+            if (followerHistoryFiltered.length > 0) {
+                // Force amplpify push
+                profileFollowerCountPartitioned[profileName][partitionIndex] = (followerHistoryFiltered[0].value || 0);
+            }
+        });
     });
 
-    // Calculate engagement rate for last partition
-    profiles.forEach(({ profileName }) => {
-        if (profileViewsPartitioned[profileName][partitionIndex] > 0) {
-            profileEngagementRatePartitioned[profileName][partitionIndex] = 
-                parseFloat(profileEngagementPartitioned[profileName][partitionIndex])
-                / profileViewsPartitioned[profileName][partitionIndex];
-        }
-    })
-
     partitions.reverse();
-
-    const rainbow = new Rainbow();
 
     return [
         {
@@ -87,7 +92,6 @@ function getGraphData(records, profiles, start, end) {
                     },
                 ],
             },
-            
         },
         {
             name: 'Views',
@@ -128,6 +132,19 @@ function getGraphData(records, profiles, start, end) {
                 })),
             },
         },
+        {
+            name: 'Follower Count',
+            type: 'line',
+            graph: {
+                labels: partitions
+                    .map(partition => moment(partition).format('MMM D, YYYY')),
+                datasets: profiles.map(({ profileName }, index) => ({
+                    label: profileName,
+                    data: profileFollowerCountPartitioned[profileName].reverse(),
+                    borderColor: graphColors[index],
+                })),
+            },
+        },
     ];
 }
 
@@ -146,6 +163,54 @@ function getGraphPartitions(start, end) {
     }
 
     return partitions;
+}
+
+async function getFollowerHistory(ctx, profiles, start, end, timezoneOffset) {
+    const { ddbClient } = ctx.resources;
+
+    // Get UTC dates
+    const startUTC = getDateWithTimezoneOffset(start, -1 * timezoneOffset);
+    const endUTC = getDateWithTimezoneOffset(end, -1 * timezoneOffset);
+
+    return await Promise.all(
+        profiles.map(async (profile) => {
+            const followerHistory = [];
+            try {
+                let nextToken = null;
+                do {
+                    const response = await ddbClient.query({
+                        TableName: 'MetricHistory-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                        KeyConditionExpression: '#key = :key AND #createdAt BETWEEN :start AND :end',
+                        ExpressionAttributeNames: {
+                            '#key': 'key',
+                            '#createdAt': 'createdAt',
+                        },
+                        ExpressionAttributeValues: {
+                            ':key': `${profile.key}_followerCount`,
+                            ':start': startUTC.toISOString(),
+                            ':end': endUTC.toISOString(),
+                        },
+                        LastEvaluatedKey: nextToken,
+                        ScanIndexForward: true,
+                    }).promise();
+
+                    followerHistory.push(...response.Items.map(item => ({
+                        ...item,
+                        createdAt: getDateWithTimezoneOffset(item.createdAt, timezoneOffset),
+                    })));
+                    nextToken = response.ExclusiveStartKey;
+                } while (nextToken !== null && nextToken !== undefined)
+            } catch (err) {
+                console.error('Failed to get users follower history', err);
+            }
+
+            return followerHistory;
+        })
+    );
+}
+
+function getDateWithTimezoneOffset(date, timezoneOffset) {
+    return new Date(new Date(date) - (timezoneOffset * 60 * 1000));
 }
 
 module.exports = getGraphData;

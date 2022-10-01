@@ -68,7 +68,7 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
                 engagementCount,
                 shareCount,
                 engagementRate: viewCount > 0 ? engagementCount / parseFloat(viewCount) : null,
-                datePosted: extraInfo.date || now.toISOString(),
+                datePosted: extraInfo.date || now,
                 createdAt: now,
                 updatedAt: now,
                 __typename: 'TiktokPost',

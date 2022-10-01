@@ -1,0 +1,12 @@
+.container {
+    margin-top: 1%;
+    display: flex;
+    justify-content: end;
+}
+
+.dateLabel {
+    display: flex;
+    align-items: center;
+    font-size: large;
+    color: gray;
+}

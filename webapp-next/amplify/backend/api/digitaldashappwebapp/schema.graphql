@@ -100,7 +100,7 @@ type MetricHistory @model
   profileKey: String! 
   metric: String!
   createdAt: String!
-  value: String!
+  value: Float!
 }
 
 type PostMedia {
