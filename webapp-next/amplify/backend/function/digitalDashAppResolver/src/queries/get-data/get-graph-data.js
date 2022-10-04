@@ -14,6 +14,10 @@ const graphColors = [
 ]
 
 async function getGraphData(ctx, records, profiles, start, end, timezoneOffset) {
+    if (records.length === 0) {
+        return [];
+    }
+    
     const partitions = getGraphPartitions(start, end);
     const followerHistory = await getFollowerHistory(ctx, profiles, start, end, timezoneOffset);
 

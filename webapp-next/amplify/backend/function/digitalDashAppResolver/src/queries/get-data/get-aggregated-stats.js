@@ -21,13 +21,17 @@ function getCalculations(records, metrics) {
     }
 
     metrics.forEach((metric) => {
-        calculations[`Average ${metric.displayName} per Post`] = (len === 0) ? 0 : (calculations[`Total ${metric.displayName}`] / len)
+        calculations[`Average ${metric.displayName} per Post`] = (len === 0)
+            ? 0
+            : (calculations[`Total ${metric.displayName}`] / len)
     });
 
-    calculations['Engagement Rate'] = `${(calculations['Total Engagement']/calculations['Total Views'] * 100).toFixed(2) }%`;
+    calculations['Engagement Rate'] = (calculations['Total Views'] === 0)
+        ? null
+        : `${(calculations['Total Engagement']/calculations['Total Views'] * 100).toFixed(2) }%`;
 
     return Object.keys(calculations).map(key => (
-        { name: key, value: calculations[key].toLocaleString() }
+        { name: key, value: (calculations[key] === null ? '---' : calculations[key]).toLocaleString() }
     ));
 }
 

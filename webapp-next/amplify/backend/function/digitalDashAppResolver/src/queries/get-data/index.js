@@ -95,6 +95,8 @@ async function getData(ctx) {
     const records = await getRecords(ctx, filteredProfiles, startDate, endDate, timezoneOffset);
 
     const previousComparisonTimeframe = getPreviousComparisonTimeframe(startDate, endDate);
+    console.log(startDate, endDate)
+    console.log(previousComparisonTimeframe)
     const previousComparisonRecords = await getRecords(ctx, filteredProfiles, previousComparisonTimeframe[0], previousComparisonTimeframe[1], timezoneOffset);
 
     const aggregatedCurrent = await getAggregatedStats(ctx, records, metrics, filteredProfiles, endDate, timezoneOffset);
@@ -194,7 +196,7 @@ function getDateWithTimezoneOffset(date, timezoneOffset) {
 }
 
 function getPreviousComparisonTimeframe(start, end) {
-    nDays = new Date(end).getDate() - new Date(start).getDate()
+    nDays = (new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24)
     newEnd = moment(start).subtract(1, 'days')
     newStart = moment(newEnd).subtract(nDays, 'days');
 

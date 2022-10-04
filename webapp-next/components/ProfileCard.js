@@ -33,6 +33,7 @@ const ProfileCard = ({
                         display: 'flex',
                         alignItems: 'center',
                     }}
+                    key={'refresh-warning'}
                 >
                     <IconButton onClick={() => {handleNeedsRefresh(profile)}}>
                         <WarningOutlined/>
@@ -51,6 +52,7 @@ const ProfileCard = ({
                         display: 'flex',
                         alignItems: 'center',
                     }}
+                    key={'delete'}
                 >
                     <IconButton onClick={handleDelete}>
                         <DeleteOutlined/>

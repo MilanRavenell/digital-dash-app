@@ -19,19 +19,16 @@ export default function App() {
   const context = React.useContext(AppContext);
 
   const [data, setData] = React.useState(null);
-  const [init, setInit] = React.useState(true);
   const [selectedProfileNames, setSelectedProfileNames] = React.useState([]);
   const [timeframe, setTimeframe] = React.useState(null);
   const [sortOrder, setSortOrder] = React.useState(null);
   const [profileToRefresh, setProfileToRefresh] = React.useState(null);
 
   React.useEffect(() => {
-    if (context.user && init) {
-      setInit(false);
+    if (context.user) {
       initialize();
-      return;
     }
-  }, [context, data]);
+  }, [context, data, selectedProfileNames, timeframe]);
 
   const initialize = async () => {
     console.log('init')
