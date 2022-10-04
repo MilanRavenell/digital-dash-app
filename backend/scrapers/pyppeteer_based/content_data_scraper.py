@@ -226,6 +226,8 @@ class ContentDataScraper:
                 'password': 'digitaldash02',
             })
 
+        await page.setRequestInterception(True)
+        page.on('request', lambda req: asyncio.ensure_future(self.request_handler(req)))
         page.on('response', lambda resp: asyncio.ensure_future(self.response_handler(resp)))
 
         return page
@@ -268,7 +270,6 @@ class ContentDataScraper:
 
     @staticmethod
     def get_int_from_string(num):
-        print(num)
         num = num.replace(',', '')
 
         if (num == ''):
@@ -312,6 +313,9 @@ class ContentDataScraper:
     
     async def get_profile(self):
         raise  NotImplementedError()
+
+    async def request_handler(self, request):
+        return
     
     async def response_handler(self, response):
         return

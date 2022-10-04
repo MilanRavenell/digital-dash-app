@@ -8,10 +8,8 @@
       "username": "milanravenell@gmail.com",
       "profileKey": "instagram-pro_Yung Milly",
       "timezoneOffset": 420,
-      "debug_noUploadToDDB": false,
-      "selectedProfileNames": ["Yung Milly", "MillyTheYounger", "Milan Ravenell"]
+      "debug_noUploadToDDB": false
     },
-
     "startDate": "2014-09-13T01:12:01.560Z",
     "endDate": "2022-09-13T00:38:01.525Z",
     "selectedProfileNames": ["Yung Milly", "MillyTheYounger"]

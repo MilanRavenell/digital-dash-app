@@ -1,6 +1,7 @@
 import React from 'react';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import Popover from '@mui/material/Popover';
 
 import styles from '../styles/StatContainer.module.css';
 
@@ -9,6 +10,12 @@ const StatContainer = ({
     value,
     percentDiff,
 }) => {
+    const popoverAnchorEl = React.useRef();
+    const [popoverOpen, setPopoverOpen] = React.useState(false);
+
+    const handlePopoverClose = () => {
+        setPopoverOpen(false);
+    }
 
     const getPercentDiffColor = () => {
         if (percentDiff < 0) {
@@ -45,7 +52,13 @@ const StatContainer = ({
                                 </div>
                                 {
                                     (percentDiff !== null && percentDiff !== undefined) &&
-                                    <div className={styles.diff} style={{ color: getPercentDiffColor() }}>
+                                    <div
+                                        className={styles.diff}
+                                        style={{ color: getPercentDiffColor() }}
+                                        ref={popoverAnchorEl}
+                                        onMouseOver={() => {setPopoverOpen(true)}}
+                                        onMouseOut={handlePopoverClose}
+                                    >
                                         { getIcon() }
                                         {`${Math.abs(percentDiff * 100).toFixed(2)}%`}
                                     </div>
@@ -54,6 +67,21 @@ const StatContainer = ({
                             </div>
                             <div className={styles.footer}/>
                         </div>
+                        <Popover
+                            open={popoverOpen}
+                            anchorEl={popoverAnchorEl.current}
+                            onClose={handlePopoverClose}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                        >
+                            In comparison to yung money
+                        </Popover>
                     </div>
                 )
             }

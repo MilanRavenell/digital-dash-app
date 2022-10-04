@@ -52,8 +52,19 @@ class InstagramScraper(ContentDataScraper):
     async def response_handler(self, response):
         try:
             if ('/query' in response.url and 'variables' in response.url) or 'username' in response.url:
-                self.response_handler_data.append(json.loads(await response.text()))
+                response_json = json.loads(await response.text())
+                if response_json['data'] and (response_json['data']['shortcode_media'] or response_json['data']['user']):
+                    self.response_handler_data.append(response_json)
         except:
             pass
+
+    async def request_handler(self, request):
+        try:
+            if len(self.response_handler_data) > 0:
+                await request.abort()
+            else:
+                await request.continue_()
+        except Exception as e:
+            print(e)
 
     ########################## Instagram Methods ##############################

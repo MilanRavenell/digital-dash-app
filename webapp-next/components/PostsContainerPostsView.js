@@ -17,9 +17,6 @@ const PostsContainerPostsView = ({
 }) => {
     const totalHeaders = [...headers.globalHeaders, ...headers.platformHeaders];
 
-    console.log('HEADEEERRR')
-    console.log(sortOrder)
-
     const onHeaderClicked = (field) => {
         if (!sortOrder || sortOrder.field !== field) {
             console.log('hi')
@@ -82,7 +79,7 @@ const PostsContainerPostsView = ({
                 {
                     totalHeaders.map(({ field, displayName }, keyIndex) => {
                         return (
-                            <div className={getStyle(displayName, true)}>
+                            <div className={getStyle(displayName, true)} key={keyIndex}>
                                 <Card sx={{ width: '100%', height: '100%', borderRadius: 0, border: 'none' }} variant="outlined"  onClick={() => {onHeaderClicked(`${field}`)}} key={keyIndex}>
                                     <CardActionArea sx={{ width: '100%', height: '100%' }}>
                                         <div className={styles.headerInner}>
