@@ -29,6 +29,12 @@ def get_scraper_from_platform(platform, use_tor, handle, content_to_process):
         except IndexError:
             print('Not enough arguments were supplied for twitter scraper')
             return
+    if platform == 'instagram':
+        try:
+            return InstagramScraper(use_tor, handle, content_to_process)
+        except IndexError:
+            print('Not enough arguments were supplied for twitter scraper')
+            return
 
 def handler(event, context):
     print(event)

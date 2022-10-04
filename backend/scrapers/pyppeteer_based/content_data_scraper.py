@@ -1,5 +1,6 @@
 from pyppeteer import launch
 import asyncio
+import pyppeteer
 from random_user_agent.user_agent import UserAgent
 from random_user_agent.params import SoftwareName, OperatingSystem
 import time
@@ -7,6 +8,10 @@ import os
 import requests
 import platform
 import subprocess
+import signal
+import sys
+import random
+from devices import devices
 
 SOCKS_PORT = 9050
 
@@ -19,6 +24,7 @@ class ContentDataScraper:
         self.use_tor = use_tor
         self.tor_process = None
         self.browser = None
+        self.mobile = False
 
     def full_run(self):
         return asyncio.get_event_loop().run_until_complete(self.arun())
@@ -114,11 +120,23 @@ class ContentDataScraper:
         if oper_sys == 'Linux':
             tor_path = os.path.join(os.getcwd(), 'Tor_linux', 'Tor', 'tor') 
             torrc_path = os.path.join(os.getcwd(), 'tor_config', 'torrc')
-            self.tor_process = subprocess.Popen([tor_path, '-f', torrc_path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            self.tor_process = subprocess.Popen(
+                [tor_path, '-f', torrc_path],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                shell=True,
+                preexec_fn=os.setsid,
+            )
         else:
             tor_path = os.path.join(os.getcwd(), 'Tor_mac', 'tor.real')
-            self.tor_process = subprocess.Popen([tor_path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-
+            self.tor_process = subprocess.Popen(
+                [tor_path],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                shell=True,
+                preexec_fn=os.setsid,
+            )
+        
         print('starting tor')
 
         proxy_launch_start = time.time()
@@ -171,19 +189,7 @@ class ContentDataScraper:
         print('browser launched')
         self.page = await self.get_new_page()
 
-        if not self.use_tor:
-            await self.page.authenticate({
-                'username': 'sp45767889',
-                'password': 'digitaldash01',
-            })
-
     def __get_headers(self):
-        # software_names = [SoftwareName.CHROME.value]
-        # operating_systems = [OperatingSystem.MAC.value]
-        # user_agent_rotator = UserAgent(software_names=software_names, operating_systems=operating_systems, limit=100)
-        # user_agent = user_agent_rotator.get_random_user_agent()
-        user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
-
         return {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
             "accept-encoding": "gzip, deflate, br",
@@ -194,17 +200,34 @@ class ContentDataScraper:
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "macOS",
             "upgrade-insecure-requests": "1",
-            "user-agent": user_agent,
+            "user-agent": 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36',
         }
 
     async def open_page(self):
-        await self.page.goto(self.url)
-        user_page_div = await self.find_element_with_timeout(self.page, self.page_test_el)
-        return (user_page_div is not None)
+        print(f'opening {self.url}')
+        await self.page.goto(self.url,  {'waitUntil': 'networkidle0', 'timeout': 120000})
+
+        if self.page_test_el:
+            user_page_div = await self.find_element_with_timeout(self.page, self.page_test_el)
+            return (user_page_div is not None)
+        else:
+            return True
     
     async def get_new_page(self):
         page = await self.browser.newPage()
-        await page.setExtraHTTPHeaders(headers=self.__get_headers())
+        if self.mobile:
+            await page.emulate(random.choice(devices))
+        else:
+            await page.setExtraHTTPHeaders(headers=self.__get_headers())
+
+        if not self.use_tor:
+            await page.authenticate({
+                'username': 'digitaldash',
+                'password': 'digitaldash02',
+            })
+
+        page.on('response', lambda resp: asyncio.ensure_future(self.response_handler(resp)))
+
         return page
 
     async def close(self):
@@ -264,6 +287,8 @@ class ContentDataScraper:
             print('Caught by CAPTCHA')
         if ('TTGCaptcha' in page_html):
             print('Caught by CAPTCHA')
+        if ('The link you followed may be broken, or the page may have been removed.' in page_html):
+            print('IG page not found')
         else:
             print(page_html)
 
@@ -287,4 +312,7 @@ class ContentDataScraper:
     
     async def get_profile(self):
         raise  NotImplementedError()
+    
+    async def response_handler(self, response):
+        return
 
