@@ -7,12 +7,19 @@ import styles from '../styles/AggregatedStatsContainer.module.css';
 
 const AggregatedStatsContainer = ({ data }) => {
     const getContent = () => {
-        return batchArray(data, 4)
+        return batchArray(data.stats, 4)
             .map((batch, batchIndex) => (
                 <div className={styles.row} key={batchIndex}>
                     {
                         batch.map((stat, keyIndex) => (
-                            <StatContainer name={(stat || {}).name} value={(stat || {}).value} percentDiff={(stat || {}).percentDiff} key={keyIndex}/>
+                            <StatContainer
+                                name={(stat || {}).name}
+                                value={(stat || {}).value}
+                                comparisonTimeframeStart={data.previousComparisonTimeframeStart}
+                                comparisonTimeframeEnd={data.previousComparisonTimeframeEnd}
+                                percentDiff={(stat || {}).percentDiff}
+                                key={keyIndex}
+                            />
                         ))
                     }
                 </div>

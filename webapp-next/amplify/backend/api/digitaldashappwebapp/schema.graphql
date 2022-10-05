@@ -134,10 +134,16 @@ type GetDataGraphDataset {
   borderColor: String
 }
 
-type GetDataAggregated {
+type GetDataAggregatedStat {
   name: String!
   value: String!
   percentDiff: Float
+}
+
+type GetDataAggregated {
+  previousComparisonTimeframeStart: String
+  previousComparisonTimeframeEnd: String
+  stats: [GetDataAggregatedStat!]!
 
 }
 
@@ -162,7 +168,7 @@ union Post = TwitterPost | YoutubePost | InstagramPost | TiktokPost
 type getDataData {
   profiles: [UserProfile!]
   graphs: [GetDataGraph!]
-  aggregated: [GetDataAggregated!]
+  aggregated: GetDataAggregated!
   timeframes: [GetDataDataTimeframe!]
   metrics: [GetDataDataMetric!]
   records: [Post!]

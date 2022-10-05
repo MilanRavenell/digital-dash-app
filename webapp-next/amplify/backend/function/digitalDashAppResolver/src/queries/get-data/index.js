@@ -95,23 +95,25 @@ async function getData(ctx) {
     const records = await getRecords(ctx, filteredProfiles, startDate, endDate, timezoneOffset);
 
     const previousComparisonTimeframe = getPreviousComparisonTimeframe(startDate, endDate);
-    console.log(startDate, endDate)
-    console.log(previousComparisonTimeframe)
     const previousComparisonRecords = await getRecords(ctx, filteredProfiles, previousComparisonTimeframe[0], previousComparisonTimeframe[1], timezoneOffset);
 
     const aggregatedCurrent = await getAggregatedStats(ctx, records, metrics, filteredProfiles, endDate, timezoneOffset);
     const aggregatedPrevious = await getAggregatedStats(ctx, previousComparisonRecords, metrics, filteredProfiles, previousComparisonTimeframe[1], timezoneOffset);
 
-    const aggregated = aggregatedCurrent.map((stat, index) => {
-        const prevValue = parseFloat(aggregatedPrevious[index].value.replace(/[^0-9.]/g, ''));
-        const curValue = parseFloat(stat.value.replace(/[^0-9.]/g, ''));
-        const percentDiff = (prevValue === 0) ? null : (curValue - prevValue) / prevValue;
-
-        return {
-            ...stat,
-            percentDiff,
-        }
-    });
+    const aggregated = {
+        previousComparisonTimeframeStart: previousComparisonTimeframe[0],
+        previousComparisonTimeframeEnd: previousComparisonTimeframe[1],
+        stats: aggregatedCurrent.map((stat, index) => {
+            const prevValue = parseFloat(aggregatedPrevious[index].value.replace(/[^0-9.]/g, ''));
+            const curValue = parseFloat(stat.value.replace(/[^0-9.]/g, ''));
+            const percentDiff = (prevValue === 0) ? null : (curValue - prevValue) / prevValue;
+    
+            return {
+                ...stat,
+                percentDiff,
+            }
+        }),
+    };
     
     return {
         data: {

@@ -14,10 +14,6 @@ const graphColors = [
 ]
 
 async function getGraphData(ctx, records, profiles, start, end, timezoneOffset) {
-    if (records.length === 0) {
-        return [];
-    }
-    
     const partitions = getGraphPartitions(start, end);
     const followerHistory = await getFollowerHistory(ctx, profiles, start, end, timezoneOffset);
 
@@ -46,7 +42,7 @@ async function getGraphData(ctx, records, profiles, start, end, timezoneOffset) 
 
     let recordIndex = 0;
     partitions.forEach((partition, partitionIndex) => {
-        while (new Date(records[recordIndex].datePosted) > new Date(partition) && (recordIndex < records.length - 1)) {
+        while ((recordIndex < records.length - 1) && (new Date(records[recordIndex].datePosted) > new Date(partition))) {
             const record = records[recordIndex];
             totalViewsPartitoned[partitionIndex] += parseInt(record.viewCount || 0);
             totalEngagementPartitioned[partitionIndex] += parseInt(record.engagementCount || 0);

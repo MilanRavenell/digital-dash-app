@@ -103,12 +103,13 @@ const IndividualPostPopUp = ({ post, headers }) => {
                 </div>
             </div>
             <div className={styles.stats}>
-                <Stat name='Views' value={post.viewCount}/>
-                <Stat name='Total Engagement' value={post.engagementCount}/>
+                <Stat name='Views' value={((post.viewCount !== null) ? post.viewCount : '--').toLocaleString()}/>
+                <Stat name='Total Engagement' value={(post.engagementCount || 0).toLocaleString()}/>
+                <Stat name='Engagement Rate' value={(post.engagementRate !== null) ? `${(post.engagementRate * 100).toFixed(2)}%` : '--'}/>
                 <div className={styles.separator}/>
                 {
                     headers.map((header, index) => (
-                        <Stat name={header.displayName} value={post[header.field]} smallFont={true} key={index}/>
+                        <Stat name={header.displayName} value={((post[header.field] !== null && post[header.field] !== undefined) ? post[header.field] : '--').toLocaleString()} smallFont={true} key={index}/>
                     ))
                 }
             </div>

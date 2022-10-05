@@ -2,6 +2,7 @@ import React from 'react';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Popover from '@mui/material/Popover';
+import moment from 'moment';
 
 import styles from '../styles/StatContainer.module.css';
 
@@ -9,10 +10,15 @@ const StatContainer = ({
     name,
     value,
     percentDiff,
+    comparisonTimeframeStart,
+    comparisonTimeframeEnd,
 }) => {
     const popoverAnchorEl = React.useRef();
     const [popoverOpen, setPopoverOpen] = React.useState(false);
 
+    const handlePopoverOpen = () => {
+        setPopoverOpen(true)
+    }
     const handlePopoverClose = () => {
         setPopoverOpen(false);
     }
@@ -56,8 +62,8 @@ const StatContainer = ({
                                         className={styles.diff}
                                         style={{ color: getPercentDiffColor() }}
                                         ref={popoverAnchorEl}
-                                        onMouseOver={() => {setPopoverOpen(true)}}
-                                        onMouseOut={handlePopoverClose}
+                                        onMouseEnter={handlePopoverOpen}
+                                        onMouseLeave={handlePopoverClose}
                                     >
                                         { getIcon() }
                                         {`${Math.abs(percentDiff * 100).toFixed(2)}%`}
@@ -71,16 +77,22 @@ const StatContainer = ({
                             open={popoverOpen}
                             anchorEl={popoverAnchorEl.current}
                             onClose={handlePopoverClose}
+                            sx={{
+                                pointerEvents: 'none',
+                            }}
                             anchorOrigin={{
                                 vertical: 'bottom',
                                 horizontal: 'right',
                             }}
                             transformOrigin={{
                                 vertical: 'top',
-                                horizontal: 'right',
+                                horizontal: 'left',
                             }}
+                            disableRestoreFocus
                         >
-                            In comparison to yung money
+                            <div className={styles.popover}>
+                                {`Compared to ${moment(comparisonTimeframeStart).format('MMM D, YYYY')} - ${moment(comparisonTimeframeEnd).format('MMM D, YYYY')}`}
+                            </div>
                         </Popover>
                     </div>
                 )

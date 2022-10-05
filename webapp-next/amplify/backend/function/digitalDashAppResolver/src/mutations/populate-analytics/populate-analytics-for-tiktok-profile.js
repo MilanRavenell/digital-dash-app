@@ -4,7 +4,6 @@ const AWS = require('aws-sdk');
 async function fetchAnalyticsForTiktokProfile(ctx, profile) {
     const { ddbClient } = ctx.resources;
     const { debug_noUploadToDDB } = ctx.arguments.input;
-
     const lambda = new AWS.Lambda({ region: 'us-west-2' });
     
     console.log('getting videos')

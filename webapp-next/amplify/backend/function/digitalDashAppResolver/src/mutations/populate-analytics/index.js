@@ -133,6 +133,9 @@ async function populatePosts(ctx, profile) {
                 console.error('hit instagram retry limit');
             }
             break;
+        case 'instagram-basic':
+            populateAnalyticsForIgBasicProfile(ctx, profile);
+            break;
         case 'twitter':
             await populateAnalyticsForTwitterProfile(ctx, profile);
             break;

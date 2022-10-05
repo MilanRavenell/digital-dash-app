@@ -13,6 +13,7 @@ async function makeApiRequest(ctx, profile, endpoint, accessToken, params = {}) 
         'twitter': makeTwitterApiRequest,
         'youtube': makeYoutubeApiRequest,
         'instagram-pro': makeIgProApiRequest,
+        'instagram-basic': makeIgBasicRequest,
     });
 
     try {
@@ -120,6 +121,32 @@ async function makeIgProApiRequest(endpoint, accessToken, params) {
             if (err.response.data.error.message.includes('Invalid OAuth access token')) {
                 throw new Error('InvalidAccessToken');
             } 
+        }
+
+        throw err;
+    }
+}
+
+async function makeIgBasicRequest(endpoint, accessToken, params) {
+    try {
+        const queryParams = Object.entries(params).reduce((acc, [key, value]) => {
+            acc += `&${key}=${value}`
+            return acc;
+        }, '');
+
+        const url = `https://graph.instagram.com/${endpoint}?&access_token=${accessToken}${queryParams}`;
+    
+        return (await http.get(url)).data;
+    } catch (err) {
+        // Do not throw if attempt to fetch analytics for media posted before business account conversion
+        if (
+            err.name === 'AxiosError'
+            && err.response
+            && err.response.data
+            && err.response.data.error
+            && err.response.data.error.message.includes('Invalid OAuth access token')
+        ) {
+            throw new Error('InvalidAccessToken');
         }
 
         throw err;

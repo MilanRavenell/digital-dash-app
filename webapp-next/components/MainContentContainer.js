@@ -147,8 +147,8 @@ const MainContentContainer = ({
             </div>
             {
                 (state.popUpPost !== null) && [
-                    (<div className={styles.popupBackground} onClick={clearPopUpPost}/>),
-                    (<div className={styles.popup}>
+                    (<div className={styles.popupBackground} onClick={clearPopUpPost} key={'background'}/>),
+                    (<div className={styles.popup} key={'pop-up'}>
                         <IndividualPostPopUp
                             post={state.popUpPost}
                             headers={

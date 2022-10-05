@@ -25,11 +25,19 @@ export default function App() {
   const [sortOrder, setSortOrder] = React.useState(null);
   const [profileToRefresh, setProfileToRefresh] = React.useState(null);
 
+  const selectedProfileNamesRef = React.useRef(selectedProfileNames);
+  const timeframeRef = React.useRef(timeframe);
+
   React.useEffect(() => {
     if (context.user) {
       initialize();
     }
   }, [context]);
+
+  React.useEffect(() => {
+    selectedProfileNamesRef.current = selectedProfileNames;
+    timeframeRef.current = timeframeRef;
+  }, [selectedProfileNames, timeframe])
 
   const initialize = async () => {
     console.log('init')
@@ -37,7 +45,7 @@ export default function App() {
       const response = await getData(context.user.email);
 
       if (response && response.success) {
-        setSelectedProfileNames(response.data.profiles.map(profile => profile.profileName));
+        setSelectedProfileNames(response.data.profiles.map(profile => profile.profileName ));
         setTimeframe(response.data.timeframes[0]);
         setData(response.data);
       }
@@ -103,9 +111,11 @@ export default function App() {
   };
 
   const updateSelectedProfileName = React.useCallback(async (newSelectedProfileNames) => {
+    console.log('selected timeframe: ', timeframeRef.current)
+
     const newData = await getData(
       context.user.email,
-      timeframe,
+      timeframeRef.current,
       newSelectedProfileNames,
     );
 
@@ -113,10 +123,10 @@ export default function App() {
       setData(newData.data);
       setSelectedProfileNames(newSelectedProfileNames);
     }
-  }, [context, timeframe]);
+  }, [context, timeframe, selectedProfileNames, setSelectedProfileNames, setData]);
 
   const updateTimeFrame = React.useCallback(async (newTimeframe) => {
-    console.log(newTimeframe)
+    console.log('selected profiles: ', selectedProfileNamesRef.current)
 
     if (!newTimeframe.startDate || !newTimeframe.endDate) {
       setTimeframe(newTimeframe);
@@ -126,14 +136,14 @@ export default function App() {
     const newData = await getData(
       context.user.email,
       newTimeframe,
-      selectedProfileNames,
+      selectedProfileNamesRef.current,
     );
 
     if (newData.success) {
       setData(newData.data);
       setTimeframe(newTimeframe);
     }
-  }, [context, selectedProfileNames]);
+  }, [context, selectedProfileNames, timeframe, setTimeframe, setData]);
 
   const goToAddPlatformSelection = React.useCallback(() => {
     router.push(`/add-profile-selection`);

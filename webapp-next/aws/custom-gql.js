@@ -46,9 +46,13 @@ export const getData = /* GraphQL */ `
           }
         }
         aggregated {
-          name
-          value
-          percentDiff
+          previousComparisonTimeframeStart
+          previousComparisonTimeframeEnd
+          stats {
+            name
+            value
+            percentDiff
+          }
         }
         records {
           __typename
@@ -59,6 +63,7 @@ export const getData = /* GraphQL */ `
             datePosted
             detailExpandCount
             engagementCount
+            engagementRate
             likeCount
             mediaEngagementCount
             profileClickCount
@@ -79,6 +84,7 @@ export const getData = /* GraphQL */ `
             createdAt
             datePosted
             engagementCount
+            engagementRate
             likeCount
             profileName
             updatedAt
@@ -96,6 +102,7 @@ export const getData = /* GraphQL */ `
             createdAt
             datePosted
             engagementCount
+            engagementRate
             likeCount
             link
             profileName
@@ -115,6 +122,7 @@ export const getData = /* GraphQL */ `
             createdAt
             datePosted
             engagementCount
+            engagementRate
             likeCount
             link
             profileName

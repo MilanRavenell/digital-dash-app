@@ -102,45 +102,51 @@ const PostsContainerPostsView = ({
             { 
                 sortedPosts.map((post, postIndex) => {
                     return (
-                        <div className={styles.post} key={postIndex} onClick={() => {openPopUp(post)}}>
-                            {
-                                totalHeaders.map(({ field, displayName }, keyIndex) => {
-                                    const platform = profiles.find((profile => (profile.profileName === post.profileName))).platform;
-                                    const timezoneOffset = new Date().getTimezoneOffset();
-                                    return (
-                                        <div className={getStyle(displayName, false)} key={keyIndex}>
-                                            {
-                                                (() => {
-                                                    switch(displayName) {
-                                                        case 'Platform':
-                                                            return (
-                                                                <div className={styles.logo}>
-                                                                    <img
-                                                                        src={platformToLogoUrlMap[platform].url}
-                                                                        alt='profile pic'
-                                                                        style={{
-                                                                            height: '100%',
-                                                                            width: '100%',
-                                                                            objectFit: 'contain',
-                                                                        }}
-                                                                        referrerPolicy="no-referrer"
-                                                                    />
-                                                                </div>
-                                                            );
-                                                        case 'Date':
-                                                            const date = moment(post[field]);
-                                                            date.subtract(timezoneOffset, 'minutes');
-                                                            return date.format('MMM D, YYYY');
-                                                        default:
-                                                            return <div className={styles.fieldContent}>{(post[field] || '').toLocaleString()}</div>;
+                        <Card sx={{ borderRadius: 0, border: 'none' }} variant="outlined" onClick={() => {openPopUp(post)}}>
+                            <CardActionArea>
+                                <div className={styles.post} key={postIndex}>
+                                    {
+                                        totalHeaders.map(({ field, displayName }, keyIndex) => {
+                                            const platform = profiles.find((profile => (profile.profileName === post.profileName))).platform;
+                                            const timezoneOffset = new Date().getTimezoneOffset();
+                                            return (
+                                                <div className={getStyle(displayName, false)} key={keyIndex}>
+                                                    {
+                                                        (() => {
+                                                            switch(displayName) {
+                                                                case 'Platform':
+                                                                    return (
+                                                                        <div className={styles.logo}>
+                                                                            <img
+                                                                                src={platformToLogoUrlMap[platform].url}
+                                                                                alt='profile pic'
+                                                                                style={{
+                                                                                    height: '100%',
+                                                                                    width: '100%',
+                                                                                    objectFit: 'contain',
+                                                                                }}
+                                                                                referrerPolicy="no-referrer"
+                                                                            />
+                                                                        </div>
+                                                                    );
+                                                                case 'Date':
+                                                                    const date = moment(post[field]);
+                                                                    date.subtract(timezoneOffset, 'minutes');
+                                                                    return <div className={styles.fieldContent}>{date.format('MMM D, YYYY')}</div>;
+                                                                case 'Engagement Rate':
+                                                                    return <div className={styles.fieldContent}>{post[field] ? `${(post[field] * 100).toFixed(2)}%` : '--'}</div>;
+                                                                default:
+                                                                    return <div className={styles.fieldContent}>{(post[field] || '--').toLocaleString()}</div>;
+                                                            }
+                                                        })()
                                                     }
-                                                })()
-                                            }
-                                        </div>
-                                    );
-                                })
-                            }
-                        </div>
+                                                </div>
+                                            );
+                                        })
+                                    }
+                                </div>
+                            </CardActionArea>
+                        </Card>
                     )
                 })
             }

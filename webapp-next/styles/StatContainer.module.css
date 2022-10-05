@@ -53,3 +53,8 @@
     flex: 1;
     background-color: var(--theme-light-blue);
 }
+
+.popover {
+    color: gray;
+    font-size: small;
+}
