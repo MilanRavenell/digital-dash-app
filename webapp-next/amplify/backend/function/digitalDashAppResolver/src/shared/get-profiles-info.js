@@ -77,7 +77,7 @@ async function getInstagramProProfileInfo(ctx, profile) {
             profilePicUrl: response.profile_picture_url,
         }
     } catch (err) {
-        console.error('Failed to get instagram profile information', err);
+        console.error('Failed to get instagram pro profile information', err);
         return {};
     }
 }
@@ -109,12 +109,40 @@ async function getTikTokProfileInfo(ctx, profile) {
     }
 }
 
+async function getInstagramBasicProfileInfo(ctx, profile) {
+    console.log('getting tiktok profile')
+    try {
+        const lambda = new AWS.Lambda({ region: 'us-west-2' });
+
+        const response = await lambda.invoke({
+            FunctionName: 'web-scraper-service-staging-scrapeContent',
+            Payload: JSON.stringify({
+                platform: 'instagram',
+                handle: profile.profileName,
+                task: 'get_profile_info',
+                use_tor: false,
+            }),
+        }).promise();
+        console.log(response)
+        const data = JSON.parse(response.Payload)
+
+        return {
+            followerCount: data.followers,
+            profilePicUrl: data.profile_pic_url,
+        }
+    } catch (err) {
+        console.error('Failed to get instagram basic profile information', err);
+        return {};
+    }
+}
+
 
 
 const platformToProfileInfoGetterMap = Object.freeze({
     'twitter': getTwitterProfileInfo,
     'youtube': getYoutubeProfileInfo, 
     'instagram-pro': getInstagramProProfileInfo,
+    'instagram-basic': getInstagramBasicProfileInfo,
     'tiktok': getTikTokProfileInfo,
 });
 

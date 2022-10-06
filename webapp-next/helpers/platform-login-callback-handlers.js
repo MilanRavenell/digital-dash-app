@@ -28,12 +28,11 @@ async function twitterLoginCallbackHandler({ sessionData, currentProfiles, setPr
 
 async function igBasicLoginCallbackHandler({ code, currentProfiles, setProfiles }) {
     try {
-        const { access_token, user_id, expires_in } = (await axios.get(`/api/auth/get-ig-basic-access-token?code=${code}`)).data;
-
-        const user = (await axios.get(`https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`)).data;
+        const { access_token, user_id, expires_in, profile_pic_url, username } = (await axios.get(`/api/auth/get-ig-basic-access-token?code=${code}`)).data;
 
         const profile = {
-            profileName: user.username,
+            profileName: username,
+            profilePicUrl: profile_pic_url,
             meta: JSON.stringify({
                 id: user_id,
                 accessToken: access_token,

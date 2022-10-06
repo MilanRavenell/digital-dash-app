@@ -65,8 +65,8 @@ const AddProfile = () => {
           )
         );
 
-      const profilesToAdd = profileIndicesToModify
-        .filter(profileIndex => (profileIndex === -1));
+      const profilesToAdd = profiles
+        .filter((profile, index) => (profileIndicesToModify[index] === -1));
 
       try {
         await Promise.all(

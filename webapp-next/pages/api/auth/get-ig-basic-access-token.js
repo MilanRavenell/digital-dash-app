@@ -1,4 +1,7 @@
 import axios from 'axios';
+import AWS from 'aws-sdk';
+
+AWS.config.update({ accessKeyId: 'AKIAR2K6MPFH7YCY42AB', secretAccessKey: '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', region: 'us-west-2' })
 
 export default async function handler(req, res) {
     const { code } = req.query;
@@ -11,7 +14,7 @@ export default async function handler(req, res) {
         params.append('client_id', '582112473702622');
         params.append('client_secret', clientSecret);
         params.append('grant_type', 'authorization_code');
-        params.append('redirect_uri', 'https://c54c-38-34-126-58.ngrok.io/add-profile/instagram');
+        params.append('redirect_uri', `${process.env.NEXTAUTH_URL}add-profile/instagram`);
         params.append('code', code);
 
         const response = await axios.post(
@@ -20,12 +23,33 @@ export default async function handler(req, res) {
         )
 
         const { access_token, user_id } = response.data;
+
+        const user = (await axios.get(`https://graph.instagram.com/${user_id}?fields=id,username&access_token=${access_token}`)).data;
         
         const longLivedTokenResponse = await axios.get(`https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=${clientSecret}&access_token=${access_token}`);
 
+        // Get profile info
+        const payloadParams = {
+            platform: 'instagram',
+            handle: user.username,
+            task: 'get_profile_info',
+        }
+
+        const lambda = new AWS.Lambda();
+
+        const profileInfoParams = {
+            FunctionName: 'web-scraper-service-staging-scrapeContent',
+            Payload: JSON.stringify(payloadParams),
+        }
+
+        const profileInfoResponse = await lambda.invoke(profileInfoParams).promise();
+        console.log(profileInfoResponse)
+        const profileInfo = JSON.parse(profileInfoResponse.Payload) || {}
+
         res.status(200).send({
             ...longLivedTokenResponse.data,
-            user_id,
+            ...user,
+            ...profileInfo,
         });
     } catch (err) {
         if (err.name === 'AxiosError' && err.response && err.response.data) {

@@ -16,17 +16,7 @@ const DatePicker = ({
 
     const handleApply = () => {
         // convert to UTC
-        const timezoneOffset = new Date().getTimezoneOffset();
-
-        const start = startDate.toDate();
-        const end = endDate.toDate();
-        
-        start.setTime(start.getTime() + (timezoneOffset * 60 * 1000));
-
-        end.setHours(23, 59, 59);
-        end.setTime(emd.getTime() + (timezoneOffset * 60 * 1000));
-
-        submit(start, end);
+        submit(startDate.toDate(), endDate.toDate());
     };
 
     return (

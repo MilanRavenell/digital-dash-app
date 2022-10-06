@@ -102,9 +102,9 @@ const PostsContainerPostsView = ({
             { 
                 sortedPosts.map((post, postIndex) => {
                     return (
-                        <Card sx={{ borderRadius: 0, border: 'none' }} variant="outlined" onClick={() => {openPopUp(post)}}>
+                        <Card sx={{ borderRadius: 0, border: 'none' }} variant="outlined" onClick={() => {openPopUp(post)}} key={postIndex}>
                             <CardActionArea>
-                                <div className={styles.post} key={postIndex}>
+                                <div className={styles.post}>
                                     {
                                         totalHeaders.map(({ field, displayName }, keyIndex) => {
                                             const platform = profiles.find((profile => (profile.profileName === post.profileName))).platform;

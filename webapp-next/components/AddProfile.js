@@ -47,13 +47,13 @@ const AddProfile = ({
                 loginCallbackHandler({ sessionData: session.data, currentProfiles, setProfiles });
                 return;
             }
-            if (router.query.code  && state.profiles.length === 0) {
+            if (router.query.code && state.profiles.length === 0) {
                 const code = router.query.code.split('#_')[0];
                 loginCallbackHandler({ code, currentProfiles, setProfiles });
                 return;
             }
         }
-    });
+    }, []);
 
     const onSubmitClick = () => {
         handleSubmit(user, state.profiles);
@@ -125,7 +125,7 @@ const AddProfile = ({
                         {
                             (state.profiles !== null && state.profiles !== undefined) && 
                             state.profiles.map((profile, index) => (
-                                <div className={styles.profile}>
+                                <div className={styles.profile} key={index}>
                                     <ProfileCard 
                                         profile={{
                                             ...profile,

@@ -2,9 +2,14 @@ import axios from 'axios';
 import { signIn } from 'next-auth/react';
 
 async function igBasicLoginHandler({ router }) {
-    // Use this command to locally test ig basic - ngrok http https://localhost:3000
+    // HOW TO TEST IG BASIC LOCALLY
+    // Run this command in terminal- ngrok http http://localhost:3000
+    // Take note of the https url under 'Forwarding' (looks like https://xxxx-xx-xx-xxx-xx.nrgrok.io)
+    // In webapp_next/.env.local, update NEXTAUTH_URL to that url
+    // In the Facebook Developer Portal, under 'Instagram Basic Display -> Basic Display' add https://xxxx-xx-xx-xxx-xx.nrgrok.io/add-profile/instagra, tp 'Valid OAuth Redirect URIs'
+    // In browser, navigate to https://xxxx-xx-xx-xxx-xx.nrgrok.io and test
     const appId = '582112473702622';
-    const redirectUri = 'https://c54c-38-34-126-58.ngrok.io/add-profile/instagram';
+    const redirectUri = `${process.env.NEXTAUTH_URL}add-profile/instagram`;
 
     router.push(`https://api.instagram.com/oauth/authorize?client_id=${appId}&redirect_uri=${redirectUri}&scope=user_profile,user_media&response_type=code`)
 }

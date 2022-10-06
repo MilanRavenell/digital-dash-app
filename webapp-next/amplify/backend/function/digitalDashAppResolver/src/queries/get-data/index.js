@@ -148,6 +148,10 @@ async function gertProfiles(ctx, username) {
 
 async function getRecords(ctx, profiles, startDate, endDate, timezoneOffset) {
     const { ddbClient } = ctx.resources;
+
+    // Get UTC dates
+    const startUTC = getDateWithTimezoneOffset(startDate, -1 * timezoneOffset);
+    const endUTC = getDateWithTimezoneOffset(endDate, -1 * timezoneOffset);
     
     const records = [];
     try {
@@ -165,8 +169,8 @@ async function getRecords(ctx, profiles, startDate, endDate, timezoneOffset) {
                         KeyConditionExpression: '#profileName = :profileName AND #datePosted BETWEEN :start AND :end',
                         ExpressionAttributeValues: {
                             ':profileName': profile.profileName,
-                            ':start': startDate,
-                            ':end': endDate,
+                            ':start': startUTC.toISOString(),
+                            ':end': endUTC.toISOString(),
                         },
                         ExpressionAttributeNames: {
                             '#profileName': 'profileName',

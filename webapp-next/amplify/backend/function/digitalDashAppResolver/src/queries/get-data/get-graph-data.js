@@ -42,7 +42,7 @@ async function getGraphData(ctx, records, profiles, start, end, timezoneOffset) 
 
     let recordIndex = 0;
     partitions.forEach((partition, partitionIndex) => {
-        while ((recordIndex < records.length - 1) && (new Date(records[recordIndex].datePosted) > new Date(partition))) {
+        while ((recordIndex < records.length) && (new Date(records[recordIndex].datePosted) > new Date(partition))) {
             const record = records[recordIndex];
             totalViewsPartitoned[partitionIndex] += parseInt(record.viewCount || 0);
             totalEngagementPartitioned[partitionIndex] += parseInt(record.engagementCount || 0);

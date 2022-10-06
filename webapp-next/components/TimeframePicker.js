@@ -21,6 +21,7 @@ const TimeframePicker = ({
 
         if (value === 'Custom') {
             setPopoverOpen(true);
+            return;
         }
 
         const timeframeIndex = timeframeNames.indexOf(event.target.value);
@@ -30,7 +31,7 @@ const TimeframePicker = ({
     const handleCustomTimeframe = React.useCallback((startDate, endDate) => {
         setPopoverOpen(false);
         setTimeframe({
-            name: 'CustomSelected',
+            name: 'Custom',
             startDate,
             endDate,
         });

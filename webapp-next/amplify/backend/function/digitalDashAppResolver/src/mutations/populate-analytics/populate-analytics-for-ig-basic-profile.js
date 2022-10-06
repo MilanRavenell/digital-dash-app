@@ -37,7 +37,7 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
                     handle: profile.profileName,
                     task: 'process_single_content',
                     content_to_process: mediaObject.id,
-                    use_tor: true,
+                    use_tor: false,
                 }),
             }).promise();
 
