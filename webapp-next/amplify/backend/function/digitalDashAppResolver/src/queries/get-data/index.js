@@ -75,6 +75,13 @@ const postHeaders = [
         ]
     },
     {
+        platform: 'instagram-basic',
+        metrics: [
+            { displayName: 'Likes', field: 'likeCount'},
+            { displayName: 'Comments', field: 'commentCount'},
+        ]
+    },
+    {
         platform: 'tiktok',
         metrics: [
             { displayName: 'Likes', field: 'likeCount'},

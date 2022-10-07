@@ -14,10 +14,11 @@ import random
 from devices import devices
 
 SOCKS_PORT = 9050
+NUM_RETRIES = 10
 
 #TODO: Optimize by opening a driver per content(limit on number of active drivers at once)
 class ContentDataScraper:
-    def __init__(self, use_tor):
+    def __init__(self, use_tor, task, content_id):
         self.seen_content_ids = set()
         self.time_start = time.time()
         self.no_new_content = 0
@@ -25,28 +26,23 @@ class ContentDataScraper:
         self.tor_process = None
         self.browser = None
         self.mobile = False
-
-    def full_run(self):
-        return asyncio.get_event_loop().run_until_complete(self.arun())
-
-    def get_content(self):
-        return asyncio.get_event_loop().run_until_complete(self.arun(gather_content_only=True))
-
-    def process_single_content(self, content_to_process):
-        return asyncio.get_event_loop().run_until_complete(self.arun(content_to_process=content_to_process))
-
-    def verify_bio_contains_token(self):
-        return asyncio.get_event_loop().run_until_complete(self.arun(verify_bio=True))
+        self.task = task
+        self.content_id = content_id
     
-    def get_profile_info(self):
-        return asyncio.get_event_loop().run_until_complete(self.arun(get_profile_info=True))
+    def run(self):
+        return asyncio.get_event_loop().run_until_complete(self.arun(
+            gather_content_only=(self.task == 'get_content'),
+            content_to_process=self.content_id,
+            verify_bio=(self.task == 'verify_bio_contains_token'),
+            get_profile_info=(self.task == 'get_profile_info'),
+        ))
 
     async def arun(self, gather_content_only=False, content_to_process=None, verify_bio=False, get_profile_info=False):
         tries = 0
         success = False
         result = None
 
-        while not success and tries < 10:
+        while not success and tries < NUM_RETRIES:
             tries = tries + 1
 
             try:
@@ -196,7 +192,7 @@ class ContentDataScraper:
             "accept-language": "en-US,en;q=0.9",
             "cache-control": "no-cache",
             "pragma": "no-cache",
-            # "sec-ch-ua": '.Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103',
+            "sec-ch-ua": '.Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103',
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "macOS",
             "upgrade-insecure-requests": "1",
@@ -204,8 +200,9 @@ class ContentDataScraper:
         }
 
     async def open_page(self):
-        print(f'opening {self.url}')
-        await self.page.goto(self.url,  {'waitUntil': 'networkidle0', 'timeout': 120000})
+        url = self.get_url()
+        print(f'opening {url}')
+        await self.page.goto(url,  {'waitUntil': 'networkidle0', 'timeout': 120000})
 
         if self.page_test_el:
             user_page_div = await self.find_element_with_timeout(self.page, self.page_test_el)
@@ -293,6 +290,9 @@ class ContentDataScraper:
         else:
             print(page_html)
 
+    async def get_url(self):
+        raise NotImplementedError()
+
     async def get_loaded_content(self):
         raise NotImplementedError()
     
@@ -315,6 +315,7 @@ class ContentDataScraper:
         raise  NotImplementedError()
 
     async def request_handler(self, request):
+        await request.continue_()
         return
     
     async def response_handler(self, response):

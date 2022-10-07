@@ -77,7 +77,7 @@ async function makeYoutubeApiRequest(endpoint, accessToken, params) {
             return acc;
         }, '');
 
-        const url = `https://www.googleapis.com/youtube/v3/${endpoint}?&access_token=${accessToken}${queryParams}`;
+        const url = `https://www.googleapis.com/youtube/v3/${endpoint}?access_token=${accessToken}${queryParams}`;
     
         return (await http.get(url)).data;
     } catch (err) {
@@ -103,7 +103,7 @@ async function makeIgProApiRequest(endpoint, accessToken, params) {
             return acc;
         }, '');
 
-        const url = `https://graph.facebook.com/v14.0/${endpoint}?&access_token=${accessToken}${queryParams}`;
+        const url = `https://graph.facebook.com/v14.0/${endpoint}?access_token=${accessToken}${queryParams}`;
     
         return (await http.get(url)).data;
     } catch (err) {
@@ -134,7 +134,7 @@ async function makeIgBasicRequest(endpoint, accessToken, params) {
             return acc;
         }, '');
 
-        const url = `https://graph.instagram.com/${endpoint}?&access_token=${accessToken}${queryParams}`;
+        const url = `https://graph.instagram.com/${endpoint}?access_token=${accessToken}${queryParams}`;
     
         return (await http.get(url)).data;
     } catch (err) {

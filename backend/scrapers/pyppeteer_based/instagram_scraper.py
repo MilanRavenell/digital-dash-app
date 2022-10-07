@@ -4,63 +4,97 @@ import time
 import json
 
 class InstagramScraper(ContentDataScraper):
-    def __init__(self, use_tor, handle, content_id=None):
-        super().__init__(use_tor)
+    def __init__(self, use_tor, handle, task, content_id=None):
+        super().__init__(use_tor, task, content_id)
 
         self.handle = handle
         self.metrics_records = []
-        self.url = f'https://www.instagram.com/p/{content_id}/' if content_id else f'https://www.instagram.com/{self.handle}/'
         self.page_test_el = None
-        self.response_handler_data = []
+        self.response_handler_data = None
         self.mobile = True
+    
+    def get_url(self):
+        if self.task == 'process_single_content':
+            return f'https://www.instagram.com/p/{self.content_id}/'
+        
+        return f'https://www.instagram.com/{self.handle}/'
 
     async def get_profile(self):
         record = {}
 
-        for data in self.response_handler_data:
-            if data and data['data'] and data['data']['user']:
-                data_user = data['data']['user']
-                if data_user['profile_pic_url']:
-                    record['profile_pic_url'] = data_user['profile_pic_url']
+        if self.response_handler_data and 'data' in self.response_handler_data and 'user' in self.response_handler_data['data']:
+            data_user = self.response_handler_data['data']['user']
+            if 'profile_pic_url' in data_user:
+                record['profile_pic_url'] = data_user['profile_pic_url']
+        
+            if 'edge_followed_by' in data_user:
+                record['followers'] = data_user['edge_followed_by']['count']
             
-                if data_user['edge_followed_by']:
-                    record['followers'] = data_user['edge_followed_by']['count']
-                
-                print(record)
-                return record
+            print(record)
+            return record
+    
+    async def load_new_content(self):
+        await self.page.evaluate('window.scrollTo(0, document.body.scrollHeight);')
+
+    async def get_loaded_content(self):
+        if self.response_handler_data:
+            content = self.response_handler_data['data']['user']['edge_owner_to_timeline_media']['edges']
+            # Reset response_handler_data to fetch more data
+            self.response_handler_data = None
+            return content
+        
+        return []
+
+    async def get_content_identifier(self, content):
+        return content['node']['id']
+
+    async def process_content(self, content):
+        node = content['node']
+        return {
+            'id': node.get('id'),
+            'shortcode': node.get('shortcode'),
+            'comments': node.get('edge_media_to_comment', {}).get('count'),
+            'views': node.get('video_view_count'),
+            'likes': node.get('edge_media_preview_like', {}).get('count'),
+        }
 
     async def process_content_page(self):
         record = {}
 
-        for data in self.response_handler_data:
-            if data and data['data'] and data['data']['shortcode_media']:
+        if self.response_handler_data:
+            data = self.response_handler_data
+            if data and 'data' in data and 'shortcode_media' in data['data']:
                 data_shortcode_media = data['data']['shortcode_media']
-                if data_shortcode_media['edge_media_preview_like']:
+                if 'edge_media_preview_like' in data_shortcode_media:
                     record['likes'] = data_shortcode_media['edge_media_preview_like']['count']
             
-                if data_shortcode_media['edge_media_to_parent_comment']:
+                if 'edge_media_to_parent_comment' in data_shortcode_media:
                     record['comments'] = data_shortcode_media['edge_media_to_parent_comment']['count']
                 
                 print(record)
                 return record
-
-        
 
     async def close(self):
         await super().close()
 
     async def response_handler(self, response):
         try:
-            if ('/query' in response.url and 'variables' in response.url) or 'username' in response.url:
-                response_json = json.loads(await response.text())
-                if response_json['data'] and (response_json['data']['shortcode_media'] or response_json['data']['user']):
-                    self.response_handler_data.append(response_json)
+            response_json = json.loads(await response.text())
+
+            if self.task == 'process_single_content':
+                if 'data' in response_json and 'shortcode_media' in response_json['data'] :
+                    self.response_handler_data = response_json
+
+            if self.task == 'get_profile_info' or self.task == 'get_content' or self.task == 'full_run':
+                if 'data' in response_json and 'user' in response_json['data']:
+                    self.response_handler_data = response_json
+
         except:
             pass
 
     async def request_handler(self, request):
         try:
-            if len(self.response_handler_data) > 0:
+            if self.response_handler_data or 'jpg' in request.url:
                 await request.abort()
             else:
                 await request.continue_()

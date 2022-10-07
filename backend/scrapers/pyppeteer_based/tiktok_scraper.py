@@ -3,13 +3,18 @@ import datetime
 import time
 
 class TikTokScraper(ContentDataScraper):
-    def __init__(self, use_tor, handle, content_id=None):
-        super().__init__(use_tor)
+    def __init__(self, use_tor, handle, task, content_id=None):
+        super().__init__(use_tor, task, content_id)
 
         self.handle = handle
         self.metrics_records = []
-        self.url = f'https://www.tiktok.com/@{self.handle}/video/{content_id}' if content_id else f'https://www.tiktok.com/@{self.handle}'
         self.page_test_el = '//strong[@data-e2e="like-count"]' if content_id else '//div[@data-e2e="user-avatar"]'
+
+    def get_url(self):
+        if self.task == 'process_single_content':
+            return f'https://www.tiktok.com/@{self.handle}/video/{self.content_id}'
+        
+        return f'https://www.tiktok.com/@{self.handle}'
 
     async def load_new_content(self):
         await self.page.evaluate('window.scrollTo(0, document.body.scrollHeight);')

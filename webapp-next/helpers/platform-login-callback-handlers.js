@@ -34,7 +34,7 @@ async function igBasicLoginCallbackHandler({ code, currentProfiles, setProfiles 
             profileName: username,
             profilePicUrl: profile_pic_url,
             meta: JSON.stringify({
-                id: user_id,
+                account_id: user_id,
                 accessToken: access_token,
                 expires: expires_in,
             }),

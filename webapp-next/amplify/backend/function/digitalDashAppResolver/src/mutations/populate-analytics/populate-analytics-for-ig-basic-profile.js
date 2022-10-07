@@ -5,16 +5,31 @@ const { makeApiRequest } = require('../../shared');
 async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
     const { ddbClient } = ctx.resources;
     const { debug_noUploadToDDB } = ctx.arguments.input;
-    const { account_id: accountId, access_token: accessToken } = JSON.parse(profile.meta);
+    const { account_id: accountId, accessToken } = JSON.parse(profile.meta);
     const lambda = new AWS.Lambda({ region: 'us-west-2' });
 
-    const mediaObjects = [];
-    let nextToken = null;
+    const getContentResponse = await lambda.invoke({
+        FunctionName: 'web-scraper-service-staging-scrapeContent',
+        Payload: JSON.stringify({
+            platform: 'instagram',
+            handle: profile.profileName,
+            task: 'full_run',
+            use_tor: false
+        }),
+    }).promise();
+    const mediaObjects = JSON.parse(getContentResponse.Payload)
 
-    // Get all posts for the user
+    if (!Array.isArray(mediaObjects)) {
+        console.error('Failed to get videos')
+        return;
+    }
+
+    // Get fetch post data from instagram api
+    let i = 0;
+    let nextToken = null;
     do {
         const response = await makeApiRequest(ctx, profile, `v15.0/${accountId}/media`, accessToken, {
-            'fields': 'id,caption,media_type,media_url,thumbnail_url,timestamp',
+            'fields': 'caption,media_type,media_url,thumbnail_url,timestamp',
             ...(nextToken ? { 'after': nextToken } : {}),
         });
 
@@ -22,25 +37,23 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
             return [];
         }
 
-        mediaObjects.push(...response.data);
+        response.data.forEach(datum => {
+            if (i < mediaObjects.length) {
+                mediaObjects[i] = {
+                    ...mediaObjects[i],
+                    ...datum,
+                }
+            }
+            
+            i++;
+
+        });
 
         nextToken = response.paging.next ? response.paging.next.split('after=')[1] : null;
-    } while (nextToken !== null)
+    } while (nextToken !== null && i < mediaObjects.length)
 
     const items = await Promise.all(mediaObjects.map(async (mediaObject) => {
         try {
-            console.log(`getting ${post.id}`)
-            const singleContentResponse = await lambda.invoke({
-                FunctionName: 'web-scraper-service-staging-scrapeContent',
-                Payload: JSON.stringify({
-                    platform: 'instagram',
-                    handle: profile.profileName,
-                    task: 'process_single_content',
-                    content_to_process: mediaObject.id,
-                    use_tor: false,
-                }),
-            }).promise();
-
             // Get children media for album posts
             media = [];
             if (mediaObject.media_type === 'CAROUSEL_ALBUM') {
@@ -48,14 +61,14 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
 
                 do {
                     const albumChildrenResponse = await makeApiRequest(ctx, profile, `${mediaObject.id}/children`, accessToken, {
-                        'fields': 'media_type,thumbnail_url',
+                        'fields': 'media_type,thumbnail_url,media_url',
                         ...(nextToken ? { 'after': nextToken } : {}),
                     });
     
                     media.push(
                         albumChildrenResponse.data.map(child => ({
-                            thumbnailUrl: child.thumbnail_url || '',
-                            type: child.media_type,
+                            thumbnailUrl: (child.media_type === 'VIDEO' ? child.thumbnail_url : child.media_url) || '',
+                            type: child.media_type.toLowerCase(),
                         })),
                     );
 
@@ -63,30 +76,28 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
                 } while (nextToken !== null)
             } else {
                 media.push({
-                    thumbnailUrl: mediaObject.thumbnail_url || '',
-                    type: mediaObject.media_type,
+                    thumbnailUrl: (mediaObject.media_type === 'VIDEO' ? mediaObject.thumbnail_url : mediaObject.media_url) || '',
+                    type: mediaObject.media_type.toLowerCase(),
                 })
             }
-    
-            const extraInfo = JSON.parse(singleContentResponse.Payload);
-            if (extraInfo.errorMessage) {
-                return null
-            }
-    
+
             const now = new Date().toISOString();
-            const commentCount = parseInt(extraInfo.comments || 0);
-            const likeCount = parseInt(extraInfo.likes || 0);
+            const viewCount = mediaObject.views ? parseInt(mediaObject.views) : null;
+            const commentCount = parseInt(mediaObject.comments || 0);
+            const likeCount = parseInt(mediaObject.likes || 0);
             const engagementCount = commentCount + likeCount;
 
             const item = {
-                id: post.id,
+                id: mediaObject.shortcode,
                 profileName: profile.profileName,
                 caption: mediaObject.caption || '',
                 media,
                 commentCount,
                 likeCount,
-                link: mediaObject.media_url,
+                link: `https://instagram.com/p/${mediaObject.shortcode}/`,
                 engagementCount,
+                viewCount,
+                engagementRate: viewCount ? engagementCount/viewCount : null,
                 datePosted: mediaObject.timestamp || now,
                 createdAt: now,
                 updatedAt: now,

@@ -7,31 +7,31 @@ sys.path.append(os.path.join(file_dir, 'pyppeteer_based'))
 
 from pyppeteer_based import *
 
-def get_scraper_from_platform(platform, use_tor, handle, content_to_process):
+def get_scraper_from_platform(platform, use_tor, handle, task, content_to_process):
     if platform == 'twitter':
         try:
             password = sys.argv[3]
             phone_number = sys.argv[4]
 
-            return TwitterScraper(handle, password, phone_number)
+            return TwitterScraper(handle, task, password, phone_number)
         except IndexError:
             print('Not enough arguments were supplied for twitter scraper')
             return
     if platform == 'youtube':
         try:
-            return YoutubeScraper(handle)
+            return YoutubeScraper(handle, task)
         except IndexError:
             print('Not enough arguments were supplied for twitter scraper')
             return
     if platform == 'tiktok':
         try:
-            return TikTokScraper(use_tor, handle, content_to_process)
+            return TikTokScraper(use_tor, handle, task, content_to_process)
         except IndexError:
             print('Not enough arguments were supplied for twitter scraper')
             return
     if platform == 'instagram':
         try:
-            return InstagramScraper(use_tor, handle, content_to_process)
+            return InstagramScraper(use_tor, handle, task, content_to_process)
         except IndexError:
             print('Not enough arguments were supplied for twitter scraper')
             return
@@ -46,18 +46,5 @@ def handler(event, context):
     content_to_process = event.get('content_to_process')
     use_tor = event.get('use_tor', False)
 
-    content_scraper = get_scraper_from_platform(platform, use_tor, handle, content_to_process)
-    if task == 'full_run':
-        return content_scraper.full_run()
-    
-    if task == 'get_content':
-        return content_scraper.get_content()
-    
-    if task == 'process_single_content':
-        return content_scraper.process_single_content(content_to_process)
-
-    if task == 'verify_bio_contains_token':
-        return content_scraper.verify_bio_contains_token()
-
-    if task == 'get_profile_info':
-        return content_scraper.get_profile_info()
+    content_scraper = get_scraper_from_platform(platform, use_tor, handle, task, content_to_process)
+    return content_scraper.run()

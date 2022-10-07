@@ -1,4 +1,5 @@
-const fetchAnalyticsForIgProProfile = require('./populate-analytics-for-ig-pro-profile');
+const populateAnalyticsForIgProProfile = require('./populate-analytics-for-ig-pro-profile');
+const populateAnalyticsForIgBasicProfile = require('./populate-analytics-for-ig-basic-profile')
 const populateAnalyticsForTwitterProfile = require('./populate-analytics-for-twitter-profile');
 const populateAnalyticsForYtProfile = require('./populate-analytics-for-yt-profile');
 const populateAnalyticsForTiktokProfile = require('./populate-analytics-for-tiktok-profile');
@@ -41,21 +42,22 @@ async function fetchAnalytics(ctx) {
     console.log('Fetching data');
 
     try {
-        
         await Promise.all([populateProfile(ctx, profile), populatePosts(ctx, profile)])
 
-        // Set postsLastPopulated for the user to now
-        await ddbClient.update({
-            TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
-            Key: { user: username, key: profileKey },
-            UpdateExpression: 'SET #postsLastPopulated = :postsLastPopulated',
-            ExpressionAttributeNames: { 
-                '#postsLastPopulated': 'postsLastPopulated',
-            },
-            ExpressionAttributeValues: {
-                ':postsLastPopulated': new Date().toISOString(),
-            },
-        }).promise();
+        if (!debug_noUploadToDDB) {
+            // Set postsLastPopulated for the user to now
+            await ddbClient.update({
+                TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                Key: { user: username, key: profileKey },
+                UpdateExpression: 'SET #postsLastPopulated = :postsLastPopulated',
+                ExpressionAttributeNames: { 
+                    '#postsLastPopulated': 'postsLastPopulated',
+                },
+                ExpressionAttributeValues: {
+                    ':postsLastPopulated': new Date().toISOString(),
+                },
+            }).promise();
+        }
 
         return {
             dataUpdated: true,
@@ -118,7 +120,7 @@ async function populatePosts(ctx, profile) {
             let success = false;
             while (tries < 10 && !success) {
                 try {
-                    await fetchAnalyticsForIgProProfile(ctx, profile);
+                    await populateAnalyticsForIgProProfile(ctx, profile);
                     success = true;
                 } catch (err) {
                     console.log(err)
@@ -134,7 +136,7 @@ async function populatePosts(ctx, profile) {
             }
             break;
         case 'instagram-basic':
-            populateAnalyticsForIgBasicProfile(ctx, profile);
+            await populateAnalyticsForIgBasicProfile(ctx, profile);
             break;
         case 'twitter':
             await populateAnalyticsForTwitterProfile(ctx, profile);
