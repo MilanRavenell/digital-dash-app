@@ -5,8 +5,17 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
     const { ddbClient } = ctx.resources;
     const { debug_noUploadToDDB } = ctx.arguments.input;
     const lambda = new AWS.Lambda({ region: 'us-west-2' });
+
+    // get all DDB posts
+    const ddbPosts = await getCollectedPosts(ctx, profile);
+
+    if (ddbPosts === null) {
+        return;
+    }
+
+    const ddbPostIdsSet = new Set(ddbPosts.map(({ id }) => id));
     
-    console.log('getting videos')
+    // get scraped videos
     const getContentResponse = await lambda.invoke({
         FunctionName: 'web-scraper-service-staging-scrapeContent',
         Payload: JSON.stringify({
@@ -14,19 +23,31 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
             handle: profile.profileName,
             task: 'full_run',
             // If this is the first time we're gathering content for the user, use the proxy to get full content. Otherwise, use tor
-            use_tor: Boolean(profile.postsLastPopulated) 
+            use_tor: Boolean(profile.postsLastPopulated)
         }),
     }).promise();
-    const videos = JSON.parse(getContentResponse.Payload)
+    const scrapedVideos = JSON.parse(getContentResponse.Payload)
 
-    console.log(videos);
-
-    if (!Array.isArray(videos)) {
+    if (!Array.isArray(scrapedVideos)) {
         console.error('Failed to get videos')
         return;
     }
 
-    const items = await Promise.all(videos.map(async (video) => {
+    const allVideos = [
+        ...ddbPosts.map((post) =>{
+            const scrapedVideo = scrapedVideos.find(({ id }) => id === post.id);
+
+            return {
+                ...post,
+                views: post.viewCount,
+                thumbnail_url: post.media[0].thumbnailUrl,
+                ...(scrapedVideo || {}),
+            }
+        }),
+        ...scrapedVideos.filter(({ id }) => !ddbPostIdsSet.has(id)),
+    ]
+
+    const items = await Promise.all(allVideos.map(async (video) => {
         try {
             console.log(`getting ${video.id}`)
             const singleContentResponse = await lambda.invoke({
@@ -53,6 +74,7 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
             const engagementCount = commentCount + likeCount + shareCount;
 
             const item = {
+                __typename: 'TiktokPost',
                 id: video.id,
                 profileName: profile.profileName,
                 caption: video.caption || '',
@@ -67,10 +89,11 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
                 engagementCount,
                 shareCount,
                 engagementRate: viewCount > 0 ? engagementCount / parseFloat(viewCount) : null,
-                datePosted: extraInfo.date || now,
-                createdAt: now,
                 updatedAt: now,
-                __typename: 'TiktokPost',
+                ...(!ddbPostIdsSet.has(video.id) ? { 
+                    datePosted: (extraInfo.date || now),
+                    createdAt: now,
+                } : {}),
             };
     
             if (!debug_noUploadToDDB) {
@@ -85,6 +108,29 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
             console.error(`Failed to get analytics for tiktok ${video.id}`, err)
         }
     }));
+}
+
+async function getCollectedPosts(ctx, profile) {
+    const { ddbClient } = ctx.resources;
+
+    try {
+        return (await ddbClient.query({
+            TableName: `TiktokPost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging`,
+            IndexName: 'ByProfileName',
+            KeyConditionExpression: '#profileName = :profileName',
+            ExpressionAttributeValues: {
+                ':profileName': profile.profileName,
+            },
+            ExpressionAttributeNames: {
+                '#profileName': 'profileName',
+            }
+        }).promise())
+            .Items;
+    } catch (err) {
+        console.error(`Failed to fetch collected posts for profile ${profile.profileName}`, err);
+        return null;
+    }
+   
 }
 
 module.exports = fetchAnalyticsForTiktokProfile;
