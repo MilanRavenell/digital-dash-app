@@ -125,7 +125,7 @@ async function getData(ctx) {
     return {
         data: {
             profiles,
-            graphs: await getGraphData(ctx, records, profiles, startDate, endDate, timezoneOffset),
+            graphs: await getGraphData(ctx, records, filteredProfiles, startDate, endDate, timezoneOffset),
             aggregated,
             records,
             timeframes: timeframes(timezoneOffset),
