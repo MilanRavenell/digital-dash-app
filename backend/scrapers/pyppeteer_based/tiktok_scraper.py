@@ -55,6 +55,10 @@ class TikTokScraper(ContentDataScraper):
         record['shares'] = self.get_int_from_string(await self.__extract_attribute(self.page, '//strong[@data-e2e="share-count"]'))
         record['date'] = await self.get_date(self.page)
 
+        thumbnail_img = await self.find_elements_safe(self.page, '//img[contains(@class, "ImgPoster")]')
+        record['thumbnail_url'] = await (await thumbnail_img.getProperty('src')).jsonValue()
+        record['caption'] = await (await thumbnail_img.getProperty('alt')).jsonValue()
+
         print(record)
         return record
 
@@ -68,10 +72,6 @@ class TikTokScraper(ContentDataScraper):
         record['profile'] = self.handle
         record['id'] = await self.get_content_identifier(video)
         record['views'] = self.get_int_from_string(await self.__extract_attribute(video, './/strong[@data-e2e="video-views"]'))
-
-        thumbnail_img = await self.find_elements_safe(video, 'img', byxpath=False)
-        record['thumbnail_url'] = await (await thumbnail_img.getProperty('src')).jsonValue()
-        record['caption'] = await (await thumbnail_img.getProperty('alt')).jsonValue()
 
         return record
 
@@ -94,6 +94,14 @@ class TikTokScraper(ContentDataScraper):
             if 'd' in time_ago:
                 days_ago = int(time_ago.split('d')[0])
                 return (now - datetime.timedelta(days=days_ago)).isoformat()
+
+            if 'm' in time_ago:
+                minutes_ago = int(time_ago.split('m')[0])
+                return (now - datetime.timedelta(minutes=minutes_ago)).isoformat()
+
+            if 's' in time_ago:
+                seconds_ago = int(time_ago.split('s')[0])
+                return (now - datetime.timedelta(seconds=seconds_ago)).isoformat()
 
         date = date_str.split('-')
         if len(date) == 2:
