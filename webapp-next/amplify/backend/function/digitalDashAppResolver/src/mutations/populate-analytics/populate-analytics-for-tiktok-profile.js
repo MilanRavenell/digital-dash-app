@@ -40,7 +40,6 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
             return {
                 ...post,
                 views: post.viewCount,
-                thumbnail_url: post.media[0].thumbnailUrl,
                 ...(scrapedVideo || {}),
             }
         }),
@@ -77,9 +76,9 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
                 __typename: 'TiktokPost',
                 id: video.id,
                 profileName: profile.profileName,
-                caption: video.caption || '',
+                caption: extraInfo.caption || '',
                 media: [{
-                    thumbnailUrl: video.thumbnail_url || '',
+                    thumbnailUrl: extraInfo.thumbnail_url || '',
                     type: 'video',
                 }],
                 viewCount,
@@ -113,6 +112,7 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
 async function getCollectedPosts(ctx, profile) {
     const { ddbClient } = ctx.resources;
 
+    // TODO: add pagination
     try {
         return (await ddbClient.query({
             TableName: `TiktokPost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging`,
@@ -130,7 +130,6 @@ async function getCollectedPosts(ctx, profile) {
         console.error(`Failed to fetch collected posts for profile ${profile.profileName}`, err);
         return null;
     }
-   
 }
 
 module.exports = fetchAnalyticsForTiktokProfile;

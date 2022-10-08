@@ -8,6 +8,15 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
     const { account_id: accountId, accessToken } = JSON.parse(profile.meta);
     const lambda = new AWS.Lambda({ region: 'us-west-2' });
 
+    // get all DDB posts
+    const ddbPosts = await getCollectedPosts(ctx, profile);
+
+    if (ddbPosts === null) {
+        return;
+    }
+
+    const ddbPostIdsSet = new Set(ddbPosts.map(({ id }) => id));
+
     const getContentResponse = await lambda.invoke({
         FunctionName: 'web-scraper-service-staging-scrapeContent',
         Payload: JSON.stringify({
@@ -17,12 +26,28 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
             use_tor: false
         }),
     }).promise();
-    const mediaObjects = JSON.parse(getContentResponse.Payload)
+    const scrapedMediaObjects = JSON.parse(getContentResponse.Payload)
 
-    if (!Array.isArray(mediaObjects)) {
+    if (!Array.isArray(scrapedMediaObjects)) {
         console.error('Failed to get videos')
         return;
     }
+
+    const mediaObjects = [
+        ...ddbPosts.map((post) =>{
+            const scrapedMediaObject = scrapedMediaObjects.find(({ shortcode }) => shortcode === post.id);
+
+            return {
+                ...post,
+                views: post.viewCount,
+                timestamp: post.datePosted,
+                shortcode: post.id,
+                media: post.media,
+                ...(scrapedMediaObject || {}),
+            }
+        }),
+        ...scrapedMediaObjects.filter(({ shortcode }) => !ddbPostIdsSet.has(shortcode)),
+    ]
 
     // Get fetch post data from instagram api
     let i = 0;
@@ -55,30 +80,32 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
     const items = await Promise.all(mediaObjects.map(async (mediaObject) => {
         try {
             // Get children media for album posts
-            media = [];
-            if (mediaObject.media_type === 'CAROUSEL_ALBUM') {
-                nextToken = null;
-
-                do {
-                    const albumChildrenResponse = await makeApiRequest(ctx, profile, `${mediaObject.id}/children`, accessToken, {
-                        'fields': 'media_type,thumbnail_url,media_url',
-                        ...(nextToken ? { 'after': nextToken } : {}),
-                    });
+            media = mediaObject.media || [];
+            if (media.length === 0) {
+                if (mediaObject.media_type === 'CAROUSEL_ALBUM') {
+                    nextToken = null;
     
-                    media.push(
-                        albumChildrenResponse.data.map(child => ({
-                            thumbnailUrl: (child.media_type === 'VIDEO' ? child.thumbnail_url : child.media_url) || '',
-                            type: child.media_type.toLowerCase(),
-                        })),
-                    );
-
-                    nextToken = response.paging.next ? response.paging.next.split('after=')[1] : null;
-                } while (nextToken !== null)
-            } else {
-                media.push({
-                    thumbnailUrl: (mediaObject.media_type === 'VIDEO' ? mediaObject.thumbnail_url : mediaObject.media_url) || '',
-                    type: mediaObject.media_type.toLowerCase(),
-                })
+                    do {
+                        const albumChildrenResponse = await makeApiRequest(ctx, profile, `${mediaObject.id}/children`, accessToken, {
+                            'fields': 'media_type,thumbnail_url,media_url',
+                            ...(nextToken ? { 'after': nextToken } : {}),
+                        });
+        
+                        media.push(
+                            albumChildrenResponse.data.map(child => ({
+                                thumbnailUrl: (child.media_type === 'VIDEO' ? child.thumbnail_url : child.media_url) || '',
+                                type: child.media_type.toLowerCase(),
+                            })),
+                        );
+    
+                        nextToken = response.paging.next ? response.paging.next.split('after=')[1] : null;
+                    } while (nextToken !== null)
+                } else {
+                    media.push({
+                        thumbnailUrl: (mediaObject.media_type === 'VIDEO' ? mediaObject.thumbnail_url : mediaObject.media_url) || '',
+                        type: mediaObject.media_type.toLowerCase(),
+                    })
+                }
             }
 
             const now = new Date().toISOString();
@@ -88,6 +115,7 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
             const engagementCount = commentCount + likeCount;
 
             const item = {
+                __typename: 'InstagramPost',
                 id: mediaObject.shortcode,
                 profileName: profile.profileName,
                 caption: mediaObject.caption || '',
@@ -99,9 +127,10 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
                 viewCount,
                 engagementRate: viewCount ? engagementCount/viewCount : null,
                 datePosted: mediaObject.timestamp || now,
-                createdAt: now,
                 updatedAt: now,
-                __typename: 'InstagramPost',
+                ...(!ddbPostIdsSet.has(mediaObject.shortcode) ? {
+                    createdAt: now,
+                } : {}),
             };
     
             if (!debug_noUploadToDDB) {
@@ -116,6 +145,29 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
             console.error(`Failed to get analytics for instagram media object ${mediaObject.id}`, err)
         }
     }));
+}
+
+async function getCollectedPosts(ctx, profile) {
+    const { ddbClient } = ctx.resources;
+
+    // TODO: add pagination
+    try {
+        return (await ddbClient.query({
+            TableName: `InstagramPost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging`,
+            IndexName: 'ByProfileName',
+            KeyConditionExpression: '#profileName = :profileName',
+            ExpressionAttributeValues: {
+                ':profileName': profile.profileName,
+            },
+            ExpressionAttributeNames: {
+                '#profileName': 'profileName',
+            }
+        }).promise())
+            .Items;
+    } catch (err) {
+        console.error(`Failed to fetch collected posts for profile ${profile.profileName}`, err);
+        return null;
+    }
 }
 
 module.exports = fetchAnalyticsForIgBasicProfile;

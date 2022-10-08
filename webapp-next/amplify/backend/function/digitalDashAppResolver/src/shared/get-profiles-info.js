@@ -110,7 +110,7 @@ async function getTikTokProfileInfo(ctx, profile) {
 }
 
 async function getInstagramBasicProfileInfo(ctx, profile) {
-    console.log('getting tiktok profile')
+    console.log('getting ig basic profile')
     try {
         const lambda = new AWS.Lambda({ region: 'us-west-2' });
 
