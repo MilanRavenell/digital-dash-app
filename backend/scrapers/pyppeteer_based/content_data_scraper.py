@@ -104,11 +104,10 @@ class ContentDataScraper:
         unseen_content = [content[0] for content in content_with_ids if content[1] not in self.seen_content_ids]
         [self.seen_content_ids.add(content[1]) for content in content_with_ids]
 
-        print(unseen_content)
         return unseen_content
 
     def is_finished(self):
-        return (time.time() - self.time_start > 200) or (self.no_new_content >= 5)
+        return (time.time() - self.time_start > 200) or (self.no_new_content >= 10)
     
     def __start_tor_proxy(self):
         oper_sys = platform.system()

@@ -14,6 +14,7 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
     }
 
     const ddbPostIdsSet = new Set(ddbPosts.map(({ id }) => id));
+    console.log(ddbPostIdsSet)
     
     // get scraped videos
     const getContentResponse = await lambda.invoke({
@@ -22,11 +23,12 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
             platform: 'tiktok',
             handle: profile.profileName,
             task: 'full_run',
-            // If this is the first time we're gathering content for the user, use the proxy to get full content. Otherwise, use tor
+            // If this is the first time we're gathering content for the user, use the proxy to get all content. Otherwise, use tor
             use_tor: Boolean(profile.postsLastPopulated)
         }),
     }).promise();
     const scrapedVideos = JSON.parse(getContentResponse.Payload)
+    console.log(scrapedVideos)
 
     if (!Array.isArray(scrapedVideos)) {
         console.error('Failed to get videos')
@@ -89,10 +91,8 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
                 shareCount,
                 engagementRate: viewCount > 0 ? engagementCount / parseFloat(viewCount) : null,
                 updatedAt: now,
-                ...(!ddbPostIdsSet.has(video.id) ? { 
-                    datePosted: (extraInfo.date || now),
-                    createdAt: now,
-                } : {}),
+                datePosted: video.datePosted || extraInfo.date,
+                createdAt: video.createdAt || now,
             };
     
             if (!debug_noUploadToDDB) {

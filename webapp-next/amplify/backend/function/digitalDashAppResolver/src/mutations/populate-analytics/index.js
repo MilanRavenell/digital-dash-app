@@ -35,7 +35,7 @@ async function fetchAnalytics(ctx) {
         console.error('Failed to fetch user', err);
         return {
             dataUpdated: false,
-            success: true,
+            success: false,
         }
     }
     

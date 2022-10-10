@@ -128,9 +128,7 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
                 engagementRate: viewCount ? engagementCount/viewCount : null,
                 datePosted: mediaObject.timestamp || now,
                 updatedAt: now,
-                ...(!ddbPostIdsSet.has(mediaObject.shortcode) ? {
-                    createdAt: now,
-                } : {}),
+                createdAt: mediaObject.createdAt || now,
             };
     
             if (!debug_noUploadToDDB) {

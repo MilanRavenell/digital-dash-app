@@ -1,6 +1,7 @@
 from content_data_scraper import ContentDataScraper
 import datetime
 import time
+import json
 
 class TikTokScraper(ContentDataScraper):
     def __init__(self, use_tor, handle, task, content_id=None):
@@ -9,6 +10,8 @@ class TikTokScraper(ContentDataScraper):
         self.handle = handle
         self.metrics_records = []
         self.page_test_el = '//strong[@data-e2e="like-count"]' if task == 'process_single_content' else '//div[@data-e2e="user-avatar"]'
+        self.response_handler_data = None
+        self.finished = False
 
     def get_url(self):
         if self.task == 'process_single_content':
@@ -17,20 +20,47 @@ class TikTokScraper(ContentDataScraper):
         return f'https://www.tiktok.com/@{self.handle}'
 
     async def load_new_content(self):
+        if self.finished:
+            return []
+
         await self.page.evaluate('window.scrollTo(0, document.body.scrollHeight);')
+        start = time.time()
+        
+        try:
+            response = await self.page.waitForResponse(lambda res: 'api/post/item_list/' in res.url, { 'timeout': 10000 })
+            print(await response.text())
+            text = await response.text()
+            self.response_handler_data = json.loads(text)
+
+            print(f'Found content in {time.time() - start}')
+        except:
+            self.finished = True
+        
     
     async def process_content(self, content):
-        return await self.__process_video(content)
+        if type(content).__name__ == 'ElementHandle':
+            return await self.__process_video_html(content)
+        else:
+            return self.__process_video_json(content)
+            
 
     async def get_loaded_content(self):
-        return await self.page.Jx('//div[@data-e2e="user-post-item"]')
+        if self.response_handler_data:
+            content = self.response_handler_data.get('itemList')
+            self.finished = not self.response_handler_data.get('hasMore')
+            self.response_handler_data = None
+            return content
+        else:
+            return await self.page.Jx('//div[@data-e2e="user-post-item"]')
 
     async def get_content_identifier(self, content):
-        return (await (await (await content.J('a')).getProperty('href')).jsonValue()).split('video/')[1]
+        if type(content).__name__ == 'ElementHandle':
+            return (await (await (await content.J('a')).getProperty('href')).jsonValue()).split('video/')[1]
+        else:
+            return content.get('id')
 
     async def verify_bio(self):
         bio = await self.__extract_attribute(self.page, '//h2[@data-e2e="user-bio"]')
-        print(bio)
 
         return (bio.find('digitaldashappXD') != -1)
 
@@ -59,14 +89,16 @@ class TikTokScraper(ContentDataScraper):
         record['thumbnail_url'] = await (await thumbnail_img.getProperty('src')).jsonValue()
         record['caption'] = await (await thumbnail_img.getProperty('alt')).jsonValue()
 
-        print(record)
         return record
 
     async def close(self):
         await super().close()
+    
+    def is_finished(self):
+        return self.finished
 
     ########################## TikTok Methods ##############################
-    async def __process_video(self, video):
+    async def __process_video_html(self, video):
         record = {}
 
         record['profile'] = self.handle
@@ -74,6 +106,16 @@ class TikTokScraper(ContentDataScraper):
         record['views'] = self.get_int_from_string(await self.__extract_attribute(video, './/strong[@data-e2e="video-views"]'))
 
         return record
+    
+    def __process_video_json(self, video):
+        record = {}
+
+        record['profile'] = self.handle
+        record['id'] = video.get('id')
+        record['views'] = video.get('stats', {}).get('playCount')
+
+        return record
+
 
     async def __extract_attribute(self, page, xpath):
         element =  await self.find_element_with_timeout(page, xpath)
@@ -94,6 +136,10 @@ class TikTokScraper(ContentDataScraper):
             if 'd' in time_ago:
                 days_ago = int(time_ago.split('d')[0])
                 return (now - datetime.timedelta(days=days_ago)).isoformat()
+
+            if 'w' in time_ago:
+                weeks_ago = int(time_ago.split('w')[0])
+                return (now - datetime.timedelta(days=(weeks_ago * 7))).isoformat()
 
             if 'm' in time_ago:
                 minutes_ago = int(time_ago.split('m')[0])
