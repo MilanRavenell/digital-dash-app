@@ -38,10 +38,10 @@ const PostsContainerGraphView = ({ graphData }) => {
                                 (() => {
                                     switch(type) {
                                         case 'bar':
-                                            return <Bar data={graph} options={{ responsive: true, maintainAspectRatio: false }}/>;
+                                            return <Bar data={graph} options={{ responsive: true, maintainAspectRatio: false, scales: { y: { min: 0 } } }}/>;
                                         case 'line':
                                         default:
-                                            return <Line data={graph} options={{ responsive: true, maintainAspectRatio: false }}/>;
+                                            return <Line data={graph} options={{ responsive: true, maintainAspectRatio: false, scales: { y: { min: 0 } } }}/>;
                                     }
                                 })()
                             }

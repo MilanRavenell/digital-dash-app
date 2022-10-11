@@ -128,7 +128,7 @@ async function getInstagramBasicProfileInfo(ctx, profile) {
 
         return {
             followerCount: data.followers,
-            profilePicUrl: data.profile_pic_url,
+            profilePicUrl: `/api/fetch-image?url=${data.profile_pic_url.replace(/&/g, '@@@@')}`, // instagram-basic prof pic links cannot be accessed by the DOM, need to fetch image through the backend
         }
     } catch (err) {
         console.error('Failed to get instagram basic profile information', err);

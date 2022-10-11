@@ -1,6 +1,6 @@
 {
-  "typeName": "Query",
-  "fieldName": "getData",
+  "typeName": "Mutation",
+  "fieldName": "populateAnalytics",
   "arguments": {
     "input": {
       "platform": "instagram",
@@ -8,7 +8,7 @@
       "username": "milanravenell@gmail.com",
       "profileKey": "instagram-basic_yungmilly69",
       "timezoneOffset": 420,
-      "debug_noUploadToDDB": false
+      "debug_noUploadToDDB": true
     },
     "startDate": "2014-09-13T01:12:01.560Z",
     "endDate": "2022-09-13T00:38:01.525Z",
