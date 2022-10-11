@@ -32,8 +32,10 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
         console.error('Failed to get videos')
         return;
     }
+    scrapedMediaObjects.sort((a, b) => b.taken_at_timestamp - a.taken_at_timestamp)
 
     const mediaObjects = [
+        ...scrapedMediaObjects.filter(({ shortcode }) => !ddbPostIdsSet.has(shortcode)),
         ...ddbPosts.map((post) =>{
             const scrapedMediaObject = scrapedMediaObjects.find(({ shortcode }) => shortcode === post.id);
 
@@ -46,7 +48,6 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
                 ...(scrapedMediaObject || {}),
             }
         }),
-        ...scrapedMediaObjects.filter(({ shortcode }) => !ddbPostIdsSet.has(shortcode)),
     ]
 
     // Get fetch post data from instagram api
@@ -71,7 +72,6 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
             }
             
             i++;
-
         });
 
         nextToken = response.paging.next ? response.paging.next.split('after=')[1] : null;
@@ -80,7 +80,7 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
     const items = await Promise.all(mediaObjects.map(async (mediaObject) => {
         try {
             // Get children media for album posts
-            media = mediaObject.media || [];
+            const media = mediaObject.media || [];
             if (media.length === 0) {
                 if (mediaObject.media_type === 'CAROUSEL_ALBUM') {
                     nextToken = null;
@@ -92,13 +92,13 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
                         });
         
                         media.push(
-                            albumChildrenResponse.data.map(child => ({
+                            ...albumChildrenResponse.data.map(child => ({
                                 thumbnailUrl: (child.media_type === 'VIDEO' ? child.thumbnail_url : child.media_url) || '',
                                 type: child.media_type.toLowerCase(),
                             })),
                         );
     
-                        nextToken = response.paging.next ? response.paging.next.split('after=')[1] : null;
+                        nextToken = albumChildrenResponse.paging?.next ? albumChildrenResponse.paging.next.split('after=')[1] : null;
                     } while (nextToken !== null)
                 } else {
                     media.push({
@@ -159,7 +159,8 @@ async function getCollectedPosts(ctx, profile) {
             },
             ExpressionAttributeNames: {
                 '#profileName': 'profileName',
-            }
+            },
+            ScanIndexForward: false,
         }).promise())
             .Items;
     } catch (err) {

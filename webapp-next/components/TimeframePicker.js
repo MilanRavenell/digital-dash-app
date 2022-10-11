@@ -41,19 +41,12 @@ const TimeframePicker = ({
         setPopoverOpen(false);
     }
 
-    const timezoneOffset = new Date().getTimezoneOffset();
-
-    const start = moment(timeframe.startDate);
-    start.subtract(timezoneOffset, 'minutes');
-    const end = moment(timeframe.endDate);
-    end.subtract(timezoneOffset, 'minutes');
-
     return (
         <div className={styles.container}>
             <div className={styles.dateLabel}>
                 {
                     (timeframe.startDate && timeframe.endDate)
-                    && `${start.format('MMM D, YYYY') } - ${end.format('MMM D, YYYY')}`
+                    && `${moment.utc(timeframe.startDate).format('MMM D, YYYY') } - ${moment.utc(timeframe.endDate).format('MMM D, YYYY')}`
                 }
             </div>
             <FormControl sx={{ m: 1, minWidth: 120, height: '100%' }} ref={popoverAnchorEl}>

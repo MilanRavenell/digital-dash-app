@@ -12,24 +12,45 @@ const platformTableMap = Object.freeze({
 
 // Must be reverse ordered chronologically
 const now = new Date();
-const timeframes = (timezoneOffset) => ([
-    {
-        name: 'Past Week',
-        endDate: getDateWithTimezoneOffset(now, timezoneOffset).toISOString(),
-        startDate: getDateWithTimezoneOffset(new Date(new Date().setDate(now.getDate() - 6)), timezoneOffset).toISOString(),
-    },
-    {
-        name: 'Past Month',
-        endDate: getDateWithTimezoneOffset(now, timezoneOffset).toISOString(),
-        startDate: getDateWithTimezoneOffset(new Date(new Date().setDate(now.getDate() - 29)), timezoneOffset).toISOString(),
-    },
-    {
-        name: 'Past Year',
-        endDate: getDateWithTimezoneOffset(now, timezoneOffset).toISOString(),
-        startDate: getDateWithTimezoneOffset(new Date(new Date().setDate(now.getDate() - 364)), timezoneOffset).toISOString(),
-    },
-    { name: 'Custom' }
-]);
+
+const zerodOut = new Date();
+zerodOut.setHours(0, 0, 0, 0)
+
+const timeframes = (timezoneOffset) => {
+    const nowTimezone = getDateWithTimezoneOffset(now, timezoneOffset);
+
+    const zerodOut = new Date();
+    zerodOut.setHours(0, 0, 0, 0);
+
+
+    const weekAgo = new Date(zerodOut);
+    weekAgo.setDate(nowTimezone.getDate() - 6);
+
+    const monthAgo = new Date(zerodOut);
+    monthAgo.setDate(nowTimezone.getDate() - 29);
+
+    const yearAgo = new Date(zerodOut);
+    yearAgo.setDate(nowTimezone.getDate() - 364);
+
+    return [
+        {
+            name: 'Past Week',
+            endDate: nowTimezone.toISOString(),
+            startDate: weekAgo.toISOString(),
+        },
+        {
+            name: 'Past Month',
+            endDate: nowTimezone.toISOString(),
+            startDate: monthAgo.toISOString(),
+        },
+        {
+            name: 'Past Year',
+            endDate: nowTimezone.toISOString(),
+            startDate: yearAgo.toISOString(),
+        },
+        { name: 'Custom' }
+    ]
+};
 
 const metrics = [
     { displayName: 'Views', field: 'viewCount'},

@@ -56,6 +56,7 @@ class InstagramScraper(ContentDataScraper):
             'comments': node.get('edge_media_to_comment', {}).get('count'),
             'views': node.get('video_view_count'),
             'likes': node.get('edge_media_preview_like', {}).get('count'),
+            'taken_at_timestamp': node.get('taken_at_timestamp')
         }
 
     async def process_content_page(self):

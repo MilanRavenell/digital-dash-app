@@ -61,7 +61,16 @@ async function getGraphData(ctx, records, profiles, start, end, timezoneOffset) 
             }
 
             const followerHistoryFiltered = followerHistory[profileIndex]
-                .filter(history => (new Date(history.createdAt).getDate() === new Date(partition).getDate()));
+                .filter(history => {
+                    partitionDate = new Date(partition);
+                    historyDate = new Date(history.createdAt)
+
+                    return (
+                        historyDate.getFullYear() === partitionDate.getFullYear()
+                        && historyDate.getMonth() === partitionDate.getMonth()
+                        && historyDate.getDate() === partitionDate.getDate()
+                    )
+                });
 
             if (followerHistoryFiltered.length > 0) {
                 // Force amplpify push

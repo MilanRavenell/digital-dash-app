@@ -108,7 +108,6 @@ const PostsContainerPostsView = ({
                                     {
                                         totalHeaders.map(({ field, displayName }, keyIndex) => {
                                             const platform = profiles.find((profile => (profile.profileName === post.profileName))).platform;
-                                            const timezoneOffset = new Date().getTimezoneOffset();
                                             return (
                                                 <div className={getStyle(displayName, false)} key={keyIndex}>
                                                     {
@@ -130,9 +129,7 @@ const PostsContainerPostsView = ({
                                                                         </div>
                                                                     );
                                                                 case 'Date':
-                                                                    const date = moment(post[field]);
-                                                                    date.subtract(timezoneOffset, 'minutes');
-                                                                    return <div className={styles.fieldContent}>{date.format('MMM D, YYYY')}</div>;
+                                                                    return <div className={styles.fieldContent}>{moment.utc(post[field]).format('MMM D, YYYY')}</div>;
                                                                 case 'Engagement Rate':
                                                                     return <div className={styles.fieldContent}>{post[field] ? `${(post[field] * 100).toFixed(2)}%` : '--'}</div>;
                                                                 default:
