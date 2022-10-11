@@ -20,9 +20,10 @@ export default NextAuth({
       if (account !== undefined) {
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
-        token.expires = new Date(new Date() + (1000 * account.expires_at)),
+        token.expires = new Date(1000 * account.expires_at);
         token.profileName = profile.data.username;
         token.id = profile.data.id;
+        token.profilePicUrl = profile.data.profile_image_url;
       }
       
       return token;
@@ -34,6 +35,7 @@ export default NextAuth({
       session.expires = token.expires,
       session.profileName = token.profileName;
       session.id = token.id;
+      session.profilePicUrl = token.profilePicUrl;
       return session;
     }
   },

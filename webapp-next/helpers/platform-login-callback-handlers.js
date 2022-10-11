@@ -2,14 +2,6 @@ import axios from "axios";
 import { signOut } from 'next-auth/react';
 
 async function twitterLoginCallbackHandler({ sessionData, currentProfiles, setProfiles }) {
-    // Get profile pic
-    let profilePicUrl = null;
-    try {
-        profilePicUrl = (await axios.get(`/api/get-profile-pic?id=${sessionData.id}&accessToken=${sessionData.accessToken}&platform=twitter`)).data;
-    } catch (err) {
-        console.error('Failed to fetch profile picture', err);
-    }
-    
     const profile = {
         profileName: sessionData.profileName,
         meta: JSON.stringify({
@@ -18,7 +10,7 @@ async function twitterLoginCallbackHandler({ sessionData, currentProfiles, setPr
             refreshToken: sessionData.refreshToken,
             expires: sessionData.expires,
         }),
-        profilePicUrl,
+        profilePicUrl: sessionData.profilePicUrl,
         platform: 'twitter',
     };
 

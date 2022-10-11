@@ -119,6 +119,8 @@ async function fetchAnalyticsForTwitterProfile(ctx, profile) {
                 TableName: 'TwitterPost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
                 Item: item
             }).promise();
+        } else {
+            console.log(item)
         }
 
         return item;
