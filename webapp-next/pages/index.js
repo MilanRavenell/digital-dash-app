@@ -36,7 +36,7 @@ export default function App() {
 
   React.useEffect(() => {
     selectedProfileNamesRef.current = selectedProfileNames;
-    timeframeRef.current = timeframeRef;
+    timeframeRef.current = timeframe;
   }, [selectedProfileNames, timeframe])
 
   const initialize = async () => {
