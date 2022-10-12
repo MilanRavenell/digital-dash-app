@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../components/Header';
 import AppContext from '../components/AppContext';
 import MainContentContainer from '../components/MainContentContainer';
+import Loading from '../components/Loading';
 import "@aws-amplify/ui-react/styles.css";
 import { useRouter } from 'next/router';
 import { useAuthenticator } from "@aws-amplify/ui-react";
@@ -163,9 +164,13 @@ export default function App() {
 
   const getContent = () => {
     if (context.user && context.userProfiles && data) {
-      return (
-        <div className='container'>
-          <Header user={context.user} goToAddPlatformSelection={goToAddPlatformSelection} signOut={context.signOut}/>
+      return [
+          <Header
+            user={context.user}
+            goToAddPlatformSelection={goToAddPlatformSelection}
+            signOut={context.signOut}
+            key={'header'}
+          />,
           <MainContentContainer
             data={data}
             profiles={context.userProfiles}
@@ -179,15 +184,21 @@ export default function App() {
             handleRefresh={handleRefresh}
             handleRefreshCancel={handleRefreshCancel}
             profileToRefresh={profileToRefresh}
+            key={'main'}
           />
-        </div>
-      )
+      ]
     }
 
     return (
-      <div className='container'>Loading</div>
+      <Loading/>
     )
   }
 
-  return  getContent();
+  return  (
+    <div className='container'>
+    {
+      getContent()
+    }
+    </div>
+  );
 }

@@ -7,6 +7,7 @@ import { createUserProfile, updateUserProfile } from '../../aws/graphql/mutation
 import AppContext from '../../components/AppContext';
 import { platformLoginHandlers, platformLoginCallbackHandlers } from '../../helpers';
 import Header from '../../components/Header';
+import Loading from '../../components/Loading';
 
 export async function getStaticPaths() {
   return {
@@ -127,26 +128,39 @@ const AddProfile = () => {
       router.push(`/add-profile-selection`);
     };
 
-    if (context.user) {
-      return (
-        <div className='container'>
-          <Header user={context.user} signOut={context.signOut}/>
-          <AddProfileComponent
+    const getContent = () => {
+      if (context.user) {
+        return [
+            <Header
               user={context.user}
-              currentProfiles={context.userProfiles}
-              platform={platform}
-              loginHandlers={platformLoginHandlers[platform]}
-              loginCallbackHandler={platformLoginCallbackHandlers[platform]}
-              handleSubmit={handleSubmit}
-              cancel={cancel}
-          />
-        </div>
-      );
+              signOut={context.signOut}
+              key={'header'}
+            />,
+            <AddProfileComponent
+                user={context.user}
+                currentProfiles={context.userProfiles}
+                platform={platform}
+                loginHandlers={platformLoginHandlers[platform]}
+                loginCallbackHandler={platformLoginCallbackHandlers[platform]}
+                handleSubmit={handleSubmit}
+                cancel={cancel}
+                key={'main'}
+            />
+        ];
+      }
+  
+      return (
+        <Loading/>
+      )
     }
 
     return (
-      <div className='container'>Loading</div>
-    )
+      <div className='container'>
+      {
+        getContent()
+      }
+      </div>
+    )    
 }
 
 export default AddProfile;

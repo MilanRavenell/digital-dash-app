@@ -1,14 +1,10 @@
-const axios = require("axios");
-const Twitter = require('twitter-lite');
-const { getAccessToken } = require('../../shared');
 const { makeApiRequest } = require('../../shared');
 
-async function fetchAnalyticsForTwitterProfile(ctx, profile) {
+async function fetchAnalyticsForTwitterProfile(ctx, profile, accessToken) {
     const { ddbClient } = ctx.resources;
     const { debug_noUploadToDDB } = ctx.arguments.input;
     const { id } = JSON.parse(profile.meta);
 
-    const accessToken = await getAccessToken(ctx, profile);
     if (accessToken === null) {
         return;
     } 

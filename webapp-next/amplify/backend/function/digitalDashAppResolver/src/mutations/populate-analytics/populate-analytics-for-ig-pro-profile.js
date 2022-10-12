@@ -68,6 +68,8 @@ async function fetchAnalyticsForIgProProfile (ctx, profile) {
                     TableName: 'InstagramPost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
                     Item: item,
                 }).promise();
+            } else {
+                console.log(item)
             }
 
             return item;

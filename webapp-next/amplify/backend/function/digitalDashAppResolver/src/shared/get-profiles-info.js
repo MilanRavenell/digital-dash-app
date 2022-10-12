@@ -1,26 +1,25 @@
 const Twitter = require('twitter-lite');
 const axios = require("axios");
 const AWS = require('aws-sdk');
-const getAccessToken = require('./get-access-token');
 const makeApiRequest = require('./make-api-request');
 
-async function getProfileInfo(ctx, profile) {
+async function getProfileInfo(ctx, profile, accessToken) {
     try {
-        return await platformToProfileInfoGetterMap[profile.platform](ctx, profile);
+        return await platformToProfileInfoGetterMap[profile.platform](ctx, profile, accessToken);
     } catch (err) {
         console.error(`Failed to fetch profile for user ${username}`, err);
         return {};
     }
 }
 
-async function getTwitterProfileInfo(ctx, profile) {
+async function getTwitterProfileInfo(ctx, profile, accessToken) {
     const { id } = JSON.parse(profile.meta);
 
-    try {
-        const accessToken = await getAccessToken(ctx, profile);
         if (!accessToken) {
             return {}
         }
+
+    try {
 
         const response = await makeApiRequest(ctx, profile, `users/${id}`, accessToken, {
             'user.fields': 'public_metrics,profile_image_url,created_at',
@@ -37,15 +36,10 @@ async function getTwitterProfileInfo(ctx, profile) {
     
 }
 
-async function getYoutubeProfileInfo(ctx, profile) {
+async function getYoutubeProfileInfo(ctx, profile, accessToken) {
     const { id } = JSON.parse(profile.meta);
     
     try {
-        const accessToken = await getAccessToken(ctx, profile);
-        if (!accessToken) {
-            return {}
-        }
-        
         const response = await makeApiRequest(ctx, profile, 'channels', accessToken, {
             'part': 'snippet,statistics',
             id,

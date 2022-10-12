@@ -1,7 +1,18 @@
 const axios = require("axios");
 
+const platformRefresherMap = Object.freeze({
+    'twitter': refreshTwitterTokens,
+    'youtube': refreshYoutubeTokens,
+});
+
 async function getAccessToken(ctx, profile) {
     const { ddbClient } = ctx.resources;
+
+    const platformRefresher = platformRefresherMap[profile.platform];
+    if (!platformRefresher) {
+        return null;
+    }
+
     const { accessToken, expires } = JSON.parse(profile.meta);
 
     if (new Date() < new Date(expires)) {
@@ -9,11 +20,6 @@ async function getAccessToken(ctx, profile) {
     }
 
     console.log(`Refreshing token for ${profile.user}'s ${profile.platform} profile ${profile.profileName}`);
-
-    const platformRefresherMap = Object.freeze({
-        'twitter': refreshTwitterTokens,
-        'youtube': refreshYoutubeTokens,
-    });
 
     try {
         return await platformRefresherMap[profile.platform](ctx, profile);

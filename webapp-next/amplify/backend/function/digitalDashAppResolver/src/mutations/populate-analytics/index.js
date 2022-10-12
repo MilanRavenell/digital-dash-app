@@ -3,7 +3,7 @@ const populateAnalyticsForIgBasicProfile = require('./populate-analytics-for-ig-
 const populateAnalyticsForTwitterProfile = require('./populate-analytics-for-twitter-profile');
 const populateAnalyticsForYtProfile = require('./populate-analytics-for-yt-profile');
 const populateAnalyticsForTiktokProfile = require('./populate-analytics-for-tiktok-profile');
-const { getProfileInfo } = require('../../shared');
+const { getProfileInfo, getAccessToken } = require('../../shared');
 
 async function fetchAnalytics(ctx) {
     const { ddbClient } = ctx.resources;
@@ -42,7 +42,9 @@ async function fetchAnalytics(ctx) {
     console.log('Fetching data');
 
     try {
-        await Promise.all([populateProfile(ctx, profile), populatePosts(ctx, profile)])
+        const accessToken = await getAccessToken(ctx, profile);
+
+        await Promise.all([populateProfile(ctx, profile, accessToken), populatePosts(ctx, profile, accessToken)])
 
         if (!debug_noUploadToDDB) {
             // Set postsLastPopulated for the user to now
@@ -78,11 +80,11 @@ async function fetchAnalytics(ctx) {
 }
 
 // Fetch  latest profile info
-async function populateProfile(ctx, profile) {
+async function populateProfile(ctx, profile, accessToken) {
     const { ddbClient } = ctx.resources;
     const { debug_noUploadToDDB } = ctx.arguments.input;
 
-    const profileInfo = await getProfileInfo(ctx, profile);
+    const profileInfo = await getProfileInfo(ctx, profile, accessToken);
 
     if (!debug_noUploadToDDB) {
         try {
@@ -113,7 +115,7 @@ async function populateProfile(ctx, profile) {
     }
 }
 
-async function populatePosts(ctx, profile) {
+async function populatePosts(ctx, profile, accessToken) {
     switch(profile.platform) {
         case 'instagram-pro':
             let tries = 0;
@@ -139,10 +141,10 @@ async function populatePosts(ctx, profile) {
             await populateAnalyticsForIgBasicProfile(ctx, profile);
             break;
         case 'twitter':
-            await populateAnalyticsForTwitterProfile(ctx, profile);
+            await populateAnalyticsForTwitterProfile(ctx, profile, accessToken);
             break;
         case 'youtube':
-            await populateAnalyticsForYtProfile(ctx, profile);
+            await populateAnalyticsForYtProfile(ctx, profile, accessToken);
             break;
         case 'tiktok':
             await populateAnalyticsForTiktokProfile(ctx, profile);

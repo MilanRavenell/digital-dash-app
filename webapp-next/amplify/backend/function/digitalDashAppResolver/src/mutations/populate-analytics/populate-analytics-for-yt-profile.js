@@ -1,13 +1,11 @@
 const axios = require("axios");
-const { getAccessToken } = require('../../shared');
 const { makeApiRequest } = require('../../shared');
 
-async function fetchAnalyticsForYtProfile(ctx, profile) {
+async function fetchAnalyticsForYtProfile(ctx, profile, accessToken) {
     const { ddbClient } = ctx.resources;
     const { uploadsId: id } = JSON.parse(profile.meta);
     const { debug_noUploadToDDB } = ctx.arguments.input;
 
-    const accessToken = await getAccessToken(ctx, profile);
     if (accessToken === null) {
         return;
     } 

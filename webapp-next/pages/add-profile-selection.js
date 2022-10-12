@@ -7,6 +7,7 @@ import { deleteUserProfile } from '../aws/graphql/mutations';
 import AppContext from '../components/AppContext';
 import axios from "axios";
 import Header from '../components/Header';
+import Loading from '../components/Loading';
 
 export default function Home() {
   const router = useRouter();
@@ -84,10 +85,14 @@ export default function Home() {
     setProfileToRefresh(null);
   }, []);
 
-  if (context.user) {
-    return (
-      <div className='container'>
-        <Header user={context.user} signOut={context.signOut}/>
+  const getContent = () => {
+    if (context.user) {
+      return [
+        <Header
+          user={context.user}
+          signOut={context.signOut}
+          key={'header'}
+        />,
         <AddProfileSelection
           user={context.user}
           profiles={context.userProfiles}
@@ -99,13 +104,22 @@ export default function Home() {
           handleRefresh={handleRefresh}
           handleRefreshCancel={handleRefreshCancel}
           profileToRefresh={profileToRefresh}
+          key={'main'}
         />
-      </div>
+      ]
+    }
+  
+    return (
+      <Loading/>
     )
   }
 
   return (
-    <div className='container'>Loading</div>
+    <div className='container'>
+    {
+      getContent()
+    }
+    </div>
   )
   
 }
