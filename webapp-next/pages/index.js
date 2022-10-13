@@ -25,9 +25,11 @@ export default function App() {
   const [timeframe, setTimeframe] = React.useState(null);
   const [sortOrder, setSortOrder] = React.useState(null);
   const [profileToRefresh, setProfileToRefresh] = React.useState(null);
+  const [profilesUpdated, setProfilesUpdated] = React.useState(0);
 
   const selectedProfileNamesRef = React.useRef(selectedProfileNames);
   const timeframeRef = React.useRef(timeframe);
+  const profilesUpdatedRef = React.useRef(profilesUpdated);
 
   React.useEffect(() => {
     if (context.user) {
@@ -38,7 +40,29 @@ export default function App() {
   React.useEffect(() => {
     selectedProfileNamesRef.current = selectedProfileNames;
     timeframeRef.current = timeframe;
-  }, [selectedProfileNames, timeframe])
+    profilesUpdatedRef.current = profilesUpdated;
+  }, [selectedProfileNames, timeframe, profilesUpdated]);
+
+  React.useEffect(() => {
+    if (profilesUpdated > 0) {
+      const currentProfilesUpdated = profilesUpdated
+      setTimeout(() => {
+        if (currentProfilesUpdated === profilesUpdatedRef.current) {
+          getData(
+            context.user.email,
+            timeframeRef.current,
+            selectedProfileNamesRef.current,
+          ).then(newData => {
+            if (newData.success) {
+              setData(newData.data);
+            }
+          });
+  
+          setProfilesUpdated(0);
+        }
+      }, 2000);
+    }
+  }, [profilesUpdated])
 
   const initialize = async () => {
     console.log('init')
@@ -86,6 +110,19 @@ export default function App() {
     });
   }
 
+  // Put stat containers in shimmering state
+  const setStatsLoading = () => {
+    if (data !== null) {
+      setData((prevData) => ({
+        ...prevData,
+        aggregated: {
+          ...prevData.aggregated,
+          stats: prevData.aggregated.stats.map((stat) => ({ name: 'loading' })),
+        }
+      }))
+    }
+  }
+
   const getData = async (username, timeframe, selectedProfileNames) => {
     const { startDate, endDate } = timeframe ?? {};
     const timezoneOffset = new Date().getTimezoneOffset();
@@ -112,19 +149,10 @@ export default function App() {
   };
 
   const updateSelectedProfileName = React.useCallback(async (newSelectedProfileNames) => {
-    console.log('selected timeframe: ', timeframeRef.current)
-
-    const newData = await getData(
-      context.user.email,
-      timeframeRef.current,
-      newSelectedProfileNames,
-    );
-
-    if (newData.success) {
-      setData(newData.data);
-      setSelectedProfileNames(newSelectedProfileNames);
-    }
-  }, [context, timeframe, selectedProfileNames, setSelectedProfileNames, setData]);
+    setSelectedProfileNames(newSelectedProfileNames);
+    setProfilesUpdated((prev) => prev + 1);
+    setStatsLoading();
+  }, [data]);
 
   const updateTimeFrame = React.useCallback(async (newTimeframe) => {
     console.log('selected profiles: ', selectedProfileNamesRef.current)
@@ -133,6 +161,8 @@ export default function App() {
       setTimeframe(newTimeframe);
       return;
     }
+
+    setStatsLoading();
 
     const newData = await getData(
       context.user.email,
@@ -144,7 +174,7 @@ export default function App() {
       setData(newData.data);
       setTimeframe(newTimeframe);
     }
-  }, [context, selectedProfileNames, timeframe, setTimeframe, setData]);
+  }, [context, selectedProfileNames, timeframe, setTimeframe, setData, data]);
 
   const goToAddPlatformSelection = React.useCallback(() => {
     router.push(`/add-profile-selection`);

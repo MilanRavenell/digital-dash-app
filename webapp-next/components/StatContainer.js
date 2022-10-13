@@ -2,6 +2,7 @@ import React from 'react';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Popover from '@mui/material/Popover';
+import Skeleton from '@mui/material/Skeleton';
 import moment from 'moment';
 
 import styles from '../styles/StatContainer.module.css';
@@ -48,7 +49,7 @@ const StatContainer = ({
     return(
         <div className={styles.container}>
             {
-                (name != null) && (
+                (name && name !== 'loading') && (
                     <div className={styles.inner}>
                         <div className={styles.content}>
                             <div className={styles.title}> { name } </div>
@@ -94,6 +95,21 @@ const StatContainer = ({
                                 {`Compared to ${moment(comparisonTimeframeStart).format('MMM D, YYYY')} - ${moment(comparisonTimeframeEnd).format('MMM D, YYYY')}`}
                             </div>
                         </Popover>
+                    </div>
+                )
+            }
+            {
+                (name === 'loading') && (
+                    <div className={styles.inner}>
+                        <div className={styles.content}>
+                            <div className={styles.title}>
+                                <Skeleton variant="text" width={'50%'}/>
+                            </div>
+                            <div className={styles.values}>
+                                <Skeleton variant="text" width={'9vw'}/>
+                            </div>
+                            <div className={styles.footer}/>
+                        </div>
                     </div>
                 )
             }
