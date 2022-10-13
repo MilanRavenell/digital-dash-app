@@ -4,7 +4,7 @@ const { makeApiRequest } = require('../../shared');
 
 async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
     const { ddbClient, envVars } = ctx.resources;
-    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id, WEB_SCRAPER_LAMBDA_NAME: webScraperLambdaName } = envVars;
     const { debug_noUploadToDDB } = ctx.arguments.input;
     const { account_id: accountId, accessToken } = JSON.parse(profile.meta);
     const lambda = new AWS.Lambda({ region: 'us-west-2' });
@@ -19,7 +19,7 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
     const ddbPostIdsSet = new Set(ddbPosts.map(({ id }) => id));
 
     const getContentResponse = await lambda.invoke({
-        FunctionName: 'web-scraper-service-staging-scrapeContent',
+        FunctionName: webScraperLambdaName,
         Payload: JSON.stringify({
             platform: 'instagram',
             handle: profile.profileName,

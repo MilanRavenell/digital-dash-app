@@ -3,7 +3,7 @@ const AWS = require('aws-sdk');
 
 async function fetchAnalyticsForTiktokProfile(ctx, profile) {
     const { ddbClient, envVars } = ctx.resources;
-    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id, WEB_SCRAPER_LAMBDA_NAME: webScraperLambdaName } = envVars;
     const { debug_noUploadToDDB } = ctx.arguments.input;
     const lambda = new AWS.Lambda({ region: 'us-west-2' });
 
@@ -19,7 +19,7 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
     
     // get scraped videos
     const getContentResponse = await lambda.invoke({
-        FunctionName: 'web-scraper-service-staging-scrapeContent',
+        FunctionName: webScraperLambdaName,
         Payload: JSON.stringify({
             platform: 'tiktok',
             handle: profile.profileName,
@@ -53,7 +53,7 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
         try {
             console.log(`getting ${video.id}`)
             const singleContentResponse = await lambda.invoke({
-                FunctionName: 'web-scraper-service-staging-scrapeContent',
+                FunctionName: webScraperLambdaName,
                 Payload: JSON.stringify({
                     platform: 'tiktok',
                     handle: profile.profileName,

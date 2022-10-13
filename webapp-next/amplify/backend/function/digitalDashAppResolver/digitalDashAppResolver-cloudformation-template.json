@@ -10,13 +10,16 @@
     "deploymentBucketName": {
       "Type": "String"
     },
-    "env": {
-      "Type": "String"
-    },
     "s3Key": {
       "Type": "String"
     },
     "appsyncApiId": {
+      "Type": "String"
+    },
+    "env": {
+      "Type": "String"
+    },
+    "webScraperLambdaName": {
       "Type": "String"
     }
   },
@@ -67,14 +70,17 @@
         },
         "Environment": {
           "Variables": {
-            "ENV": {
-              "Ref": "env"
-            },
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "appsync_api_id": {
+            "APPSYNC_API_ID": {
               "Ref": "appsyncApiId"
+            },
+            "ENV": {
+              "Ref": "env"
+            },
+            "WEB_SCRAPER_LAMBDA_NAME": {
+              "Ref": "webScraperLambdaName"
             }
           }
         },

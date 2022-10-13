@@ -4,7 +4,27 @@
   "environmentVariableList": [
     {
       "cloudFormationParameterName": "appsyncApiId",
-      "environmentVariableName": "appsync_api_id"
+      "environmentVariableName": "APPSYNC_API_ID"
+    },
+    {
+      "cloudFormationParameterName": "env",
+      "environmentVariableName": "ENV"
+    },
+    {
+      "cloudFormationParameterName": "webScraperLambdaName",
+      "environmentVariableName": "WEB_SCRAPER_LAMBDA_NAME"
+    },
+    {
+      "cloudFormationParameterName": "env",
+      "environmentVariableName": "ENV"
+    },
+    {
+      "cloudFormationParameterName": "appsyncApiId",
+      "environmentVariableName": "APPSYNC_API_ID"
+    },
+    {
+      "cloudFormationParameterName": "webScraperLambdaName",
+      "environmentVariableName": "WEB_SCRAPER_LAMBDA_NAME"
     }
   ]
 }

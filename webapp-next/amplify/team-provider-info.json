@@ -18,8 +18,10 @@
       "function": {
         "digitalDashAppResolver": {
           "deploymentBucketName": "amplify-amplify36cf6a1d3b6e4-staging-162021-deployment",
-          "s3Key": "amplify-builds/digitalDashAppResolver-773067455256484d3361-build.zip",
-          "appsyncApiId": "7hdw3dtfmbhhbmqwm7qi7fgbki"
+          "s3Key": "amplify-builds/digitalDashAppResolver-313370686c6d4b535547-build.zip",
+          "appsyncApiId": "7hdw3dtfmbhhbmqwm7qi7fgbki",
+          "env": "staging",
+          "webScraperLambdaName": "web-scraper-service-staging-scrapeContent"
         }
       }
     }
@@ -43,7 +45,10 @@
       "function": {
         "digitalDashAppResolver": {
           "deploymentBucketName": "amplify-digitaldashappwebapp-prod-224358-deployment",
-          "s3Key": "amplify-builds/digitalDashAppResolver-773067455256484d3361-build.zip"
+          "s3Key": "amplify-builds/digitalDashAppResolver-5437587a306b6368344a-build.zip",
+          "env": "prod",
+          "appsyncApiId": "b7rvoho6bjf3xcicxkq6ivubgy",
+          "webScraperLambdaName": "web-scraper-service-prod-scrapeContent"
         }
       }
     }
