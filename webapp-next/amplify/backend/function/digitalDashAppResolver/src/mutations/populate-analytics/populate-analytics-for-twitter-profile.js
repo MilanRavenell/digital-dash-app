@@ -1,7 +1,8 @@
 const { makeApiRequest } = require('../../shared');
 
 async function fetchAnalyticsForTwitterProfile(ctx, profile, accessToken) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
     const { debug_noUploadToDDB } = ctx.arguments.input;
     const { id } = JSON.parse(profile.meta);
 
@@ -112,7 +113,7 @@ async function fetchAnalyticsForTwitterProfile(ctx, profile, accessToken) {
 
         if (!debug_noUploadToDDB) {
             await ddbClient.put({
-                TableName: 'TwitterPost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                TableName: `TwitterPost-${appsync_api_id}-${env}`,
                 Item: item
             }).promise();
         } else {

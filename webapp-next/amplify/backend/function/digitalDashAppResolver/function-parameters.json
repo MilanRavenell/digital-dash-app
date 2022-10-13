@@ -1,4 +1,10 @@
 {
   "permissions": {},
-  "lambdaLayers": []
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "appsyncApiId",
+      "environmentVariableName": "appsync_api_id"
+    }
+  ]
 }

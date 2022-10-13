@@ -2,7 +2,8 @@ const axios = require("axios");
 const { makeApiRequest } = require('../../shared');
 
 async function fetchAnalyticsForYtProfile(ctx, profile, accessToken) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
     const { uploadsId: id } = JSON.parse(profile.meta);
     const { debug_noUploadToDDB } = ctx.arguments.input;
 
@@ -81,7 +82,7 @@ async function fetchAnalyticsForYtProfile(ctx, profile, accessToken) {
 
         if (!debug_noUploadToDDB) {
             await ddbClient.put({
-                TableName: 'YoutubePost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                TableName: `YoutubePost-${appsync_api_id}-${env}`,
                 Item: item
             }).promise();
         }

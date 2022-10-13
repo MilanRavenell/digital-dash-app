@@ -36,29 +36,30 @@ function getCalculations(records, metrics) {
 }
 
 async function getTotalFollowerCount(ctx, profiles, end, timezoneOffset) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
 
     try {
         const results = await Promise.all(profiles.map(async (profile) => {
-                return (await ddbClient.query({
-                    TableName: 'MetricHistory-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
-                    KeyConditionExpression: '#key = :key AND #createdAt < :end',
-                    ExpressionAttributeNames: {
-                        '#key': 'key',
-                        '#createdAt': 'createdAt',
-                    },
-                    ExpressionAttributeValues: {
-                        ':key': `${profile.key}_followerCount`,
-                        ':end': getDateWithTimezoneOffset(end, -1 * timezoneOffset).toISOString(),
-                    },
-                    ScanIndexForward: true,
-                    Limit: 1,
-                }).promise())
-                    .Items
-                    .map(item => ({
-                        ...item,
-                        createdAt: getDateWithTimezoneOffset(end, timezoneOffset),
-                    }));
+            return (await ddbClient.query({
+                TableName: `MetricHistory-${appsync_api_id}-${env}`,
+                KeyConditionExpression: '#key = :key AND #createdAt < :end',
+                ExpressionAttributeNames: {
+                    '#key': 'key',
+                    '#createdAt': 'createdAt',
+                },
+                ExpressionAttributeValues: {
+                    ':key': `${profile.key}_followerCount`,
+                    ':end': getDateWithTimezoneOffset(end, -1 * timezoneOffset).toISOString(),
+                },
+                ScanIndexForward: true,
+                Limit: 1,
+            }).promise())
+                .Items
+                .map(item => ({
+                    ...item,
+                    createdAt: getDateWithTimezoneOffset(end, timezoneOffset),
+                }));
         }));
 
         return results

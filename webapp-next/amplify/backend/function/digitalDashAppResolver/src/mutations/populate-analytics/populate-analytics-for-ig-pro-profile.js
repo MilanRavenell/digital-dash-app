@@ -1,7 +1,8 @@
 const { makeApiRequest } = require('../../shared');
 
 async function fetchAnalyticsForIgProProfile (ctx, profile) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
     const { debug_noUploadToDDB } = ctx.arguments.input;
     const { account_id: accountId, access_token: accessToken } = JSON.parse(profile.meta);
 
@@ -65,7 +66,7 @@ async function fetchAnalyticsForIgProProfile (ctx, profile) {
 
             if (!debug_noUploadToDDB) {
                 await ddbClient.put({
-                    TableName: 'InstagramPost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                    TableName: `InstagramPost-${appsync_api_id}-${env}`,
                     Item: item,
                 }).promise();
             } else {

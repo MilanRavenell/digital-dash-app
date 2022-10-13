@@ -18,7 +18,32 @@
       "function": {
         "digitalDashAppResolver": {
           "deploymentBucketName": "amplify-amplify36cf6a1d3b6e4-staging-162021-deployment",
-          "s3Key": "amplify-builds/digitalDashAppResolver-3767514e716966693541-build.zip"
+          "s3Key": "amplify-builds/digitalDashAppResolver-773067455256484d3361-build.zip",
+          "appsyncApiId": "7hdw3dtfmbhhbmqwm7qi7fgbki"
+        }
+      }
+    }
+  },
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-digitaldashappwebapp-prod-224358-authRole",
+      "UnauthRoleArn": "arn:aws:iam::125288872271:role/amplify-digitaldashappwebapp-prod-224358-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::125288872271:role/amplify-digitaldashappwebapp-prod-224358-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-digitaldashappwebapp-prod-224358-deployment",
+      "UnauthRoleName": "amplify-digitaldashappwebapp-prod-224358-unauthRole",
+      "StackName": "amplify-digitaldashappwebapp-prod-224358",
+      "StackId": "arn:aws:cloudformation:us-west-2:125288872271:stack/amplify-digitaldashappwebapp-prod-224358/0cc47ed0-4aba-11ed-b7ca-067a834d3ed5",
+      "AmplifyAppId": "djcj6w6idgy88"
+    },
+    "categories": {
+      "auth": {
+        "digitaldashappwebapp27a2f2b0": {}
+      },
+      "function": {
+        "digitalDashAppResolver": {
+          "deploymentBucketName": "amplify-digitaldashappwebapp-prod-224358-deployment",
+          "s3Key": "amplify-builds/digitalDashAppResolver-773067455256484d3361-build.zip"
         }
       }
     }

@@ -2,7 +2,8 @@ const axios = require("axios");
 const AWS = require('aws-sdk');
 
 async function fetchAnalyticsForTiktokProfile(ctx, profile) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
     const { debug_noUploadToDDB } = ctx.arguments.input;
     const lambda = new AWS.Lambda({ region: 'us-west-2' });
 
@@ -97,7 +98,7 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
     
             if (!debug_noUploadToDDB) {
                 await ddbClient.put({
-                    TableName: 'TiktokPost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                    TableName: `TiktokPost-${appsync_api_id}-${env}`,
                     Item: item
                 }).promise();
             } else {
@@ -115,7 +116,7 @@ async function getCollectedPosts(ctx, profile) {
     // TODO: add pagination
     try {
         return (await ddbClient.query({
-            TableName: `TiktokPost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging`,
+            TableName: `TiktokPost-${appsync_api_id}-${env}`,
             IndexName: 'ByProfileName',
             KeyConditionExpression: '#profileName = :profileName',
             ExpressionAttributeValues: {

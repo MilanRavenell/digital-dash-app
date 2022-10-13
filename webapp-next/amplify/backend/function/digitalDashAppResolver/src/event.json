@@ -6,7 +6,7 @@
       "platform": "instagram",
       "accessToken": "EAApFdlyGMG4BAO48fx8ZBTCVrCI8vZCSTf6ZAnPoxpu7FRMFfiqSMNaAayWQZCFM4onldAZCZBcXkvgITYpRIfZCyXzZCznGxb4gogHCnE5A83Bvx1277B6NWG50wZCZBvvsEJRxPNSNBdg6TvnGiKm8dLGAKx92YL09oeO8rV8AWMbYYZBMuJZCB1BXZC0U4EdvcEioZCLXcPEGOuAwZDZD",
       "username": "milanravenell@gmail.com",
-      "profileKey": "youtube_Milan Ravenell",
+      "profileKey": "instagram-pro_Yung Milly",
       "timezoneOffset": 420,
       "debug_noUploadToDDB": true
     },
@@ -18,5 +18,9 @@
     {
       "body": "{\"typeName\":\"Mutation\",\"fieldName\":\"populateAnalytics\",\"arguments\":{\"input\":{\"username\":\"milanravenell@gmail.com\",\"profileKey\":\"instagram-pro_Yung Milly\",\"debug_noUploadToDDB\":false}}}"
     }
-  ]
+  ],
+  "LOCAL_ENVVARS": {
+    "ENV": "staging",
+    "APPSYNC_API_ID": "7hdw3dtfmbhhbmqwm7qi7fgbki"
+  }
 }

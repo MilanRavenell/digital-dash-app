@@ -6,14 +6,15 @@ const populateAnalyticsForTiktokProfile = require('./populate-analytics-for-tikt
 const { getProfileInfo, getAccessToken } = require('../../shared');
 
 async function fetchAnalytics(ctx) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
     const { username, profileKey, debug_noUploadToDDB } = ctx.arguments.input;
 
     // Do not fetch posts if it's been less then an hour since posts were last fetched
     let profile = null;
     try {
         profile = (await ddbClient.get({
-            TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+            TableName: `UserProfile-${appsync_api_id}-${env}`,
             Key: { user: username, key: profileKey },
         }).promise()).Item;
     
@@ -49,7 +50,7 @@ async function fetchAnalytics(ctx) {
         if (!debug_noUploadToDDB) {
             // Set postsLastPopulated for the user to now
             await ddbClient.update({
-                TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                TableName: `UserProfile-${appsync_api_id}-${env}`,
                 Key: { user: username, key: profileKey },
                 UpdateExpression: 'SET #postsLastPopulated = :postsLastPopulated',
                 ExpressionAttributeNames: { 
@@ -81,7 +82,8 @@ async function fetchAnalytics(ctx) {
 
 // Fetch  latest profile info
 async function populateProfile(ctx, profile, accessToken) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
     const { debug_noUploadToDDB } = ctx.arguments.input;
 
     const profileInfo = await getProfileInfo(ctx, profile, accessToken);
@@ -89,7 +91,7 @@ async function populateProfile(ctx, profile, accessToken) {
     if (!debug_noUploadToDDB) {
         try {
             await ddbClient.put({
-                TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                TableName: `UserProfile-${appsync_api_id}-${env}`,
                 Item: {
                     ...profile,
                     ...profileInfo,
@@ -97,7 +99,7 @@ async function populateProfile(ctx, profile, accessToken) {
             }).promise();
     
             await ddbClient.put({
-                TableName: 'MetricHistory-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                TableName: `MetricHistory-${appsync_api_id}-${env}`,
                 Item: {
                     key: `${profile.key}_followerCount`,
                     profileKey: profile.key,

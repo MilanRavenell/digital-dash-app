@@ -6,7 +6,8 @@ const platformRefresherMap = Object.freeze({
 });
 
 async function getAccessToken(ctx, profile) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
 
     const platformRefresher = platformRefresherMap[profile.platform];
     if (!platformRefresher) {
@@ -33,7 +34,7 @@ async function getAccessToken(ctx, profile) {
 
         console.log('profile needs refresh')
         await ddbClient.update({
-            TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+            TableName: `UserProfile-${appsync_api_id}-${env}`,
             Key: {
                 user: profile.user,
                 key: `${profile.platform}_${profile.profileName}`,
@@ -53,7 +54,8 @@ async function getAccessToken(ctx, profile) {
 
 async function refreshTwitterTokens(ctx, profile) {
     const { id, refreshToken } = JSON.parse(profile.meta);
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
 
     const params = new URLSearchParams();
     params.append('refresh_token', refreshToken);
@@ -82,7 +84,7 @@ async function refreshTwitterTokens(ctx, profile) {
 
     // Update profile with new tokens
     await ddbClient.update({
-        TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+        TableName: `UserProfile-${appsync_api_id}-${env}`,
         Key: {
             user: profile.user,
             key: `${profile.platform}_${profile.profileName}`,
@@ -101,7 +103,8 @@ async function refreshTwitterTokens(ctx, profile) {
 
 async function refreshYoutubeTokens(ctx, profile) {
     const { id, refreshToken, uploadsId } = JSON.parse(profile.meta);
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
 
     const params = new URLSearchParams();
     params.append('refresh_token', refreshToken);
@@ -133,7 +136,7 @@ async function refreshYoutubeTokens(ctx, profile) {
 
     // Update profile with new tokens
     await ddbClient.update({
-        TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+        TableName: `UserProfile-${appsync_api_id}-${env}`,
         Key: {
             user: profile.user,
             key: `${profile.platform}_${profile.profileName}`,

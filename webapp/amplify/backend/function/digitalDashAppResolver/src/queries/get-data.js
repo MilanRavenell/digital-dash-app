@@ -85,12 +85,13 @@ async function getData(ctx) {
 }
 
 async function getRecords(ctx, username) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
 
     const profiles = [];
     try {
         profiles.push(...(await ddbClient.query({
-            TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+            TableName: `UserProfile-${appsync_api_id}-${env}`,
             KeyConditionExpression: '#user = :user',
             ExpressionAttributeValues: { ':user': username },
             ExpressionAttributeNames: { '#user': 'user' }
@@ -104,7 +105,7 @@ async function getRecords(ctx, username) {
     try {
         records.push(...(await Promise.all(profiles.map(async (profile) => {
             const items = (await ddbClient.query({
-                TableName: `${platformTableMap[profile.platform]}-7hdw3dtfmbhhbmqwm7qi7fgbki-staging`,
+                TableName: `${platformTableMap[profile.platform]}-${appsync_api_id}-${env}`,
                 IndexName: 'ByProfileName',
                 KeyConditionExpression: '#profileName = :profileName',
                 ExpressionAttributeValues: { ':profileName': profile.profileName },

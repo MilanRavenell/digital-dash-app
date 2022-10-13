@@ -2,7 +2,8 @@ const axios = require("axios");
 const Twitter = require('twitter-lite');
 
 async function fetchAnalyticsForTwitterProfile(ctx, profile) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
     const { id, oauthToken, oauthTokenSecret } = JSON.parse(profile.meta);
 
     console.log(profile.profileName)
@@ -47,7 +48,7 @@ async function fetchAnalyticsForTwitterProfile(ctx, profile) {
             };
 
             await ddbClient.put({
-                TableName: 'TwitterPost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                TableName: `TwitterPost-${appsync_api_id}-${env}`,
                 Item: item
             }).promise();
         }));

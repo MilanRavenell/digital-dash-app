@@ -3,7 +3,8 @@ const AWS = require('aws-sdk');
 const { makeApiRequest } = require('../../shared');
 
 async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
     const { debug_noUploadToDDB } = ctx.arguments.input;
     const { account_id: accountId, accessToken } = JSON.parse(profile.meta);
     const lambda = new AWS.Lambda({ region: 'us-west-2' });
@@ -133,7 +134,7 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
     
             if (!debug_noUploadToDDB) {
                 await ddbClient.put({
-                    TableName: 'InstagramPost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                    TableName: `InstagramPost-${appsync_api_id}-${env}`,
                     Item: item
                 }).promise();
             } else {
@@ -146,12 +147,13 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
 }
 
 async function getCollectedPosts(ctx, profile) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
 
     // TODO: add pagination
     try {
         return (await ddbClient.query({
-            TableName: `InstagramPost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging`,
+            TableName: `InstagramPost-${appsync_api_id}-${env}`,
             IndexName: 'ByProfileName',
             KeyConditionExpression: '#profileName = :profileName',
             ExpressionAttributeValues: {

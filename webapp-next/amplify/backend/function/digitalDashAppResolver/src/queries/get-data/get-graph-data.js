@@ -181,7 +181,8 @@ function getGraphPartitions(start, end) {
 }
 
 async function getFollowerHistory(ctx, profiles, start, end, timezoneOffset) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
 
     // Get UTC dates
     const startUTC = getDateWithTimezoneOffset(start, -1 * timezoneOffset);
@@ -194,7 +195,7 @@ async function getFollowerHistory(ctx, profiles, start, end, timezoneOffset) {
                 let nextToken = null;
                 do {
                     const response = await ddbClient.query({
-                        TableName: 'MetricHistory-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                        TableName: `MetricHistory-${appsync_api_id}-${env}`,
                         KeyConditionExpression: '#key = :key AND #createdAt BETWEEN :start AND :end',
                         ExpressionAttributeNames: {
                             '#key': 'key',

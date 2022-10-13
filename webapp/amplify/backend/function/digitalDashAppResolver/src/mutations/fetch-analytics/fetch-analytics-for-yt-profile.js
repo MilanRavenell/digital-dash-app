@@ -1,7 +1,8 @@
 const axios = require("axios");
 
 async function fetchAnalyticsForYtProfile(ctx, profile) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
     const { id, accessToken } = JSON.parse(profile.meta);
 
     const videos = [];
@@ -47,7 +48,7 @@ async function fetchAnalyticsForYtProfile(ctx, profile) {
         };
 
         await ddbClient.put({
-            TableName: 'YoutubePost-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+            TableName: `YoutubePost-${appsync_api_id}-${env}`,
             Item: item
         }).promise();
     }));

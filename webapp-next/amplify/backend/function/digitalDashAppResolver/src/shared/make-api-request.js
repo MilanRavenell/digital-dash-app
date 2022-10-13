@@ -7,7 +7,8 @@ const http = rateLimit(axios.create(), {
 })
 
 async function makeApiRequest(ctx, profile, endpoint, accessToken, params = {}) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
 
     const platformMap = Object.freeze({
         'twitter': makeTwitterApiRequest,
@@ -31,7 +32,7 @@ async function makeApiRequest(ctx, profile, endpoint, accessToken, params = {}) 
             console.log('profile needs refresh')
             
             await ddbClient.update({
-                TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                TableName: `UserProfile-${appsync_api_id}-${env}`,
                 Key: {
                     user: profile.user,
                     key: `${profile.platform}_${profile.profileName}`,

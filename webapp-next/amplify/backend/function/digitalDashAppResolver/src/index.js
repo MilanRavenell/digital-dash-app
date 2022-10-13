@@ -25,8 +25,19 @@ const functions = {
   }
 }
 
+function populateLocalEnvVars(localEnvvars) {
+  Object.entries(localEnvvars).map(([key, value]) => {
+    process.env[key] = value;
+  })
+}
+
 exports.handler = async (event) => {
   console.log(`EVENT: ${JSON.stringify(event)}`);
+
+  // If executed from local, manually populate env vars from event file
+  if (event.LOCAL_ENVVARS) {
+    populateLocalEnvVars(event.LOCAL_ENVVARS);
+  }
 
   let objToParse = event;
   if (event.Records) {
@@ -37,7 +48,8 @@ exports.handler = async (event) => {
 
   const response = functions[typeName][fieldName]({
     resources: {
-      ddbClient
+      ddbClient,
+      envVars: process.env,
     },
     arguments,
   });
