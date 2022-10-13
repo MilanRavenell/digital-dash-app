@@ -1,1 +1,6 @@
-{}
+{
+    "LOCAL_ENVVARS": {
+        "ENV": "staging",
+        "APPSYNC_API_ID": "7hdw3dtfmbhhbmqwm7qi7fgbki"
+    }
+}

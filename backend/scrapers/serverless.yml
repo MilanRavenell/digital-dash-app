@@ -1,7 +1,7 @@
 service: web-scraper-service
 provider:
   name: aws
-  stage: staging
+  stage: ${opt:stage, 'staging'}
   region: us-west-2
   profile: milan
   ecr:
@@ -17,8 +17,3 @@ functions:
           path: /
           method: post
           cors: true
-custom:
-  bucket: ${self:service}-${self:provider.stage}-demo
-# Function level environment variables
-  environment:
-    BUCKET: ${self:custom.bucket}

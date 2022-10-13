@@ -1,7 +1,7 @@
 service: update-analytics
 provider:
   name: aws
-  stage: staging
+  stage: ${opt:stage, 'staging'}
   region: us-west-2
   profile: milan
   iam:
@@ -10,11 +10,11 @@ provider:
         - Effect: 'Allow'
           Action:
             - sqs:SendMessage
-          Resource: arn:aws:sqs:us-west-2:125288872271:update-analytics-queue
+          Resource: arn:aws:sqs:us-west-2:125288872271:update-analytics-queue-${self:provider.stage}
         - Effect: Allow
           Action:
             - dynamodb:Scan
-          Resource: arn:aws:dynamodb:us-west-2:125288872271:table/UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging
+          Resource: arn:aws:dynamodb:us-west-2:125288872271:table/UserProfile-${self:custom.appsync_api_id.${opt:stage, self:provider.stage}}-${self:provider.stage}
 
 functions:
   updateAnalytics:
@@ -23,7 +23,10 @@ functions:
       - eventBridge:
           schedule: cron(0 * * * ? *)
 custom:
-  bucket: ${self:service}-${self:provider.stage}-demo
+  appsync_api_id:
+    staging: 7hdw3dtfmbhhbmqwm7qi7fgbki
+    prod: b7rvoho6bjf3xcicxkq6ivubgy
 # Function level environment variables
   environment:
-    BUCKET: ${self:custom.bucket}
+    ENV: ${self:provider.stage}
+    APPSYNC_API_ID: ${self:custom.appsync_api_id.${opt:stage, self:provider.stage}}

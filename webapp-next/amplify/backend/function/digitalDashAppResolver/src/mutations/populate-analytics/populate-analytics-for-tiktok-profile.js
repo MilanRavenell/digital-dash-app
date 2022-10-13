@@ -111,7 +111,8 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
 }
 
 async function getCollectedPosts(ctx, profile) {
-    const { ddbClient } = ctx.resources;
+    const { ddbClient, envVars } = ctx.resources;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
 
     // TODO: add pagination
     try {

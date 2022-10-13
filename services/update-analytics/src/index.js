@@ -3,13 +3,21 @@ const ddbClient = new AWS.DynamoDB.DocumentClient({ region: 'us-west-2', apiVers
 const sqsClient = new AWS.SQS({ region: 'us-west-2', apiVersion: 'latest' });
 
 exports.handler = async (event) => {
+    if (event.LOCAL_ENVVARS) {
+        Object.entries(event.LOCAL_ENVVARS).map(([key, value]) => {
+            process.env[key] = value;
+        })
+    }
+
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = process.env;
+
     // Get all profiles
     try {
         let nextToken = null;
 
         do {
             const response = await ddbClient.scan({
-                TableName: 'UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging',
+                TableName: `UserProfile-${appsync_api_id}-${env}`,
                 ExclusiveStartKey: nextToken,
             }).promise();
 
@@ -18,7 +26,7 @@ exports.handler = async (event) => {
 
                 try {
                     await sqsClient.sendMessage({
-                        QueueUrl: 'https://sqs.us-west-2.amazonaws.com/125288872271/update-analytics-queue',
+                        QueueUrl: `https://sqs.us-west-2.amazonaws.com/125288872271/update-analytics-queue-${process.env.ENV}`,
                         MessageBody: JSON.stringify({
                             typeName: 'Mutation',
                             fieldName: 'populateAnalytics',

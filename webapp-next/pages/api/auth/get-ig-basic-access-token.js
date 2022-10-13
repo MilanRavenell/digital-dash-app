@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         const lambda = new AWS.Lambda();
 
         const profileInfoParams = {
-            FunctionName: 'web-scraper-service-staging-scrapeContent',
+            FunctionName: `web-scraper-service-${proccess.env.ENV}-scrapeContent`,
             Payload: JSON.stringify(payloadParams),
         }
 

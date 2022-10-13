@@ -6,7 +6,7 @@
     },
     "provider": {
       "name": "aws",
-      "stage": "staging",
+      "stage": "prod",
       "region": "us-west-2",
       "profile": "milan",
       "ecr": {
@@ -93,7 +93,7 @@
           "ScrapeContentLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/web-scraper-service-staging-scrapeContent"
+              "LogGroupName": "/aws/lambda/web-scraper-service-prod-scrapeContent"
             }
           },
           "IamRoleLambdaExecution": {
@@ -122,7 +122,7 @@
                       "-",
                       [
                         "web-scraper-service",
-                        "staging",
+                        "prod",
                         "lambda"
                       ]
                     ]
@@ -138,7 +138,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/web-scraper-service-staging*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/web-scraper-service-prod*:*"
                           }
                         ]
                       },
@@ -149,7 +149,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/web-scraper-service-staging*:*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/web-scraper-service-prod*:*:*"
                           }
                         ]
                       }
@@ -163,7 +163,7 @@
                   "-",
                   [
                     "web-scraper-service",
-                    "staging",
+                    "prod",
                     {
                       "Ref": "AWS::Region"
                     },
@@ -177,10 +177,10 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
               "Code": {
-                "ImageUri": "125288872271.dkr.ecr.us-west-2.amazonaws.com/serverless-web-scraper-service-staging@sha256:81db6f76964466546062876e3a9ec701c7bd2bb7f452a3da15573d6ea094a8ee"
+                "ImageUri": "125288872271.dkr.ecr.us-west-2.amazonaws.com/serverless-web-scraper-service-prod@sha256:03a4e111d8721e7edd084f1f77adcdeee86cfcfe798bab5adfabb5585f1ef152"
               },
               "PackageType": "Image",
-              "FunctionName": "web-scraper-service-staging-scrapeContent",
+              "FunctionName": "web-scraper-service-prod-scrapeContent",
               "MemorySize": 1024,
               "Timeout": 6,
               "Role": {
@@ -194,20 +194,20 @@
               "ScrapeContentLogGroup"
             ]
           },
-          "ScrapeContentLambdaVersionfvo7E6y61HAs0p9e8Ij7Oj2H3bcWBJuQOMY3ZWfeA": {
+          "ScrapeContentLambdaVersiongvs3iIAQHkndr29HrmUPjAYgQABkFaKyMJA3yJ86kec": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ScrapeContentLambdaFunction"
               },
-              "CodeSha256": "81db6f76964466546062876e3a9ec701c7bd2bb7f452a3da15573d6ea094a8ee"
+              "CodeSha256": "03a4e111d8721e7edd084f1f77adcdeee86cfcfe798bab5adfabb5585f1ef152"
             }
           },
           "ApiGatewayRestApi": {
             "Type": "AWS::ApiGateway::RestApi",
             "Properties": {
-              "Name": "staging-web-scraper-service",
+              "Name": "prod-web-scraper-service",
               "EndpointConfiguration": {
                 "Types": [
                   "EDGE"
@@ -313,13 +313,13 @@
               "ScrapeContentLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1665452916610": {
+          "ApiGatewayDeployment1665701560931": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               },
-              "StageName": "staging"
+              "StageName": "prod"
             },
             "DependsOn": [
               "ApiGatewayMethodOptions",
@@ -370,16 +370,16 @@
               "Ref": "ServerlessDeploymentBucket"
             },
             "Export": {
-              "Name": "sls-web-scraper-service-staging-ServerlessDeploymentBucketName"
+              "Name": "sls-web-scraper-service-prod-ServerlessDeploymentBucketName"
             }
           },
           "ScrapeContentLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ScrapeContentLambdaVersionfvo7E6y61HAs0p9e8Ij7Oj2H3bcWBJuQOMY3ZWfeA"
+              "Ref": "ScrapeContentLambdaVersiongvs3iIAQHkndr29HrmUPjAYgQABkFaKyMJA3yJ86kec"
             },
             "Export": {
-              "Name": "sls-web-scraper-service-staging-ScrapeContentLambdaFunctionQualifiedArn"
+              "Name": "sls-web-scraper-service-prod-ScrapeContentLambdaFunctionQualifiedArn"
             }
           },
           "ServiceEndpoint": {
@@ -400,12 +400,12 @@
                   {
                     "Ref": "AWS::URLSuffix"
                   },
-                  "/staging"
+                  "/prod"
                 ]
               ]
             },
             "Export": {
-              "Name": "sls-web-scraper-service-staging-ServiceEndpoint"
+              "Name": "sls-web-scraper-service-prod-ServiceEndpoint"
             }
           }
         }
@@ -494,12 +494,6 @@
       },
       "vpc": {}
     },
-    "custom": {
-      "bucket": "web-scraper-service-staging-demo",
-      "environment": {
-        "BUCKET": "web-scraper-service-staging-demo"
-      }
-    },
     "pluginsData": {},
     "functions": {
       "scrapeContent": {
@@ -532,12 +526,12 @@
             }
           }
         ],
-        "name": "web-scraper-service-staging-scrapeContent",
+        "name": "web-scraper-service-prod-scrapeContent",
         "package": {},
         "memory": 1024,
         "timeout": 6,
         "vpc": {},
-        "versionLogicalId": "ScrapeContentLambdaVersionfvo7E6y61HAs0p9e8Ij7Oj2H3bcWBJuQOMY3ZWfeA"
+        "versionLogicalId": "ScrapeContentLambdaVersiongvs3iIAQHkndr29HrmUPjAYgQABkFaKyMJA3yJ86kec"
       }
     },
     "configValidationMode": "warn",
@@ -549,16 +543,13 @@
       },
       "functions": {
         "$ref": "$[\"service\"][\"functions\"]"
-      },
-      "custom": {
-        "$ref": "$[\"service\"][\"custom\"]"
       }
     },
     "layers": {},
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/web-scraper-service/staging/1665452921536-2022-10-11T01:48:41.536Z",
+    "artifactDirectoryName": "serverless/web-scraper-service/prod/1665701563120-2022-10-13T22:52:43.120Z",
     "artifact": ""
   }
 }
