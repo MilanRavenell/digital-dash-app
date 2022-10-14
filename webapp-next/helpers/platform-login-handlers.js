@@ -6,7 +6,7 @@ async function igBasicLoginHandler({ router }) {
     // Run this command in terminal- ngrok http http://localhost:3000
     // Take note of the https url under 'Forwarding' (looks like https://xxxx-xx-xx-xxx-xx.nrgrok.io)
     // In webapp_next/.env.local, update NEXTAUTH_URL to that url
-    // In the Facebook Developer Portal, under 'Instagram Basic Display -> Basic Display' add https://xxxx-xx-xx-xxx-xx.nrgrok.io/add-profile/instagra, tp 'Valid OAuth Redirect URIs'
+    // In the Facebook Developer Portal, under 'Instagram Basic Display -> Basic Display' add https://xxxx-xx-xx-xxx-xx.nrgrok.io/add-profile/instagram, tp 'Valid OAuth Redirect URIs'
     // In browser, navigate to https://xxxx-xx-xx-xxx-xx.nrgrok.io and test
     const appId = '582112473702622';
     const redirectUri = `${process.env.NEXTAUTH_URL}add-profile/instagram`;

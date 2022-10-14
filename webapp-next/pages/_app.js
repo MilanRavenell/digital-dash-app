@@ -71,8 +71,6 @@ function MyApp({ Component, pageProps }) {
         return profiles.items;
     }
 
-    
-
     const setUserCallback = useCallback(async (authUser) => {
         if (user) {
             return;
@@ -127,7 +125,7 @@ function MyApp({ Component, pageProps }) {
                 {
                 `window.fbAsyncInit = function() {
                     FB.init({
-                        appId: '2891124427862126',
+                        appId: '${process.env.FB_API_ID}',
                         autoLogAppEvents: true,
                         xfbml: true,
                         version: 'v14.0'
@@ -143,7 +141,7 @@ function MyApp({ Component, pageProps }) {
                     `function start() {
                         // 2. Initialize the JavaScript client library.
                         gapi.client.init({
-                            'apiKey': 'AIzaSyC09ooSdhzZjl6WPBA_OI_EwnRbzFOnyUE'
+                            'apiKey': '${process.env.GOOG_API_KEY}'
                         }).then(function(response) {
                         }, function(reason) {
                             console.log(reason);

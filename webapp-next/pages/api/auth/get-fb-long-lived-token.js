@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     console.log('getting facebook long lived access token');
 
     try {
-        const response = await axios.get(`https://graph.facebook.com/v14.0/oauth/access_token?grant_type=fb_exchange_token&client_id=2891124427862126&client_secret=9c243b62d5aeaeab2dffe6c4a29a2f7e&fb_exchange_token=${shortTermToken}`)
+        const response = await axios.get(`https://graph.facebook.com/v14.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${process.env.FB_API_ID}&client_secret=${process.env.FB_APP_SECRET}&fb_exchange_token=${shortTermToken}`)
         console.log(response.data)
         res.status(200).send(response.data.access_token);
     } catch (err) {

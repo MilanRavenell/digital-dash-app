@@ -5,8 +5,8 @@ export default NextAuth({
   site: process.env.NEXTAUTH_URL,
   providers: [
     TwitterProvider({
-      clientId: 'dTAwRDBqOFl3ZmpkOGw4RmpIT1c6MTpjaQ', //process.env.TWITTER_CONSUMER_KEY,
-      clientSecret: 'FaIS5ICp0qvbrRO30zSvngjZLyVU8VEY4V0lsklrsvu0CkK384', //process.env.TWITTER_CONSUMER_SECRET,
+      clientId: process.env.TWITTER_API_KEY,
+      clientSecret: process.env.TWITTER_API_SECRET,
       version: "2.0",
     })
   ],

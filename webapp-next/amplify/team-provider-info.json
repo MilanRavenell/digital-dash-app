@@ -19,11 +19,11 @@
         "digitalDashAppResolver": {
           "deploymentBucketName": "amplify-amplify36cf6a1d3b6e4-staging-162021-deployment",
           "s3Key": "amplify-builds/digitalDashAppResolver-306a3753644e76327759-build.zip",
+          "twitterApiSecret": "FaIS5ICp0qvbrRO30zSvngjZLyVU8VEY4V0lsklrsvu0CkK384",
           "appsyncApiId": "7hdw3dtfmbhhbmqwm7qi7fgbki",
           "env": "staging",
           "webScraperLambdaName": "web-scraper-service-staging-scrapeContent",
-          "twitterApiKey": "dTAwRDBqOFl3ZmpkOGw4RmpIT1c6MTpjaQ",
-          "twitterApiSecret": "FaIS5ICp0qvbrRO30zSvngjZLyVU8VEY4V0lsklrsvu0CkK384"
+          "twitterApiKey": "dTAwRDBqOFl3ZmpkOGw4RmpIT1c6MTpjaQ"
         }
       }
     }
@@ -47,12 +47,14 @@
       "function": {
         "digitalDashAppResolver": {
           "deploymentBucketName": "amplify-digitaldashappwebapp-prod-224358-deployment",
-          "s3Key": "amplify-builds/digitalDashAppResolver-4437634271725775454c-build.zip",
+          "s3Key": "amplify-builds/digitalDashAppResolver-306a3753644e76327759-build.zip",
           "twitterApiSecret": "jIVGcIVRWGoI1in9fJlHOXCgK4KcLmCi2629WpZLxFqLJKrSSK",
           "appsyncApiId": "b7rvoho6bjf3xcicxkq6ivubgy",
           "env": "prod",
           "webScraperLambdaName": "web-scraper-service-prod-scrapeContent",
-          "twitterApiKey": "aTV3WEVuRlhnNTN6MlMwTmF1UGE6MTpjaQ"
+          "twitterApiKey": "aTV3WEVuRlhnNTN6MlMwTmF1UGE6MTpjaQ",
+          "fbApiId": "782441353106135",
+          "fbAppSecret": "9518fa82a15e89d7c30040b6ac60c228"
         }
       }
     }
