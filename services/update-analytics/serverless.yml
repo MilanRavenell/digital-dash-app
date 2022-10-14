@@ -15,6 +15,9 @@ provider:
           Action:
             - dynamodb:Scan
           Resource: arn:aws:dynamodb:us-west-2:125288872271:table/UserProfile-${self:custom.appsync_api_id.${opt:stage, self:provider.stage}}-${self:provider.stage}
+  environment:
+    ENV: ${self:provider.stage}
+    APPSYNC_API_ID: ${self:custom.appsync_api_id.${opt:stage, self:provider.stage}}
 
 functions:
   updateAnalytics:
@@ -26,7 +29,4 @@ custom:
   appsync_api_id:
     staging: 7hdw3dtfmbhhbmqwm7qi7fgbki
     prod: b7rvoho6bjf3xcicxkq6ivubgy
-# Function level environment variables
-  environment:
-    ENV: ${self:provider.stage}
-    APPSYNC_API_ID: ${self:custom.appsync_api_id.${opt:stage, self:provider.stage}}
+  

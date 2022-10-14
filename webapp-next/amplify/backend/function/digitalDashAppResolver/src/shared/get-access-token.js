@@ -73,7 +73,7 @@ async function refreshTwitterTokens(ctx, profile) {
     )
 
     const { access_token, refresh_token, expires_in } = response.data;
-    const expires = new Date(new Date() + (1000 * expires_in)).toISOString();
+    const expires = new Date(new Date().getTime() + (1000 * expires_in)).toISOString();
 
     const newMeta = JSON.stringify({
         id,

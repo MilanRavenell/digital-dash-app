@@ -97,6 +97,10 @@ async function populateProfile(ctx, profile, accessToken) {
                     ...profileInfo,
                 }
             }).promise();
+
+            if (profileInfo.followerCount === null || profileInfo.followerCount === undefined) {
+                throw new Error('followerCount was null');
+            }
     
             await ddbClient.put({
                 TableName: `MetricHistory-${appsync_api_id}-${env}`,
@@ -109,7 +113,7 @@ async function populateProfile(ctx, profile, accessToken) {
                 }
             }).promise();
         } catch (err) {
-            console.error('Failed to update profile info')
+            console.error('Failed to update profile info', err)
         }
     }
     else {

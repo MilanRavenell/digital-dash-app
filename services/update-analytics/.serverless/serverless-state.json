@@ -29,6 +29,10 @@
           ]
         }
       },
+      "environment": {
+        "ENV": "prod",
+        "APPSYNC_API_ID": "b7rvoho6bjf3xcicxkq6ivubgy"
+      },
       "versionFunctions": true,
       "compiledCloudFormationTemplate": {
         "AWSTemplateFormatVersion": "2010-09-09",
@@ -199,13 +203,19 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/update-analytics/prod/1665701172815-2022-10-13T22:46:12.815Z/update-analytics.zip"
+                "S3Key": "serverless/update-analytics/prod/1665768896255-2022-10-14T17:34:56.255Z/update-analytics.zip"
               },
               "Handler": "src/index.handler",
               "Runtime": "nodejs14.x",
               "FunctionName": "update-analytics-prod-updateAnalytics",
               "MemorySize": 1024,
               "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "ENV": "prod",
+                  "APPSYNC_API_ID": "b7rvoho6bjf3xcicxkq6ivubgy"
+                }
+              },
               "Role": {
                 "Fn::GetAtt": [
                   "IamRoleLambdaExecution",
@@ -217,14 +227,14 @@
               "UpdateAnalyticsLogGroup"
             ]
           },
-          "UpdateAnalyticsLambdaVersionCqqsRkl9SDq9aYCI0pmV3Yq6JnUk4W5Tyc9FpcnKo": {
+          "UpdateAnalyticsLambdaVersionJs8VEjlR8pzQIDE75CLqaiSb0fzEZ1RmLNntUIY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UpdateAnalyticsLambdaFunction"
               },
-              "CodeSha256": "oEsdinu1FHF78EyGdOtCWCKHMIxiJdRfsBAvbmZRgCM="
+              "CodeSha256": "7i8xTJPYhuKaQOMy50NrgkCmCGJtklfPCaw4PR7sHaI="
             }
           },
           "UpdateanalyticsprodupdateAnalyticsrule1EventBridgeRule": {
@@ -296,7 +306,7 @@
           "UpdateAnalyticsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UpdateAnalyticsLambdaVersionCqqsRkl9SDq9aYCI0pmV3Yq6JnUk4W5Tyc9FpcnKo"
+              "Ref": "UpdateAnalyticsLambdaVersionJs8VEjlR8pzQIDE75CLqaiSb0fzEZ1RmLNntUIY"
             },
             "Export": {
               "Name": "sls-update-analytics-prod-UpdateAnalyticsLambdaFunctionQualifiedArn"
@@ -392,10 +402,6 @@
       "appsync_api_id": {
         "staging": "7hdw3dtfmbhhbmqwm7qi7fgbki",
         "prod": "b7rvoho6bjf3xcicxkq6ivubgy"
-      },
-      "environment": {
-        "ENV": "prod",
-        "APPSYNC_API_ID": "b7rvoho6bjf3xcicxkq6ivubgy"
       }
     },
     "pluginsData": {},
@@ -415,7 +421,7 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "UpdateAnalyticsLambdaVersionCqqsRkl9SDq9aYCI0pmV3Yq6JnUk4W5Tyc9FpcnKo"
+        "versionLogicalId": "UpdateAnalyticsLambdaVersionJs8VEjlR8pzQIDE75CLqaiSb0fzEZ1RmLNntUIY"
       }
     },
     "configValidationMode": "warn",
@@ -437,7 +443,7 @@
     "artifact": "/Users/milanravenell/Documents/digital_dash/services/update-analytics/.serverless/update-analytics.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/update-analytics/prod/1665701172815-2022-10-13T22:46:12.815Z",
+    "artifactDirectoryName": "serverless/update-analytics/prod/1665768896255-2022-10-14T17:34:56.255Z",
     "artifact": "update-analytics.zip"
   }
 }
