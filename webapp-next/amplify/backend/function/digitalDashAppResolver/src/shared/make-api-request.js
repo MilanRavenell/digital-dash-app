@@ -18,7 +18,7 @@ async function makeApiRequest(ctx, profile, endpoint, accessToken, params = {}) 
     });
 
     try {
-        return await platformMap[profile.platform](endpoint, accessToken, params);
+        return await platformMap[profile.platform](ctx, endpoint, accessToken, params);
     } catch (err) {
         console.error('Failed to make api request');
 
@@ -51,11 +51,14 @@ async function makeApiRequest(ctx, profile, endpoint, accessToken, params = {}) 
     }
 }
 
-async function makeTwitterApiRequest(endpoint, accessToken, params) {
+async function makeTwitterApiRequest(ctx, endpoint, accessToken, params) {
+    const { envVars } = ctx.resources;
+    const { TWITTER_API_KEY, TWITTER_API_SECRET } = envVars;
+
     try {
         const client = new Twitter({
-            consumer_key: 'dTAwRDBqOFl3ZmpkOGw4RmpIT1c6MTpjaQ',
-            consumer_secret: 'FaIS5ICp0qvbrRO30zSvngjZLyVU8VEY4V0lsklrsvu0CkK384',
+            consumer_key: TWITTER_API_KEY,
+            consumer_secret: TWITTER_API_SECRET,
             bearer_token: accessToken,
             version: '2',
             extension: false,
@@ -71,7 +74,7 @@ async function makeTwitterApiRequest(endpoint, accessToken, params) {
     }
 }
 
-async function makeYoutubeApiRequest(endpoint, accessToken, params) {
+async function makeYoutubeApiRequest(ctx, endpoint, accessToken, params) {
     try {
         const queryParams = Object.entries(params).reduce((acc, [key, value]) => {
             acc += `&${key}=${value}`
@@ -97,7 +100,7 @@ async function makeYoutubeApiRequest(endpoint, accessToken, params) {
     }
 }
 
-async function makeIgProApiRequest(endpoint, accessToken, params) {
+async function makeIgProApiRequest(ctx, endpoint, accessToken, params) {
     try {
         const queryParams = Object.entries(params).reduce((acc, [key, value]) => {
             acc += `&${key}=${value}`
@@ -128,7 +131,7 @@ async function makeIgProApiRequest(endpoint, accessToken, params) {
     }
 }
 
-async function makeIgBasicRequest(endpoint, accessToken, params) {
+async function makeIgBasicRequest(ctx, endpoint, accessToken, params) {
     try {
         const queryParams = Object.entries(params).reduce((acc, [key, value]) => {
             acc += `&${key}=${value}`

@@ -1,5 +1,4 @@
 import axios from "axios";
-const Twitter = require('twitter-lite');
 
 export default async function handler(req, res) {
     const { id, accessToken, platform } = req.query;
@@ -9,26 +8,6 @@ export default async function handler(req, res) {
     console.log(profPicUrl)
 
     res.status(200).send(profPicUrl);
-}
-
-async function getTwitterProfilePic(id, accessToken) {
-    try {
-        const client = new Twitter({
-            consumer_key: 'dTAwRDBqOFl3ZmpkOGw4RmpIT1c6MTpjaQ',
-            consumer_secret: 'FaIS5ICp0qvbrRO30zSvngjZLyVU8VEY4V0lsklrsvu0CkK384',
-            bearer_token: accessToken,
-            version: '2',
-            extension: false,
-        });
-
-        const response = await client.get(`users/${id}`, {
-            'user.fields': 'profile_image_url',
-        });
-
-        return response.data.profile_image_url;
-    } catch (err) {
-        console.error('Failed to get twitter profile picture', err);
-    }
 }
 
 async function getInstagramProfilePic(id, accessToken) {
@@ -42,6 +21,5 @@ async function getInstagramProfilePic(id, accessToken) {
 }
 
 const platformToProfilePictureRetreivalMap = Object.freeze({
-    'twitter': getTwitterProfilePic,
     'instagram': getInstagramProfilePic,
 });

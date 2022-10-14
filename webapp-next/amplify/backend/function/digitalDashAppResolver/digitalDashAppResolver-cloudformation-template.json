@@ -13,6 +13,9 @@
     "s3Key": {
       "Type": "String"
     },
+    "twitterApiSecret": {
+      "Type": "String"
+    },
     "appsyncApiId": {
       "Type": "String"
     },
@@ -20,6 +23,9 @@
       "Type": "String"
     },
     "webScraperLambdaName": {
+      "Type": "String"
+    },
+    "twitterApiKey": {
       "Type": "String"
     }
   },
@@ -73,6 +79,9 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
+            "TWITTER_API_SECRET": {
+              "Ref": "twitterApiSecret"
+            },
             "APPSYNC_API_ID": {
               "Ref": "appsyncApiId"
             },
@@ -81,6 +90,9 @@
             },
             "WEB_SCRAPER_LAMBDA_NAME": {
               "Ref": "webScraperLambdaName"
+            },
+            "TWITTER_API_KEY": {
+              "Ref": "twitterApiKey"
             }
           }
         },

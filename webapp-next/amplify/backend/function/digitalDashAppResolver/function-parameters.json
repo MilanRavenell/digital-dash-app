@@ -3,6 +3,10 @@
   "lambdaLayers": [],
   "environmentVariableList": [
     {
+      "cloudFormationParameterName": "twitterApiSecret",
+      "environmentVariableName": "TWITTER_API_SECRET"
+    },
+    {
       "cloudFormationParameterName": "appsyncApiId",
       "environmentVariableName": "APPSYNC_API_ID"
     },
@@ -15,16 +19,8 @@
       "environmentVariableName": "WEB_SCRAPER_LAMBDA_NAME"
     },
     {
-      "cloudFormationParameterName": "env",
-      "environmentVariableName": "ENV"
-    },
-    {
-      "cloudFormationParameterName": "appsyncApiId",
-      "environmentVariableName": "APPSYNC_API_ID"
-    },
-    {
-      "cloudFormationParameterName": "webScraperLambdaName",
-      "environmentVariableName": "WEB_SCRAPER_LAMBDA_NAME"
+      "cloudFormationParameterName": "twitterApiKey",
+      "environmentVariableName": "TWITTER_API_KEY"
     }
   ]
 }
