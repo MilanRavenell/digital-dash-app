@@ -39,7 +39,7 @@ const SignIn = ({}) => {
             <div className={styles.left}>
                 <div className={styles.contentLeft}>
                     <div className={styles.title}>
-                        Lightweight platform for tracking analyitcs for all your social media accounts in one place - totally for free!
+                        Lightweight platform for tracking analytics for all your social media accounts in one place - totally for free!
                     </div>
                     <div className={`${styles.icons} ${styles.grow}`}>
                     {

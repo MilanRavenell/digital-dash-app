@@ -8,7 +8,7 @@ import Script from 'next/script';
 import { Authenticator } from '@aws-amplify/ui-react';
 import { getUser } from '../graphql/queries';
 import { useRouter } from 'next/router';
-import { Auth } from 'aws-amplify';
+import { Auth, Hub } from 'aws-amplify';
 
 import Amplify from 'aws-amplify';
 import config from '../aws/aws-exports';
@@ -22,6 +22,10 @@ function MyApp({ Component, pageProps }) {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
+        initialize();
+    }, [user]);
+
+    const initialize = async () => {
         if (user === null) {
             getAuthUser();
             return;
@@ -30,13 +34,9 @@ function MyApp({ Component, pageProps }) {
         if (userProfiles) {
             return;
         }
-
-        const setProfilesAsync = async () => {
-            setUserProfiles(await getUserProfiles(user));
-        }
         
-        setProfilesAsync();
-    });
+        setUserProfiles(await getUserProfiles(user));
+    }
 
     const getAuthUser = async () => {
         try {
@@ -48,7 +48,9 @@ function MyApp({ Component, pageProps }) {
             }
         } catch (err) {
             if (err === 'The user is not authenticated') {
-                router.push('/sign-in');
+                if (router.pathname !== '/sign-in') {
+                    router.push('/sign-in');
+                }
             } else {
                 console.error(err);
             }
@@ -102,6 +104,17 @@ function MyApp({ Component, pageProps }) {
         Auth.signOut();
         setUser(null);
     }, []);
+
+    const listener = (data) => {
+        switch (data.payload.event) {
+            case 'signIn':
+            case 'signOut':
+                console.log('signing')
+                initialize();
+                break;
+        }
+    }
+    Hub.listen('auth', listener);
 
     return (
         <AppContext.Provider value={{ user, userProfiles, setUserProfiles, setUserCallback, signOut }}>
