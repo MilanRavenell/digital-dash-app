@@ -50,15 +50,13 @@
         "digitalDashAppResolver": {
           "deploymentBucketName": "amplify-digitaldashappwebapp-prod-224358-deployment",
           "s3Key": "amplify-builds/digitalDashAppResolver-7651574a6c5a52504859-build.zip",
-          "fbApiId": "782441353106135",
-          "fbAppSecret": "9518fa82a15e89d7c30040b6ac60c228",
+          "googOauthClientId": "97892154036-pqkjljs24ffsin8s0srqrcu1btpjung8.apps.googleusercontent.com",
+          "googOauthClientSecret": "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",
           "twitterApiSecret": "jIVGcIVRWGoI1in9fJlHOXCgK4KcLmCi2629WpZLxFqLJKrSSK",
           "appsyncApiId": "b7rvoho6bjf3xcicxkq6ivubgy",
           "env": "prod",
           "webScraperLambdaName": "web-scraper-service-prod-scrapeContent",
-          "twitterApiKey": "aTV3WEVuRlhnNTN6MlMwTmF1UGE6MTpjaQ",
-          "googOauthClientId": "97892154036-pqkjljs24ffsin8s0srqrcu1btpjung8.apps.googleusercontent.com",
-          "googOauthClientSecret": "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"
+          "twitterApiKey": "aTV3WEVuRlhnNTN6MlMwTmF1UGE6MTpjaQ"
         }
       }
     }
