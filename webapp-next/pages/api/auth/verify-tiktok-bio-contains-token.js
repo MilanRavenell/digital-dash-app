@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     const payloadParams = {
         platform: 'tiktok',
         handle,
-        task: 'verify_bio_contains_token',
+        task: 'get_profile_info',
     }
 
     try {

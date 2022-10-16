@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         const lambda = new AWS.Lambda();
 
         const profileInfoParams = {
-            FunctionName: `web-scraper-service-${proccess.env.ENV}-scrapeContent`,
+            FunctionName: `web-scraper-service-${process.env.ENV}-scrapeContent`,
             Payload: JSON.stringify(payloadParams),
         }
 
@@ -50,6 +50,7 @@ export default async function handler(req, res) {
             ...longLivedTokenResponse.data,
             ...user,
             ...profileInfo,
+            profile_pic_url: `/api/fetch-image?url=${profileInfo.profile_pic_url.replace(/&/g, '@@@@')}`,
         });
     } catch (err) {
         if (err.name === 'AxiosError' && err.response && err.response.data) {

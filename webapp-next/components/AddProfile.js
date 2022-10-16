@@ -41,7 +41,6 @@ const AddProfile = ({
     }
 
     React.useEffect(() => {
-        console.log(user)
         console.log(state.profiles)
         if (loginCallbackHandler) {
             if (session && session.status === 'authenticated' && state.profiles.length === 0) {
