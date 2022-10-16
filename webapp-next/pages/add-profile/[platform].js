@@ -100,7 +100,7 @@ const AddProfile = () => {
                 input: {
                     user: user.email,
                     key: `${profile.platform}_${profile.profileName}`,
-                    owner: profile.owner,
+                    owner: user.owner,
                     platform: profile.platform,
                     profileName: profile.profileName,
                     meta: profile.meta,

@@ -79,6 +79,7 @@ function MyApp({ Component, pageProps }) {
         }
 
         let ddbUser = (await API.graphql({ query: getUser, variables: { email: authUser.attributes.email }, })).data.getUser;
+        console.log('ddbuser: ', ddbUser)
 
         // User's first sign in, send to add-platform-selection
         if (ddbUser === null) {
@@ -97,7 +98,10 @@ function MyApp({ Component, pageProps }) {
                 query: { f: 1 },
               });
         } else {
-            setUser(ddbUser);
+            setUser({
+                ...ddbUser,
+                owner: authUser.username,
+            });
         }
     }, [user]);
 
