@@ -2,8 +2,9 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser($filter: ModelSubscriptionUserFilterInput) {
-    onCreateUser(filter: $filter) {
+  subscription OnCreateUser($owner: String) {
+    onCreateUser(owner: $owner) {
+      owner
       email
       firstName
       lastName
@@ -13,8 +14,9 @@ export const onCreateUser = /* GraphQL */ `
   }
 `;
 export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser($filter: ModelSubscriptionUserFilterInput) {
-    onUpdateUser(filter: $filter) {
+  subscription OnUpdateUser($owner: String) {
+    onUpdateUser(owner: $owner) {
+      owner
       email
       firstName
       lastName
@@ -24,8 +26,9 @@ export const onUpdateUser = /* GraphQL */ `
   }
 `;
 export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser($filter: ModelSubscriptionUserFilterInput) {
-    onDeleteUser(filter: $filter) {
+  subscription OnDeleteUser($owner: String) {
+    onDeleteUser(owner: $owner) {
+      owner
       email
       firstName
       lastName
@@ -35,10 +38,8 @@ export const onDeleteUser = /* GraphQL */ `
   }
 `;
 export const onCreateUserProfile = /* GraphQL */ `
-  subscription OnCreateUserProfile(
-    $filter: ModelSubscriptionUserProfileFilterInput
-  ) {
-    onCreateUserProfile(filter: $filter) {
+  subscription OnCreateUserProfile($owner: String) {
+    onCreateUserProfile(owner: $owner) {
       user
       key
       platform
@@ -50,14 +51,13 @@ export const onCreateUserProfile = /* GraphQL */ `
       postsLastPopulated
       createdAt
       updatedAt
+      owner
     }
   }
 `;
 export const onUpdateUserProfile = /* GraphQL */ `
-  subscription OnUpdateUserProfile(
-    $filter: ModelSubscriptionUserProfileFilterInput
-  ) {
-    onUpdateUserProfile(filter: $filter) {
+  subscription OnUpdateUserProfile($owner: String) {
+    onUpdateUserProfile(owner: $owner) {
       user
       key
       platform
@@ -69,14 +69,13 @@ export const onUpdateUserProfile = /* GraphQL */ `
       postsLastPopulated
       createdAt
       updatedAt
+      owner
     }
   }
 `;
 export const onDeleteUserProfile = /* GraphQL */ `
-  subscription OnDeleteUserProfile(
-    $filter: ModelSubscriptionUserProfileFilterInput
-  ) {
-    onDeleteUserProfile(filter: $filter) {
+  subscription OnDeleteUserProfile($owner: String) {
+    onDeleteUserProfile(owner: $owner) {
       user
       key
       platform
@@ -88,6 +87,7 @@ export const onDeleteUserProfile = /* GraphQL */ `
       postsLastPopulated
       createdAt
       updatedAt
+      owner
     }
   }
 `;

@@ -42,7 +42,7 @@ class ContentDataScraper:
         success = False
         result = None
 
-        while not success and tries < NUM_RETRIES:
+        while not success and (time.time() - self.time_start < 900):
             tries = tries + 1
 
             try:
@@ -53,6 +53,7 @@ class ContentDataScraper:
                 if await self.open_page():
                     result = await self.main(gather_content_only, content_to_process, verify_bio, get_profile_info)
                     success = True
+                    print(result)
                     print('Done :DD')
                 else:
                     print('Failed to open page')

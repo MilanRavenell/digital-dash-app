@@ -17,21 +17,6 @@ async function fetchAnalytics(ctx) {
             TableName: `UserProfile-${appsync_api_id}-${env}`,
             Key: { user: username, key: profileKey },
         }).promise()).Item;
-    
-        const now = new Date();
-        const postsLastPopulated = new Date(profile.postsLastPopulated);
-    
-        if (
-            (profile.postsLastPopulated
-            && (now - postsLastPopulated < 3600000))
-            && (debug_noUploadToDDB === undefined)
-        ) {
-            console.log('Too soon to fetch new data');
-            return {
-                dataUpdated: false,
-                success: true,
-            }
-        }
     } catch (err) {
         console.error('Failed to fetch user', err);
         return {

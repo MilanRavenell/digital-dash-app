@@ -4,10 +4,8 @@
     "apiName": "digitaldashappwebapp",
     "serviceName": "AppSync",
     "defaultAuthType": {
-      "mode": "API_KEY",
-      "expirationTime": 7,
-      "apiKeyExpirationDate": "2022-08-19T22:20:25.536Z",
-      "keyDescription": "digitaldashappkey"
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authdigitaldashappwebapp27a2f2b0"
     },
     "conflictResolution": {},
     "additionalAuthTypes": []

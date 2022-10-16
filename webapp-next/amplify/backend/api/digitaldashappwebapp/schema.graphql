@@ -1,14 +1,25 @@
 # This "input" configures a global authorization rule to enable public access to
 # all models in this schema. Learn more about authorization rules here: https://docs.amplify.aws/cli/graphql/authorization-rules
-input AMPLIFY { globalAuthRule: AuthRule = { allow: public } } # FOR TESTING ONLY!
 
-type User @model {
+type User
+@model
+@auth(rules: [
+    { allow: owner },
+])
+{
+  owner: String!
   email: String! @primaryKey
   firstName: String!
   lastName: String!
 }
 
-type UserProfile @model {
+type UserProfile
+@model
+@auth(rules: [
+    { allow: owner },
+    { allow: private, operations: [read] },
+])
+{
   user: String! @primaryKey(sortKeyFields: ["key"]) @index(name: "ByUserAndPlatform", sortKeyFields: ["platform"], queryField: "userProfilesByUserAndPlatform")
   key: String! # <platform>_<profileName>
   platform: String!
@@ -206,10 +217,10 @@ type PopulateAnalyticsResponse {
 }
 
 type Mutation {
-  populateAnalytics(input: PopulateAnalyticsInput!): PopulateAnalyticsResponse! @function(name: "digitalDashAppResolver", region: "us-west-2")
+  populateAnalytics(input: PopulateAnalyticsInput!): PopulateAnalyticsResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") 
 }
 
 type Query {
-  getData(input: GetDataInput!): GetDataResponse! @function(name: "digitalDashAppResolver", region: "us-west-2")
+  getData(input: GetDataInput!): GetDataResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
   findProfiles(input: FindProfilesInput!): FindProfilesResponse!  @function(name: "digitalDashAppResolver", region: "us-west-2")
 }

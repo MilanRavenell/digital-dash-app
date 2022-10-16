@@ -15,6 +15,7 @@ export const createUser = /* GraphQL */ `
     $condition: ModelUserConditionInput
   ) {
     createUser(input: $input, condition: $condition) {
+      owner
       email
       firstName
       lastName
@@ -29,6 +30,7 @@ export const updateUser = /* GraphQL */ `
     $condition: ModelUserConditionInput
   ) {
     updateUser(input: $input, condition: $condition) {
+      owner
       email
       firstName
       lastName
@@ -43,6 +45,7 @@ export const deleteUser = /* GraphQL */ `
     $condition: ModelUserConditionInput
   ) {
     deleteUser(input: $input, condition: $condition) {
+      owner
       email
       firstName
       lastName
@@ -68,6 +71,7 @@ export const createUserProfile = /* GraphQL */ `
       postsLastPopulated
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -88,6 +92,7 @@ export const updateUserProfile = /* GraphQL */ `
       postsLastPopulated
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -108,6 +113,7 @@ export const deleteUserProfile = /* GraphQL */ `
       postsLastPopulated
       createdAt
       updatedAt
+      owner
     }
   }
 `;

@@ -22,6 +22,7 @@ export const findProfiles = /* GraphQL */ `
 export const getUser = /* GraphQL */ `
   query GetUser($email: String!) {
     getUser(email: $email) {
+      owner
       email
       firstName
       lastName
@@ -46,6 +47,7 @@ export const listUsers = /* GraphQL */ `
       sortDirection: $sortDirection
     ) {
       items {
+        owner
         email
         firstName
         lastName
@@ -70,6 +72,7 @@ export const getUserProfile = /* GraphQL */ `
       postsLastPopulated
       createdAt
       updatedAt
+      owner
     }
   }
 `;
@@ -102,6 +105,7 @@ export const listUserProfiles = /* GraphQL */ `
         postsLastPopulated
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }
@@ -415,6 +419,7 @@ export const userProfilesByUserAndPlatform = /* GraphQL */ `
         postsLastPopulated
         createdAt
         updatedAt
+        owner
       }
       nextToken
     }

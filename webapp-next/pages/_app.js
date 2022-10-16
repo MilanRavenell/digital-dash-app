@@ -7,6 +7,7 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { Authenticator } from '@aws-amplify/ui-react';
 import { getUser } from '../graphql/queries';
+import { createUser } from '../graphql/mutations';
 import { useRouter } from 'next/router';
 import { Auth, Hub } from 'aws-amplify';
 
@@ -41,6 +42,7 @@ function MyApp({ Component, pageProps }) {
     const getAuthUser = async () => {
         try {
             const user = await Auth.currentAuthenticatedUser();
+            console.log(user)
             setUserCallback(user);
 
             if (router.pathname === '/sign-in') {
@@ -76,7 +78,7 @@ function MyApp({ Component, pageProps }) {
             return;
         }
 
-        let ddbUser = (await API.graphql({ query: getUser, variables: { email: authUser.attributes.email }})).data.getUser;
+        let ddbUser = (await API.graphql({ query: getUser, variables: { email: authUser.attributes.email }, })).data.getUser;
 
         // User's first sign in, send to add-platform-selection
         if (ddbUser === null) {
@@ -84,6 +86,7 @@ function MyApp({ Component, pageProps }) {
                 email: authUser.attributes.email,
                 firstName: authUser.attributes.given_name,
                 lastName: authUser.attributes.family_name,
+                owner: authUser.username,
             }
 
             await API.graphql({ query: createUser, variables: { input: ddbUser }});
