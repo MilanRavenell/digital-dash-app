@@ -22,6 +22,10 @@
   "LOCAL_ENVVARS": {
     "ENV": "staging",
     "APPSYNC_API_ID": "7hdw3dtfmbhhbmqwm7qi7fgbki",
-    "WEB_SCRAPER_LAMBDA_NAME": "web-scraper-service-staging-scrapeContent"
+    "WEB_SCRAPER_LAMBDA_NAME": "web-scraper-service-staging-scrapeContent",
+    "TWITTER_API_KEY": "dTAwRDBqOFl3ZmpkOGw4RmpIT1c6MTpjaQ",
+    "TWITTER_API_SECRET": "FaIS5ICp0qvbrRO30zSvngjZLyVU8VEY4V0lsklrsvu0CkK384",
+    "GOOG_OAUTH_CLIENT_ID": "581336452597-6c80lf8ijdvhlmi00odvrqsj1iah9lad.apps.googleusercontent.com",
+    "GOOG_OAUTH_CLIENT_SECRET": "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"
   }
 }

@@ -3,6 +3,14 @@
   "lambdaLayers": [],
   "environmentVariableList": [
     {
+      "cloudFormationParameterName": "googOauthClientId",
+      "environmentVariableName": "GOOG_OAUTH_CLIENT_ID"
+    },
+    {
+      "cloudFormationParameterName": "googOauthClientSecret",
+      "environmentVariableName": "GOOG_OAUTH_CLIENT_SECRET"
+    },
+    {
       "cloudFormationParameterName": "twitterApiSecret",
       "environmentVariableName": "TWITTER_API_SECRET"
     },
@@ -21,6 +29,14 @@
     {
       "cloudFormationParameterName": "twitterApiKey",
       "environmentVariableName": "TWITTER_API_KEY"
+    },
+    {
+      "cloudFormationParameterName": "googOauthClientId",
+      "environmentVariableName": "GOOG_OAUTH_CLIENT_ID"
+    },
+    {
+      "cloudFormationParameterName": "googOauthClientSecret",
+      "environmentVariableName": "GOOG_OAUTH_CLIENT_SECRET"
     }
   ]
 }

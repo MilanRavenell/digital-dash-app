@@ -55,12 +55,12 @@ async function getAccessToken(ctx, profile) {
 async function refreshTwitterTokens(ctx, profile) {
     const { id, refreshToken } = JSON.parse(profile.meta);
     const { ddbClient, envVars } = ctx.resources;
-    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id, TWITTER_API_KEY } = envVars;
 
     const params = new URLSearchParams();
     params.append('refresh_token', refreshToken);
     params.append('grant_type', 'refresh_token');
-    params.append('client_id', 'dTAwRDBqOFl3ZmpkOGw4RmpIT1c6MTpjaQ')
+    params.append('client_id', TWITTER_API_KEY)
 
     const response = await axios.post(
         `https://api.twitter.com/2/oauth2/token`,
@@ -104,13 +104,13 @@ async function refreshTwitterTokens(ctx, profile) {
 async function refreshYoutubeTokens(ctx, profile) {
     const { id, refreshToken, uploadsId } = JSON.parse(profile.meta);
     const { ddbClient, envVars } = ctx.resources;
-    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id, GOOG_OAUTH_CLIENT_ID, GOOG_OAUTH_CLIENT_SECRET } = envVars;
 
     const params = new URLSearchParams();
     params.append('refresh_token', refreshToken);
     params.append('grant_type', 'refresh_token');
-    params.append('client_id', '581336452597-6c80lf8ijdvhlmi00odvrqsj1iah9lad.apps.googleusercontent.com')
-    params.append('client_secret', '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')
+    params.append('client_id', GOOG_OAUTH_CLIENT_ID)
+    params.append('client_secret', GOOG_OAUTH_CLIENT_SECRET)
 
 
     const response = await axios.post(
