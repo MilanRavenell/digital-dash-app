@@ -83,7 +83,7 @@ const StatContainer = ({
                             }}
                             anchorOrigin={{
                                 vertical: 'bottom',
-                                horizontal: 'right',
+                                horizontal: 'center',
                             }}
                             transformOrigin={{
                                 vertical: 'top',

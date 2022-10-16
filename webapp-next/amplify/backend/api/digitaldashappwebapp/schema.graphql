@@ -21,6 +21,7 @@ type UserProfile
 ])
 {
   user: String! @primaryKey(sortKeyFields: ["key"]) @index(name: "ByUserAndPlatform", sortKeyFields: ["platform"], queryField: "userProfilesByUserAndPlatform")
+  owner: String!
   key: String! # <platform>_<profileName>
   platform: String!
   profileName: String!

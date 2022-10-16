@@ -41,6 +41,7 @@ export const onCreateUserProfile = /* GraphQL */ `
   subscription OnCreateUserProfile($owner: String) {
     onCreateUserProfile(owner: $owner) {
       user
+      owner
       key
       platform
       profileName
@@ -51,7 +52,6 @@ export const onCreateUserProfile = /* GraphQL */ `
       postsLastPopulated
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -59,6 +59,7 @@ export const onUpdateUserProfile = /* GraphQL */ `
   subscription OnUpdateUserProfile($owner: String) {
     onUpdateUserProfile(owner: $owner) {
       user
+      owner
       key
       platform
       profileName
@@ -69,7 +70,6 @@ export const onUpdateUserProfile = /* GraphQL */ `
       postsLastPopulated
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -77,6 +77,7 @@ export const onDeleteUserProfile = /* GraphQL */ `
   subscription OnDeleteUserProfile($owner: String) {
     onDeleteUserProfile(owner: $owner) {
       user
+      owner
       key
       platform
       profileName
@@ -87,7 +88,6 @@ export const onDeleteUserProfile = /* GraphQL */ `
       postsLastPopulated
       createdAt
       updatedAt
-      owner
     }
   }
 `;

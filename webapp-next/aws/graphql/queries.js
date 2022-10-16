@@ -62,6 +62,7 @@ export const getUserProfile = /* GraphQL */ `
   query GetUserProfile($user: String!, $key: String!) {
     getUserProfile(user: $user, key: $key) {
       user
+      owner
       key
       platform
       profileName
@@ -72,7 +73,6 @@ export const getUserProfile = /* GraphQL */ `
       postsLastPopulated
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -95,6 +95,7 @@ export const listUserProfiles = /* GraphQL */ `
     ) {
       items {
         user
+        owner
         key
         platform
         profileName
@@ -105,7 +106,6 @@ export const listUserProfiles = /* GraphQL */ `
         postsLastPopulated
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }
@@ -409,6 +409,7 @@ export const userProfilesByUserAndPlatform = /* GraphQL */ `
     ) {
       items {
         user
+        owner
         key
         platform
         profileName
@@ -419,7 +420,6 @@ export const userProfilesByUserAndPlatform = /* GraphQL */ `
         postsLastPopulated
         createdAt
         updatedAt
-        owner
       }
       nextToken
     }

@@ -61,6 +61,7 @@ export const createUserProfile = /* GraphQL */ `
   ) {
     createUserProfile(input: $input, condition: $condition) {
       user
+      owner
       key
       platform
       profileName
@@ -71,7 +72,6 @@ export const createUserProfile = /* GraphQL */ `
       postsLastPopulated
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -82,6 +82,7 @@ export const updateUserProfile = /* GraphQL */ `
   ) {
     updateUserProfile(input: $input, condition: $condition) {
       user
+      owner
       key
       platform
       profileName
@@ -92,7 +93,6 @@ export const updateUserProfile = /* GraphQL */ `
       postsLastPopulated
       createdAt
       updatedAt
-      owner
     }
   }
 `;
@@ -103,6 +103,7 @@ export const deleteUserProfile = /* GraphQL */ `
   ) {
     deleteUserProfile(input: $input, condition: $condition) {
       user
+      owner
       key
       platform
       profileName
@@ -113,7 +114,6 @@ export const deleteUserProfile = /* GraphQL */ `
       postsLastPopulated
       createdAt
       updatedAt
-      owner
     }
   }
 `;
