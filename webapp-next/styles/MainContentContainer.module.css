@@ -28,7 +28,6 @@
 
 .contentTop {
     display: flex;
-    height: 30vh;
     align-items: center;
 }
 
@@ -74,7 +73,7 @@
     left: 0;
 }
 
-@media only screen and (max-device-width: 480px) {
+@media only screen and (max-device-width: 600px) {
     .content {
         flex-direction: column;
     }

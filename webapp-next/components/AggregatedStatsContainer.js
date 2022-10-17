@@ -5,9 +5,12 @@ import { batchArray } from '../helpers';
 
 import styles from '../styles/AggregatedStatsContainer.module.css';
 
-const AggregatedStatsContainer = ({ data }) => {
+const AggregatedStatsContainer = ({
+    data,
+    isMobile,
+}) => {
     const getContent = () => {
-        return batchArray(data.stats, 4)
+        return batchArray(data.stats, (isMobile ? 2 : 4))
             .map((batch, batchIndex) => (
                 <div className={styles.row} key={batchIndex}>
                     {

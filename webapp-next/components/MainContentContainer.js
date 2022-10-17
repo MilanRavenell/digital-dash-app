@@ -86,19 +86,30 @@ const MainContentContainer = ({
         };
     };
 
-    const getProfilePickerWidth = () => {
+    const contentSideWidths = (() => {
         if (isMobile) {
-            return '100%';
+            return {
+                left: '100%',
+                right: '100%',
+            }
         }
 
-        return (state.profilePickerExpanded ? '18%' : '3%');
-    }
+        return (state.profilePickerExpanded)
+        ? {
+            left: '18%',
+            right: '82%',
+        }
+        : {
+            left: '3%',
+            right: '97%',
+        }
+    })();
 
     return (
         <div className={styles.container}>
             <div className={styles.content}>
                 <div className={styles.contentLeft} style={{
-                    width: getProfilePickerWidth(),
+                    width: contentSideWidths.left,
                 }}>
                     <div className={styles.contentLeftPicker}>
                         <ProfilePicker
@@ -113,7 +124,7 @@ const MainContentContainer = ({
                     </div>
                 </div>
                 <div className={styles.contentRight} style={{
-                    width: state.profilePickerExpanded ? '82%' : '97%',
+                    width: contentSideWidths.right,
                 }}>
                     <TimeframePicker
                         timeframes={data.timeframes}
@@ -122,7 +133,9 @@ const MainContentContainer = ({
                     />
                     <div className={styles.contentTop}>
                         <AggregatedStatsContainer
-                            data={aggregatedData}/>
+                            data={aggregatedData}
+                            isMobile={isMobile}
+                        />
                     </div>
                     <div className={styles.contentBottom}>
                         <div className={styles.viewPicker}>
