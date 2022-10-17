@@ -82,7 +82,7 @@ const AddProfile = ({
                 return (
                     <div>
                         <div>
-                            <Button onClick={() => { login(0); }}>Sign in with Instagram Basic</Button>
+                            <Button onClick={() => { login(0); }}>Sign in with Instagra</Button>
                         </div>
                         <div>
                             <Button onClick={() => { login(1); }}>Sign in with Instagram Pro</Button>
