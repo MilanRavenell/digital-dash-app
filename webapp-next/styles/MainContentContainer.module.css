@@ -6,21 +6,19 @@
 
 .content {
     z-index: 1;
-    width: 98%;
-    margin-left: 1%;
-    margin-right: 1%;
+    width: 96vw;
+    margin-left: 2vw;
+    margin-right: 2vw;
     margin-bottom: 1%;
     display: flex;
-    height: 90%;
+    height: 100%;
 }
 
 .contentLeft {
-    height: 95%;
 }
 
 .contentLeftPicker {
-    margin-top: 10px;
-    margin-right: 5px;
+    padding-top: 10px;
     height: 100%;
 }
 
