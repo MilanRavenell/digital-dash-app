@@ -1,5 +1,4 @@
-function batchArray(data, batchSize) {
-
+function batchArray(data, batchSize, withPlaceholders=true) {
     const batched = data.reduce((resultArray, item, index) => {
         const chunkIndex = Math.floor(index/batchSize)
         
@@ -12,8 +11,10 @@ function batchArray(data, batchSize) {
         return resultArray
     }, []);
 
-    while (batched[batched.length - 1].length < batchSize) {
-        batched[batched.length - 1].push(null);
+    if (withPlaceholders) {
+        while (batched[batched.length - 1].length < batchSize) {
+            batched[batched.length - 1].push(null);
+        }
     }
 
     return batched

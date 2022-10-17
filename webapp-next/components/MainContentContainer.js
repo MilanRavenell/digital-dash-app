@@ -25,10 +25,11 @@ const MainContentContainer = ({
     handleRefresh,
     handleRefreshCancel,
     profileToRefresh,
+    isMobile,
 }) => {
     const [state, setState] = React.useState({
         popUpPost: null,
-        profilePickerExpanded: true,
+        profilePickerExpanded: !isMobile, // Start minimized if mobile, expanded if desktop
     });
 
     const [bottomView, setBottomView] = React.useState('graph');
@@ -85,11 +86,19 @@ const MainContentContainer = ({
         };
     };
 
+    const getProfilePickerWidth = () => {
+        if (isMobile) {
+            return '100%';
+        }
+
+        return (state.profilePickerExpanded ? '18%' : '3%');
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.content}>
                 <div className={styles.contentLeft} style={{
-                    width: state.profilePickerExpanded ? '18%' : '3%',
+                    width: getProfilePickerWidth(),
                 }}>
                     <div className={styles.contentLeftPicker}>
                         <ProfilePicker
@@ -99,6 +108,7 @@ const MainContentContainer = ({
                             expanded={state.profilePickerExpanded}
                             toggleExpanded={toggleProfilePickerExpanded}
                             handleNeedsRefresh={handleNeedsRefresh}
+                            isMobile={isMobile}
                         />
                     </div>
                 </div>

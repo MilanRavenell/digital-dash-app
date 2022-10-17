@@ -20,7 +20,6 @@ export default function App() {
   const context = React.useContext(AppContext);
 
   const [data, setData] = React.useState(null);
-  const [init, setInit] = React.useState(true);
   const [selectedProfileNames, setSelectedProfileNames] = React.useState([]);
   const [timeframe, setTimeframe] = React.useState(null);
   const [sortOrder, setSortOrder] = React.useState(null);
@@ -214,6 +213,7 @@ export default function App() {
             handleRefresh={handleRefresh}
             handleRefreshCancel={handleRefreshCancel}
             profileToRefresh={profileToRefresh}
+            isMobile={context.windowDimensions.width < 600}
             key={'main'}
           />
       ]

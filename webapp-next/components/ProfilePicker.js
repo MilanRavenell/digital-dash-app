@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button, IconButton } from '@mui/material';
 import { ArrowForwardIos, ArrowBackIos } from '@mui/icons-material';
-import Image from 'next/image';
-import { platformToLogoUrlMap } from '../helpers';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { batchArray } from '../helpers';
 import ProfileCard from './ProfileCard';
 
-import profPic from './twit_prof_pic.jpeg';
 
 import styles from '../styles/ProfilePicker.module.css';
 
@@ -19,6 +19,7 @@ const ProfilePicker = ({
     editMode,
     setProfileIndexToDelete,
     handleNeedsRefresh,
+    isMobile,
 }) => {
     const onProfileClick = (profile) => {
         if (editMode) {
@@ -62,15 +63,15 @@ const ProfilePicker = ({
 
     const getExpandedContent = () => (
         <div className={styles.containerExpanded}>
-            <div className={styles.headerExpanded}>
-                <div className={styles.headerTextExpanded}>
+            <div className={styles.header}>
+                <div className={styles.headerText}>
                     Profiles
                 </div>
                 {
                     !editMode && (
-                        <div className={styles.headerMinimizeExpanded} onClick={toggleExpanded}>
+                        <div className={styles.headerMinimize} onClick={toggleExpanded}>
                             <IconButton>
-                                <ArrowBackIos/>
+                                { isMobile ? <KeyboardArrowUpIcon/> : <ArrowBackIos/> }
                             </IconButton>
                         </div>
                     )
@@ -107,33 +108,60 @@ const ProfilePicker = ({
     
     const getMinimizedContent = () => (
         <div className={styles.containerMinimized} onClick={toggleExpanded}>
-            <div className={styles.expandMinimized}>
-                <IconButton>
-                    <ArrowForwardIos/>
-                </IconButton>
-            </div>
             {
-                profiles
-                    .filter(profile => selectedProfileNames.includes(profile.profileName))
-                    .map((profile, index) => {
-                        const profilePicUrl = (profile.profilePicUrl !== null && profile.profilePicUrl !== undefined) ? profile.profilePicUrl : '/';
-                        return (
-                            <div className={styles.profileMinimized} key={index}>
-                                <div className={styles.profilePicMinimized}>
-                                    <img
-                                        src={profilePicUrl}
-                                        alt='profile pic'
-                                        style={{
-                                            height: '100%',
-                                            width: '100%',
-                                            objectFit: 'contain',
-                                        }}
-                                        referrerPolicy="no-referrer"
-                                    />
-                                </div>
-                            </div>
-                        )
-                    })
+                isMobile
+                ? ( 
+                    <div className={styles.header}>
+                        <div className={styles.headerText}>
+                            Profiles
+                        </div>
+                        <div className={styles.headerMinimize}>
+                            <IconButton>
+                                <KeyboardArrowDownIcon/>
+                            </IconButton>
+                        </div>
+                    </div>
+                )
+                : (
+                    <div className={styles.expandMinimized}>
+                        <IconButton>
+                            <ArrowForwardIos/>
+                        </IconButton>
+                    </div>
+                )
+            }
+            {
+                batchArray(
+                    profiles.filter(profile => selectedProfileNames.includes(profile.profileName)),
+                    5,
+                    false,
+                )
+                    .map((batch, batchIndex) => (
+                        <div className={styles.profilesMinimized} key={batchIndex}>
+                            {
+                                batch
+                                    .map((profile, index) => {
+                                        const profilePicUrl = (profile.profilePicUrl !== null && profile.profilePicUrl !== undefined) ? profile.profilePicUrl : '/';
+                                        return (
+                                            <div className={styles.profileMinimized} key={index}>
+                                                <div className={styles.profilePicMinimized}>
+                                                    <img
+                                                        src={profilePicUrl}
+                                                        alt='profile pic'
+                                                        style={{
+                                                            height: '100%',
+                                                            width: '100%',
+                                                            objectFit: 'contain',
+                                                        }}
+                                                        referrerPolicy="no-referrer"
+                                                    />
+                                                </div>
+                                            </div>
+                                        )
+                                    })
+                            }
+                        </div>
+                    ))
             }
         </div>
     );

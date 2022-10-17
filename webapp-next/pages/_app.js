@@ -17,10 +17,38 @@ Amplify.configure(config);
 
 import '../styles/global.css';
 
-function MyApp({ Component, pageProps }) {
+const useWindowDimension = () => {
+    const getWindowDimensions = () => {
+        if (typeof window !== "undefined") {
+            const { innerWidth: width, innerHeight: height } = window;
+            return {
+                width,
+                height
+            };
+        }
+    };
+
+    const [windowDimensions, setWindowDimensions] = useState(null);
+
+    useEffect(() => {
+        setWindowDimensions(getWindowDimensions());
+        
+        const handleResize = () => {
+            setWindowDimensions(getWindowDimensions());
+        }
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    return windowDimensions;
+}
+
+const MyApp = ({ Component, pageProps }) => {
     const router = useRouter();
     const [userProfiles, setUserProfiles] = useState(null);
     const [user, setUser] = useState(null);
+    const windowDimensions = useWindowDimension();
 
     useEffect(() => {
         initialize();
@@ -122,7 +150,14 @@ function MyApp({ Component, pageProps }) {
     Hub.listen('auth', listener);
 
     return (
-        <AppContext.Provider value={{ user, userProfiles, setUserProfiles, setUserCallback, signOut }}>
+        <AppContext.Provider value={{
+            user,
+            userProfiles,
+            windowDimensions,
+            setUserProfiles,
+            setUserCallback,
+            signOut,
+        }}>
             <Head>
                 <title>Create Next App</title>
                 <link rel="icon" href="/favicon.ico" />

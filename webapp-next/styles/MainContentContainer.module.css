@@ -75,3 +75,9 @@
     top: 0;
     left: 0;
 }
+
+@media only screen and (max-device-width: 480px) {
+    .content {
+        flex-direction: column;
+    }
+}

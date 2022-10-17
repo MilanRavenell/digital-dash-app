@@ -8,19 +8,19 @@
     box-shadow: 5px 5px lightgray;
 }
 
-.headerExpanded {
+.header {
     display: flex;
     margin-top: 4%;
 }
 
-.headerTextExpanded {
+.headerText {
     display: flex;
     margin-left: 10px;
     flex: 1;
     color: grey;
 }
 
-.headerMinimizeExpanded {
+.headerMinimize {
     display: flex;
     justify-content: right;
     margin-right: 3%;
@@ -129,7 +129,7 @@
 }
 
 .profileMinimized {
-    height: 7%;
+    height: 5vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -137,9 +137,19 @@
 }
 
 .profilePicMinimized {
-    height: 2vw;
-    width: 2vw;
+    height: max(2vw, 30px);
+    width: max(2vw, 30px);
     border-radius: 50%;
     overflow: hidden;
     display: flex;
+}
+
+@media only screen and (max-device-width: 480px) {
+    .profilesMinimized {
+        display: flex;
+    }
+
+    .containerMinimized {
+        border-radius: 10px;
+    }
 }
