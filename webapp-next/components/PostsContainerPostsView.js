@@ -2,7 +2,7 @@ import React from 'react';
 import { platformToLogoUrlMap } from '../helpers';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
-import { ExpandLess, ExpandMore } from '@mui/icons-material';
+import { ExpandLess, ExpandMore, LteMobiledataOutlined } from '@mui/icons-material';
 import moment from 'moment';
 
 import styles from '../styles/PostsContainerPostsView.module.css';
@@ -13,10 +13,20 @@ const PostsContainerPostsView = ({
     profiles,
     openPopUp,
     sortOrder,
-    setSortOrder
+    setSortOrder,
+    isMobile,
 }) => {
     const totalHeaders = [...headers.globalHeaders, ...headers.platformHeaders];
 
+    if (isMobile) {
+        ['Platform', 'Caption'].forEach(header => {
+            const headerIndex = totalHeaders.findIndex(totalHeader => (totalHeader.displayName === header));
+            if (headerIndex > -1) {
+                totalHeaders.splice(headerIndex, 1);
+            }
+        })
+    }
+    
     const onHeaderClicked = (field) => {
         if (!sortOrder || sortOrder.field !== field) {
             console.log('hi')
@@ -63,14 +73,23 @@ const PostsContainerPostsView = ({
     }
 
     const getStyle = (fieldName, isHeader) => {
+        let base = isHeader ? `${styles.headerField} ` :'';
+        let type = isHeader ? styles.headerFieldLong : styles.postFieldLong;
+
         switch(fieldName) {
             case 'Platform':
-                return isHeader ? styles.headerFieldShort : styles.postFieldShort;
             case 'Profile':
-                return isHeader ? styles.headerFieldProfileName : styles.postFieldProfileName;
-            default:
-                return isHeader ? styles.headerFieldLong : styles.postFieldLong;
+                type = isHeader ? styles.headerFieldShort : styles.postFieldShort;
+                break;
+            case 'Total Engagement':
+            case 'Engagement Rate':
+                if (isHeader) {
+                    base = `${styles.headerFieldSmallFont} `;
+                }
+                break;
         }
+
+        return `${base} ${type}`
     }
     
     return (
@@ -84,7 +103,7 @@ const PostsContainerPostsView = ({
                                     <CardActionArea sx={{ width: '100%', height: '100%' }}>
                                         <div className={styles.headerInner}>
                                             <div className={styles.headerName}>
-                                                { (displayName !== 'Platform') && displayName }
+                                                { (displayName !== 'Platform' && displayName !== 'Profile') && displayName }
                                             </div>
                                             <div className={styles.headerIcon}>
                                                 { (sortOrder && sortOrder.field === field && sortOrder.order === 'asc') && <ExpandMore/>}
@@ -107,7 +126,8 @@ const PostsContainerPostsView = ({
                                 <div className={styles.post}>
                                     {
                                         totalHeaders.map(({ field, displayName }, keyIndex) => {
-                                            const platform = profiles.find((profile => (profile.profileName === post.profileName))).platform;
+                                            const profile = profiles.find((profile => (profile.profileName === post.profileName)));
+                                            const platform = profile.platform;
                                             return (
                                                 <div className={getStyle(displayName, false)} key={keyIndex}>
                                                     {
@@ -118,7 +138,7 @@ const PostsContainerPostsView = ({
                                                                         <div className={styles.logo}>
                                                                             <img
                                                                                 src={platformToLogoUrlMap[platform].url}
-                                                                                alt='profile pic'
+                                                                                alt='platform logo'
                                                                                 style={{
                                                                                     height: '100%',
                                                                                     width: '100%',
@@ -128,6 +148,21 @@ const PostsContainerPostsView = ({
                                                                             />
                                                                         </div>
                                                                     );
+                                                                case 'Profile':
+                                                                    return (
+                                                                        <div className={styles.profPic}>
+                                                                            <img
+                                                                                src={profile.profilePicUrl}
+                                                                                alt={'profile pic'}
+                                                                                style={{
+                                                                                    height: '100%',
+                                                                                    width: '100%',
+                                                                                    objectFit: 'contain',
+                                                                                }}
+                                                                                referrerPolicy="no-referrer"
+                                                                            />
+                                                                        </div>
+                                                                    )
                                                                 case 'Date':
                                                                     return <div className={styles.fieldContent}>{moment.utc(post[field]).format('MMM D, YYYY')}</div>;
                                                                 case 'Engagement Rate':

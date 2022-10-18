@@ -162,7 +162,8 @@ const MainContentContainer = ({
                                     profiles={profiles}
                                     openPopUp={setPopUpPost}
                                     sortOrder={sortOrder}
-                                    setSortOrder={setSortOrder}/>
+                                    setSortOrder={setSortOrder}
+                                    isMobile={isMobile}/>
                                 : <PostsContainerGraphView graphData={graphData}/>
                         }
                     </div>
