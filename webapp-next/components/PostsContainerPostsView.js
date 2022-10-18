@@ -16,7 +16,7 @@ const PostsContainerPostsView = ({
     setSortOrder,
     isMobile,
 }) => {
-    const totalHeaders = [...headers.globalHeaders, ...headers.platformHeaders];
+    const totalHeaders = headers.globalHeaders;
 
     if (isMobile) {
         ['Platform', 'Caption'].forEach(header => {
@@ -25,6 +25,8 @@ const PostsContainerPostsView = ({
                 totalHeaders.splice(headerIndex, 1);
             }
         })
+    } else {
+        totalHeaders.push(...headers.platformHeaders)
     }
     
     const onHeaderClicked = (field) => {

@@ -76,6 +76,10 @@
     .content {
         flex-direction: column;
     }
+    
+    .contentRight {
+        margin-top: 1vh;
+    }
 
     .contentBottom {
         margin-left: 0;
