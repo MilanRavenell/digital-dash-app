@@ -144,6 +144,10 @@
 }
 
 @media only screen and (max-device-width: 600px) {
+    .header {
+        margin-top: 0;
+    }
+    
     .profilesMinimized {
         display: flex;
     }

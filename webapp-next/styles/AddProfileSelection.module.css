@@ -96,3 +96,9 @@
     height: 10%;
     margin-top: 5%;
 }
+
+@media only screen and (max-device-width: 600px) {
+    .container {
+        flex-direction: column;
+    }
+}
