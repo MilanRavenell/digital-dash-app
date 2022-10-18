@@ -46,8 +46,8 @@
 .popup {
     /* border: 1px solid black; */
     border-radius: 5px;
-    width: 35%;
-    height: 80%;
+    width: min(90vw, 600px);
+    height: 90vh;
     z-index: 3;
     position: fixed;
     top: 0;

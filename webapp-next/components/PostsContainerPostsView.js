@@ -75,7 +75,7 @@ const PostsContainerPostsView = ({
     }
 
     const getStyle = (fieldName, isHeader) => {
-        let base = isHeader ? `${styles.headerField} ` :'';
+        let base = isHeader ? `${styles.headerField} ` : '';
         let type = isHeader ? styles.headerFieldLong : styles.postFieldLong;
 
         switch(fieldName) {
