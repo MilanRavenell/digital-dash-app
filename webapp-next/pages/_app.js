@@ -154,6 +154,7 @@ const MyApp = ({ Component, pageProps }) => {
             user,
             userProfiles,
             windowDimensions,
+            isMobile: windowDimensions ? windowDimensions.width < 600 : false,
             setUserProfiles,
             setUserCallback,
             signOut,

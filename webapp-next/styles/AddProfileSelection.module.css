@@ -2,6 +2,7 @@
     height: 100%;
     width: 100%;
     display: flex;
+    overflow-y: auto;
 }
 
 .left {
@@ -12,8 +13,8 @@
 }
 
 .leftPicker {
-    height: 70%;
-    width: 50%;
+    height: 70vh;
+    width: min(30vw, 300px);
 }
 
 .right {
@@ -25,8 +26,6 @@
 }
 
 .rightContentContainer {
-    height: 60%;
-    width: 80%;
     background-color: white;
     border-radius: 5px;
     box-shadow: 5px 5px lightgray;
@@ -36,31 +35,37 @@
 }
 
 .rightContent {
-    height: 30%;
-    width: 80%;
+    padding-right: min(5vw, 70px);
+    padding-left: min(5vw, 70px);
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+}
+
+.headerText {
+    color: grey;
+    padding-bottom: 4vh;
 }
 
 .platforms {
     display: flex;
-    height: 90%;
-    width: 100%;
 }
 
 .platform {
     display: flex;
     align-items: center;
     flex-direction: column;
-    width: 60%;
-    height: 100%;
-    flex: 1;
+    height: 15vh;
     border-radius: 4px;
+    padding-left: 5px;
+    padding-right: 5px;
+    flex: 1
 }
 
 .platformInner {
     margin: 5%;
     border-radius: 10px;
     height: 90%;
-    width: 90%;
+    width: min(50vw, 240px);
     display: flex;
     flex-direction: column;
 }
@@ -94,11 +99,20 @@
 
 .button {
     height: 10%;
-    margin-top: 5%;
+    margin-top: 8vh;
 }
 
 @media only screen and (max-device-width: 600px) {
     .container {
         flex-direction: column;
+    }
+
+    .leftPicker {
+        width: 80vw;
+        height: 80%;
+    }
+
+    .rightContentContainer {
+        width: 80vw;
     }
 }

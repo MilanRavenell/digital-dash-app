@@ -213,7 +213,7 @@ export default function App() {
             handleRefresh={handleRefresh}
             handleRefreshCancel={handleRefreshCancel}
             profileToRefresh={profileToRefresh}
-            isMobile={context.windowDimensions.width < 600}
+            isMobile={context.isMobile}
             key={'main'}
           />
       ]

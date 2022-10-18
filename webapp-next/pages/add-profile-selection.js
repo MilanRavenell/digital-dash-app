@@ -104,6 +104,7 @@ export default function Home() {
           handleRefresh={handleRefresh}
           handleRefreshCancel={handleRefreshCancel}
           profileToRefresh={profileToRefresh}
+          windowDimensions={context.windowDimensions}
           key={'main'}
         />
       ]

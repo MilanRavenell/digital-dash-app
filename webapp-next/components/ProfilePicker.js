@@ -85,24 +85,25 @@ const ProfilePicker = ({
                     </div>
                 )
             }
-            {
-                (profiles || []).map((profile, index) => {
-                    const profilePicUrl = (profile.profilePicUrl !== null && profile.profilePicUrl !== undefined) ? profile.profilePicUrl : '/';
-                    return (
-                        <div className={styles.profileContainerExpanded} key={index}>
-                            <div className={styles.profileExpanded}
-                                style={selectedStyle(profile.profileName)}>
-                                <ProfileCard
-                                    profile={profile}
-                                    handleClick={() => {onProfileClick(profile.profileName)}}
-                                    handleDelete={editMode ? () =>{setProfileIndexToDelete(index)} : null}
-                                    handleNeedsRefresh={handleNeedsRefresh}
-                                />
+            <div className={styles.profilesExpanded}>
+                {
+                    (profiles || []).map((profile, index) => {
+                        return (
+                            <div className={styles.profileContainerExpanded} key={index}>
+                                <div className={styles.profileExpanded}
+                                    style={selectedStyle(profile.profileName)}>
+                                    <ProfileCard
+                                        profile={profile}
+                                        handleClick={() => {onProfileClick(profile.profileName)}}
+                                        handleDelete={editMode ? () =>{setProfileIndexToDelete(index)} : null}
+                                        handleNeedsRefresh={handleNeedsRefresh}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    )
-                })
-            }
+                        )
+                    })
+                }
+            </div>
         </div>
     );
     

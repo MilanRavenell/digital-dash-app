@@ -1,7 +1,7 @@
 .containerExpanded {
     /* border: 1px solid black; */
     border-radius: 10px;
-    overflow: auto;
+    overflow: hidden;
     height: 100%;
     width: 100%;
     background-color: white;
@@ -26,6 +26,11 @@
     justify-content: right;
     margin-right: 3%;
     flex: 1;
+}
+
+.profilesExpanded {
+    height: 90%;
+    overflow-y: auto;
 }
 
 .profileContainerExpanded {
