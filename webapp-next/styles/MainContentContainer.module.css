@@ -33,8 +33,7 @@
 
 .contentBottom {
     min-height: 55%;
-    margin: 10px;
-    margin-left:20px;
+    margin-left: 1vw;
 }
 
 .viewPicker {
@@ -76,5 +75,9 @@
 @media only screen and (max-device-width: 600px) {
     .content {
         flex-direction: column;
+    }
+
+    .contentBottom {
+        margin-left: 0;
     }
 }
