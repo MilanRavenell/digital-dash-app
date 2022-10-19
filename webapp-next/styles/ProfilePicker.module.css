@@ -43,7 +43,7 @@
     display: flex;
     margin: 5px;
     overflow: hidden;
-    height: 8vh;
+    height: min(10vh, 90px);
     background-color: white;
     /* box-shadow: 3px 3px lightgray; */
 }
@@ -142,8 +142,8 @@
 }
 
 .profilePicMinimized {
-    height: max(2vw, 30px);
-    width: max(2vw, 30px);
+    height: max(4vmin, 30px);
+    width: max(4vmin, 30px);
     border-radius: 50%;
     overflow: hidden;
     display: flex;
@@ -160,5 +160,11 @@
 
     .containerMinimized {
         border-radius: 10px;
+        padding-bottom: 3vh;
+    }
+
+    .profilePicMinimized {
+        height: max(8vmin, 30px);
+        width: max(8vmin, 30px);
     }
 }
