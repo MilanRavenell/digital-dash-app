@@ -59,6 +59,7 @@
     background-color: white;
     padding: 5%;
     box-shadow: 5px 5px lightgrey;
+    width: 45vw;
 }
 
 .grow { 
@@ -69,7 +70,7 @@
     transform: scale(1.1); 
 }
 
-@media only screen and (max-device-width: 600px) {
+@media only screen and (max-device-width: 800px) {
     .container {
         flex-direction: column;
     }
@@ -86,5 +87,9 @@
 
     .authenticator {
         width: 95%;
+    }
+
+    .screenshot {
+        max-width: 400px;
     }
 }
