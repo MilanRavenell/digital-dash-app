@@ -47,7 +47,16 @@ code {
     --amplify-components-tabs-item-focus-color: var(--theme-light-blue);
 }
 
+:root, [data-amplify-theme] {
+    --amplify-components-authenticator-container-width-max: 100% !important;
+}
+
 .amplify-textfield {
     --amplify-components-fieldcontrol-focus-border-color: var(--theme-light-blue) !important;
 }
+
+amplify-authenticator {
+    width: 100%;
+    overflow: hidden;
+  }
   
