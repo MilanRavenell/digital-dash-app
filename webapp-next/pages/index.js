@@ -61,7 +61,23 @@ export default function App() {
         }
       }, 2000);
     }
-  }, [profilesUpdated])
+  }, [profilesUpdated]);
+
+  // Remove custom timeframe option on mobile
+  React.useEffect(() => {
+    if (context.isMobile) {
+      const timeframes = data.timeframes;
+      if (timeframes[timeframes.length - 1].name === 'Custom') {
+        timeframes.splice(timeframes.length - 1, 1);
+
+        setData((prevData) => ({
+          ...prevData,
+          timeframes,
+        }))
+      }
+    }
+
+  }, [data, context]);
 
   const initialize = async () => {
     console.log('init')

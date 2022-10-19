@@ -142,8 +142,8 @@
 }
 
 .profilePicMinimized {
-    height: max(4vmin, 30px);
-    width: max(4vmin, 30px);
+    height: 4vmin;
+    width: 4vmin;
     border-radius: 50%;
     overflow: hidden;
     display: flex;
@@ -164,7 +164,7 @@
     }
 
     .profilePicMinimized {
-        height: max(8vmin, 30px);
-        width: max(8vmin, 30px);
+        height: 8vmin;
+        width: 8vmin;
     }
 }
