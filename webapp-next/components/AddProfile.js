@@ -75,17 +75,17 @@ const AddProfile = ({
             default:
                 return (
                     <div>
-                        <Button onClick={() => { login(0); }}>Sign in with {platform}</Button>
+                        <Button onClick={() => { login(0); }}>Register {platform} Account</Button>
                     </div>
                 );
             case 'instagram':
                 return (
                     <div>
                         <div>
-                            <Button onClick={() => { login(0); }}>Sign in with Instagra</Button>
+                            <Button onClick={() => { login(0); }}>Register Instagram Account</Button>
                         </div>
                         <div>
-                            <Button onClick={() => { login(1); }}>Sign in with Instagram Pro</Button>
+                            <Button onClick={() => { login(1); }}>Register Instagram Pro Account</Button>
                         </div>
                     </div>
                 )
@@ -96,7 +96,7 @@ const AddProfile = ({
                             <TextField id="outlined-basic" label="Tiktok handle" variant="outlined" onChange={handleTextFieldChange}/>
                         </div>
                         <div>
-                            <Button onClick={() => { login(0); }}>Register Tiktok account</Button>
+                            <Button onClick={() => { login(0); }}>Register Tiktok Account</Button>
                         </div>
                     </div>
                 )

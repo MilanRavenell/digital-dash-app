@@ -53,7 +53,7 @@ const AddPlatformInstructions = ({
     const instagram = (
         <div className={styles.container}>
             <div className={styles.instructionsHeader}>
-                {`How to add an Instagram Basic account`}
+                {`How to add an Instagram account`}
             </div>
             <div className={styles.body}>
                 <ol>
