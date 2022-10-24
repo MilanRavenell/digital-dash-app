@@ -65,7 +65,7 @@ export default function App() {
 
   // Remove custom timeframe option on mobile
   React.useEffect(() => {
-    if (context.isMobile) {
+    if (context.isMobile && data) {
       const timeframes = data.timeframes;
       if (timeframes[timeframes.length - 1].name === 'Custom') {
         timeframes.splice(timeframes.length - 1, 1);
