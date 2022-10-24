@@ -55,6 +55,7 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
         try {
             const media = (!mediaObject.media_info) ? mediaObject.media : mediaObject.media_info.map((media_info) => ({
                 type: (media_info.media_type === 'GraphImage') ? 'image' : 'video',
+                // instagram-basic pic links cannot be accessed by the DOM, need to fetch image through the backend
                 thumbnailUrl: `/api/fetch-image?url=${media_info.thumbnail_url.replace(/&/g, '@@@@')}`,
             }));
 

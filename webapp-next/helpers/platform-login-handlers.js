@@ -1,20 +1,22 @@
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
 
-async function igBasicLoginHandler({ router }) {
-    // HOW TO TEST IG BASIC LOCALLY
-    // Run this command in terminal- ngrok http http://localhost:3000
-    // Take note of the https url under 'Forwarding' (looks like https://xxxx-xx-xx-xxx-xx.nrgrok.io)
-    // In webapp_next/.env.local, update NEXTAUTH_URL to that url
-    // In the Facebook Developer Portal, under 'Instagram Basic Display -> Basic Display' add https://xxxx-xx-xx-xxx-xx.nrgrok.io/add-profile/instagram, tp 'Valid OAuth Redirect URIs'
-    // In browser, navigate to https://xxxx-xx-xx-xxx-xx.nrgrok.io and test
-    const appId = '582112473702622';
-    const redirectUri = `${process.env.NEXTAUTH_URL}add-profile/instagram`;
+async function igBasicLoginHandler({ handle, setVerify }) {
+    const profileInfo = (await axios.get(`/api/auth/fetch-profile-with-scraper?handle=${handle}&platform=instagram`)).data;
+    console.log(profileInfo)
 
-    router.push(`https://api.instagram.com/oauth/authorize?client_id=${appId}&redirect_uri=${redirectUri}&scope=user_profile,user_media&response_type=code`)
+    if (profileInfo) {
+        const profile = {
+            profileName: handle,
+            profilePicUrl: `/api/fetch-image?url=${profileInfo.profile_pic_url.replace(/&/g, '@@@@')}`,
+            platform: 'instagram',
+        };
+
+        setVerify([profile]);
+    }
 }
 
-async function igProLoginHandler({ currentProfiles, setProfiles }) {
+async function igProLoginHandler({ currentProfiles, setVerify }) {
     const onSignIn = async (shortTermToken) => {
         const accessToken = (await axios.get(`/api/auth/get-fb-long-lived-token?shortTermToken=${shortTermToken}`)).data;
 
@@ -50,7 +52,7 @@ async function igProLoginHandler({ currentProfiles, setProfiles }) {
             }
         }));
 
-        setProfiles(profiles);
+        setVerify(profiles);
     };
 
     FB.login((response) => {
@@ -65,7 +67,7 @@ async function twitterLoginHandler({ router }) {
     signIn('twitter')
 }
 
-async function youtubeLoginHandler({ currentProfiles, setProfiles }) {
+async function youtubeLoginHandler({ currentProfiles, setVerify }) {
     const onSignIn = async (response) => {
         const tokenResponse = await axios.get(`/api/auth/get-google-tokens?code=${response.code}`);
 
@@ -93,7 +95,7 @@ async function youtubeLoginHandler({ currentProfiles, setProfiles }) {
                 return;
             }
     
-            setProfiles(profiles);
+            setVerify(profiles);
         }
     }
 
@@ -107,8 +109,8 @@ async function youtubeLoginHandler({ currentProfiles, setProfiles }) {
     client.requestCode();
 }
 
-async function tiktokLoginHandler({ handle, currentProfiles, setProfiles }) {
-    const profileInfo = (await axios.get(`/api/auth/verify-tiktok-bio-contains-token?handle=${handle}`)).data;
+async function tiktokLoginHandler({ handle, setVerify }) {
+    const profileInfo = (await axios.get(`/api/auth/fetch-profile-with-scraper?handle=${handle}&platform=tiktok`)).data;
     console.log(profileInfo)
 
     if (profileInfo) {
@@ -118,7 +120,7 @@ async function tiktokLoginHandler({ handle, currentProfiles, setProfiles }) {
             platform: 'tiktok',
         };
 
-        setProfiles([profile]);
+        setVerify([profile]);
     }
 }
 

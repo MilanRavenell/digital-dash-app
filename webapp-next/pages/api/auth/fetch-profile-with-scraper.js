@@ -4,11 +4,11 @@ import AWS from 'aws-sdk';
 AWS.config.update({ accessKeyId: 'AKIAR2K6MPFH7YCY42AB', secretAccessKey: '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', region: 'us-west-2' })
 
 export default async function handler(req, res) {
-    console.log('Verifying tiktok bio has token')
-    const { handle } = req.query;
+    console.log('Fetching profile with scraper')
+    const { handle, platform } = req.query;
 
     const payloadParams = {
-        platform: 'tiktok',
+        platform,
         handle,
         task: 'get_profile_info',
     }

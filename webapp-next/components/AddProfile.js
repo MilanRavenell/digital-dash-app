@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { platformToLogoUrlMap } from '../helpers';
 import ProfileCard from './ProfileCard';
 import AddPlatformInstructions from './AddPlatformInstructions';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import styles from '../styles/AddProfile.module.css';
 
@@ -22,47 +23,43 @@ const AddProfile = ({
     const session = useSession();
     const router = useRouter();
 
-    const [state, setState] = React.useState({
-        screen: 'sign-in',
-        profiles: [],
-    });
+    const [screen, setScreen] = React.useState('sign-in');
+    const [profiles, setProfiles] = React.useState([]);
     const [textFieldValue, setTextFieldValue] = React.useState('');
 
     const handleTextFieldChange = (event) => {
         setTextFieldValue(event.target.value);
     }
 
-    const setProfiles = (profiles) => {
-        setState((prevState) => ({
-            ...prevState,
-            screen: 'verify',
-            profiles,
-        }));
+    const setVerify = (profiles) => {
+        setProfiles(profiles);
+        setScreen('verify');
     }
 
     React.useEffect(() => {
-        console.log(state.profiles)
+        console.log(profiles)
         if (loginCallbackHandler) {
-            if (session && session.status === 'authenticated' && state.profiles.length === 0) {
-                loginCallbackHandler({ sessionData: session.data, currentProfiles, setProfiles });
+            if (session && session.status === 'authenticated' && profiles.length === 0) {
+                loginCallbackHandler({ sessionData: session.data, currentProfiles, setVerify });
                 return;
             }
-            if (router.query.code && state.profiles.length === 0) {
+            if (router.query.code && profiles.length === 0) {
                 const code = router.query.code.split('#_')[0];
-                loginCallbackHandler({ code, currentProfiles, setProfiles });
+                loginCallbackHandler({ code, currentProfiles, setVerify });
                 return;
             }
         }
     }, []);
 
     const onSubmitClick = () => {
-        handleSubmit(user, state.profiles);
+        handleSubmit(user, profiles);
     };
 
     const login = (index) => {
+        setScreen('loading');
         loginHandlers[index]({
             currentProfiles,
-            setProfiles,
+            setVerify,
             router,
             handle: textFieldValue,
         });
@@ -79,16 +76,32 @@ const AddProfile = ({
                     </div>
                 );
             case 'instagram':
-                return (
-                    <div>
-                        <div>
-                            <Button onClick={() => { login(0); }}>Register Instagram Account</Button>
-                        </div>
-                        <div>
-                            <Button onClick={() => { login(1); }}>Register Instagram Pro Account</Button>
-                        </div>
-                    </div>
-                )
+                switch(screen) {
+                    case 'sign-in-register-ig-basic':
+                        return (
+                            <div>
+                                <div>
+                                    <TextField id="outlined-basic" label="Instagram handle" variant="outlined" onChange={handleTextFieldChange}/>
+                                </div>
+                                <div>
+                                    <Button onClick={() => { login(0); }}>Confirm</Button>
+                                </div>
+                            </div>
+                        )
+                    default:
+                        return (
+                            <div>
+                                <div>
+                                    <Button onClick={() => { setScreen('sign-in-register-ig-basic'); }}>
+                                        Register Instagram Account
+                                    </Button>
+                                </div>
+                                <div>
+                                    <Button onClick={() => { login(1); }}>Register Instagram Pro Account</Button>
+                                </div>
+                            </div>
+                        )
+                }
             case 'tiktok':
                 return (
                     <div>
@@ -104,8 +117,9 @@ const AddProfile = ({
     }
 
     const getContent = () => {
-        switch(state.screen) {
+        switch(screen) {
             case 'sign-in':
+            case 'sign-in-register-ig-basic':
                 return (
                     <div className={styles.form}>
                         <div className={styles.formContent}>
@@ -123,8 +137,8 @@ const AddProfile = ({
                     <div className={styles.form}>
                         <div className={styles.profiles}>
                         {
-                            (state.profiles !== null && state.profiles !== undefined) && 
-                            state.profiles.map((profile, index) => (
+                            (profiles !== null && profiles !== undefined) && 
+                            profiles.map((profile, index) => (
                                 <div className={styles.profile} key={index}>
                                     <ProfileCard 
                                         profile={{
@@ -147,6 +161,19 @@ const AddProfile = ({
                         </div>
                     </div>
                 );
+            case 'loading':
+                return (
+                    <div className={styles.form}>
+                        <div className={styles.loading}>
+                            <CircularProgress/>
+                        </div>
+                        <div className={styles.buttons}>
+                            <div>
+                                <Button onClick={cancel}>Cancel</Button>
+                            </div>
+                        </div>
+                    </div>
+                )
             default:
                 return;
         }

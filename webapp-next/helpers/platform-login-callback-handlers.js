@@ -1,7 +1,7 @@
 import axios from "axios";
 import { signOut } from 'next-auth/react';
 
-async function twitterLoginCallbackHandler({ sessionData, currentProfiles, setProfiles }) {
+async function twitterLoginCallbackHandler({ sessionData, currentProfiles, setVerify }) {
     const profile = {
         profileName: sessionData.profileName,
         meta: JSON.stringify({
@@ -15,10 +15,10 @@ async function twitterLoginCallbackHandler({ sessionData, currentProfiles, setPr
     };
 
     signOut({ redirect: false })
-    setProfiles([profile]);
+    setVerify([profile]);
 }
 
-async function igBasicLoginCallbackHandler({ code, currentProfiles, setProfiles }) {
+async function igBasicLoginCallbackHandler({ code, currentProfiles, setVerify }) {
     try {
         const { access_token, user_id, expires_in, profile_pic_url, username } = (await axios.get(`/api/auth/get-ig-basic-access-token?code=${code}`)).data;
 
@@ -33,7 +33,7 @@ async function igBasicLoginCallbackHandler({ code, currentProfiles, setProfiles 
             platform: 'instagram-basic',
         };
 
-        setProfiles([profile]);
+        setVerify([profile]);
 
     } catch (err) {
         console.error('Failed to get ig basic access token')
