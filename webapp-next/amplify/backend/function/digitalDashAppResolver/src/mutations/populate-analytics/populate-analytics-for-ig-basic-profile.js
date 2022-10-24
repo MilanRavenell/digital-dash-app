@@ -34,7 +34,6 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
         console.error('Failed to get videos')
         return;
     }
-    scrapedMediaObjects.sort((a, b) => b.taken_at_timestamp - a.taken_at_timestamp)
 
     const mediaObjects = [
         ...scrapedMediaObjects.filter(({ shortcode }) => !ddbPostIdsSet.has(shortcode)),
@@ -44,7 +43,7 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
             return {
                 ...post,
                 views: post.viewCount,
-                timestamp: post.datePosted,
+                timestamp: new Date(scrapedMediaObject.taken_at_timestamp * 1000),
                 shortcode: post.id,
                 ...(scrapedMediaObject || {}),
             }
