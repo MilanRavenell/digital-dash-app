@@ -104,7 +104,7 @@ async function getMedia(ctx, profile, id, responseData, accessToken) {
     if (responseData.media_type === 'IMAGE') {
         return [{
             thumbnailUrl: responseData.media_url,
-            type: 'photo'
+            type: 'image'
         }];
     }
 

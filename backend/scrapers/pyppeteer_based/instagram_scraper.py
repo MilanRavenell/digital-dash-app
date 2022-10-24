@@ -12,6 +12,7 @@ class InstagramScraper(ContentDataScraper):
         self.page_test_el = None
         self.response_handler_data = None
         self.mobile = True
+        self.finished = False
     
     def get_url(self):
         if self.task == 'process_single_content':
@@ -49,14 +50,27 @@ class InstagramScraper(ContentDataScraper):
         return content['node']['id']
 
     async def process_content(self, content):
+        print('getting content')
+        # Only do one content discovery iteration
+        self.finished = True
+
         node = content['node']
+
+        caption = None
+        caption_edges = node.get('edge_media_to_caption', {}).get('edges', [])
+        if len(caption_edges) > 0:
+            caption = caption_edges.get('node', {}).get('text')
+
+        print(node)
         return {
             'id': node.get('id'),
             'shortcode': node.get('shortcode'),
             'comments': node.get('edge_media_to_comment', {}).get('count'),
             'views': node.get('video_view_count'),
             'likes': node.get('edge_media_preview_like', {}).get('count'),
-            'taken_at_timestamp': node.get('taken_at_timestamp')
+            'taken_at_timestamp': node.get('taken_at_timestamp'),
+            'media_info': self.__get_media(node),
+            'caption': caption,
         }
 
     async def process_content_page(self):
@@ -83,7 +97,7 @@ class InstagramScraper(ContentDataScraper):
             response_json = json.loads(await response.text())
 
             if self.task == 'process_single_content':
-                if 'data' in response_json and 'shortcode_media' in response_json['data'] :
+                if 'data' in response_json and 'shortcode_media' in response_json['data']:
                     self.response_handler_data = response_json
 
             if self.task == 'get_profile_info' or self.task == 'get_content' or self.task == 'full_run':
@@ -102,4 +116,18 @@ class InstagramScraper(ContentDataScraper):
         except Exception as e:
             print(e)
 
+    def is_finished(self):
+        return self.finished
+
     ########################## Instagram Methods ##############################
+    def __get_media(self, node):
+        if node.get('__typename') == 'GraphSidecar':
+            return [{
+                'thumbnail_url': child.get('node', {}).get('display_url'),
+                'media_type': child.get('node', {}).get('__typename')
+            }  for child in node.get('edge_sidecar_to_children', {}).get('edges', [])]
+        
+        return [{
+            'thumbnail_url': node.get('thumbnail_src'),
+            'media_type': node.get('__typename'),
+        }]

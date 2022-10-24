@@ -6,7 +6,6 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
     const { ddbClient, envVars } = ctx.resources;
     const { ENV: env, APPSYNC_API_ID: appsync_api_id, WEB_SCRAPER_LAMBDA_NAME: webScraperLambdaName } = envVars;
     const { debug_noUploadToDDB } = ctx.arguments.input;
-    const { account_id: accountId, accessToken } = JSON.parse(profile.meta);
     const lambda = new AWS.Lambda({ region: 'us-west-2' });
 
     // get all DDB posts
@@ -18,6 +17,7 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
 
     const ddbPostIdsSet = new Set(ddbPosts.map(({ id }) => id));
 
+    console.log('scrapping')
     const getContentResponse = await lambda.invoke({
         FunctionName: webScraperLambdaName,
         Payload: JSON.stringify({
@@ -27,6 +27,7 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
             use_tor: false
         }),
     }).promise();
+    console.log(getContentResponse)
     const scrapedMediaObjects = JSON.parse(getContentResponse.Payload)
 
     if (!Array.isArray(scrapedMediaObjects)) {
@@ -45,69 +46,18 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
                 views: post.viewCount,
                 timestamp: post.datePosted,
                 shortcode: post.id,
-                media: post.media,
                 ...(scrapedMediaObject || {}),
             }
         }),
     ]
 
-    // Get fetch post data from instagram api
-    let i = 0;
-    let nextToken = null;
-    do {
-        const response = await makeApiRequest(ctx, profile, `v15.0/${accountId}/media`, accessToken, {
-            'fields': 'caption,media_type,media_url,thumbnail_url,timestamp',
-            ...(nextToken ? { 'after': nextToken } : {}),
-        });
-
-        if (!response) {
-            return [];
-        }
-
-        response.data.forEach(datum => {
-            if (i < mediaObjects.length) {
-                mediaObjects[i] = {
-                    ...mediaObjects[i],
-                    ...datum,
-                }
-            }
-            
-            i++;
-        });
-
-        nextToken = response.paging.next ? response.paging.next.split('after=')[1] : null;
-    } while (nextToken !== null && i < mediaObjects.length)
-
     const items = await Promise.all(mediaObjects.map(async (mediaObject) => {
+        // TODO: Process single content page for for items not retrieved in full run
         try {
-            // Get children media for album posts
-            const media = mediaObject.media || [];
-            if (media.length === 0) {
-                if (mediaObject.media_type === 'CAROUSEL_ALBUM') {
-                    nextToken = null;
-    
-                    do {
-                        const albumChildrenResponse = await makeApiRequest(ctx, profile, `${mediaObject.id}/children`, accessToken, {
-                            'fields': 'media_type,thumbnail_url,media_url',
-                            ...(nextToken ? { 'after': nextToken } : {}),
-                        });
-        
-                        media.push(
-                            ...albumChildrenResponse.data.map(child => ({
-                                thumbnailUrl: (child.media_type === 'VIDEO' ? child.thumbnail_url : child.media_url) || '',
-                                type: child.media_type.toLowerCase(),
-                            })),
-                        );
-    
-                        nextToken = albumChildrenResponse.paging?.next ? albumChildrenResponse.paging.next.split('after=')[1] : null;
-                    } while (nextToken !== null)
-                } else {
-                    media.push({
-                        thumbnailUrl: (mediaObject.media_type === 'VIDEO' ? mediaObject.thumbnail_url : mediaObject.media_url) || '',
-                        type: mediaObject.media_type.toLowerCase(),
-                    })
-                }
-            }
+            const media = (!mediaObject.media_info) ? mediaObject.media : mediaObject.media_info.map((media_info) => ({
+                type: (media_info.media_type === 'GraphImage') ? 'image' : 'video',
+                thumbnailUrl: media_info.thumbnail_url,
+            }));
 
             const now = new Date().toISOString();
             const viewCount = mediaObject.views ? parseInt(mediaObject.views) : null;
