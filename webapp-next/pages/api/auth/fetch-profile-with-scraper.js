@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AWS from 'aws-sdk';
 
-AWS.config.update({ accessKeyId: 'AKIAR2K6MPFH7YCY42AB', secretAccessKey: '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', region: 'us-west-2' })
+AWS.config.update({ accessKeyId: process.env.AWS_ACCESS_KEY_ID, secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, region: 'us-west-2' })
 
 export default async function handler(req, res) {
     console.log('Fetching profile with scraper')
@@ -14,10 +14,10 @@ export default async function handler(req, res) {
     }
 
     try {
-        const lambda = new AWS.Lambda();
+        const lambda = new AWS.Lambda({ region: 'us-west-2', apiVersion: 'latest' });
 
         const params = {
-            FunctionName: 'web-scraper-service-staging-scrapeContent',
+            FunctionName: `web-scraper-service-${process.env.ENV}-scrapeContent`,
             Payload: JSON.stringify(payloadParams),
         }
 

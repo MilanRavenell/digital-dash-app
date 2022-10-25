@@ -35,10 +35,10 @@ async function igProLoginHandler({ currentProfiles, setVerify }) {
                 const response = await axios.get(`https://graph.facebook.com/v14.0/${page.id}?fields=instagram_business_account&access_token=${accessToken}`);
                 const accountId = response.data.instagram_business_account.id;
 
-                const profileResponse = await axios.get(`https://graph.facebook.com/v14.0/${accountId}?fields=profile_picture_url&access_token=${accessToken}`);
+                const profileResponse = await axios.get(`https://graph.facebook.com/v14.0/${accountId}?fields=profile_picture_url,username&access_token=${accessToken}`);
     
                 return {
-                    profileName: page.name,
+                    profileName: profileResponse.data.username,
                     meta: JSON.stringify({
                         account_id: accountId,
                         access_token: accessToken,

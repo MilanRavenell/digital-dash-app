@@ -8,6 +8,7 @@ import AppContext from '../../components/AppContext';
 import { platformLoginHandlers, platformLoginCallbackHandlers } from '../../helpers';
 import Header from '../../components/Header';
 import Loading from '../../components/Loading';
+import axios from "axios";
 
 export async function getStaticPaths() {
   return {
@@ -69,6 +70,7 @@ const AddProfile = () => {
       const profilesToAdd = profiles
         .filter((profile, index) => (profileIndicesToModify[index] === -1));
 
+      // Update profiles that already exist
       try {
         await Promise.all(
           profileIndicesToModify
@@ -94,12 +96,15 @@ const AddProfile = () => {
             })
         );
       
-        const response = await Promise.all(profilesToAdd.map(profile => API.graphql({
+        // Add new profiles
+        const response = await Promise.all(profilesToAdd.map(async profile => {
+          const profileKey = `${profile.platform}_${profile.profileName}`;
+          const createUserProfileResponse = await API.graphql({
             query: createUserProfile,
             variables: {
                 input: {
                     user: user.email,
-                    key: `${profile.platform}_${profile.profileName}`,
+                    key: profileKey,
                     owner: user.owner,
                     platform: profile.platform,
                     profileName: profile.profileName,
@@ -107,7 +112,13 @@ const AddProfile = () => {
                     profilePicUrl: profile.profilePicUrl,
                 },
             }
-        })));
+          });
+
+          // Trigger populateAnalytics
+          await axios.get(`/api/send-populate-analytics-sqs?username=${user.email}&profileKey=${profileKey}`);
+
+          return createUserProfileResponse;
+        }));
 
         response.map(({ data }) => {
           newContextProfiles.push(data.createUserProfile);

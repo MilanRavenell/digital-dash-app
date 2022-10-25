@@ -17,5 +17,7 @@ module.exports = {
     GOOG_API_KEY: process.env.GOOG_API_KEY,
     GOOG_OAUTH_CLIENT_ID: process.env.GOOG_OAUTH_CLIENT_ID,
     GOOG_OAUTH_CLIENT_SECRET: process.env.GOOG_OAUTH_CLIENT_SECRET,
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
   }
 }
