@@ -52,13 +52,13 @@ async function getTotalFollowerCount(ctx, profiles, end, timezoneOffset) {
                     ':key': `${profile.key}_followerCount`,
                     ':end': getDateWithTimezoneOffset(end, -1 * timezoneOffset).toISOString(),
                 },
-                ScanIndexForward: true,
+                ScanIndexForward: false,
                 Limit: 1,
             }).promise())
                 .Items
                 .map(item => ({
                     ...item,
-                    createdAt: getDateWithTimezoneOffset(end, timezoneOffset),
+                    createdAt: getDateWithTimezoneOffset(item.createdAt, timezoneOffset),
                 }));
         }));
 

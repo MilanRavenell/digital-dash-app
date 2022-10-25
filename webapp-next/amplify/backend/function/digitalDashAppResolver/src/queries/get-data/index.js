@@ -142,11 +142,13 @@ async function getData(ctx) {
             }
         }),
     };
+
+    const graphs = await getGraphData(ctx, records, filteredProfiles, startDate, endDate, timezoneOffset);
     
     return {
         data: {
             profiles,
-            graphs: await getGraphData(ctx, records, filteredProfiles, startDate, endDate, timezoneOffset),
+            graphs,
             aggregated,
             records,
             timeframes: timeframes(timezoneOffset),
