@@ -157,3 +157,14 @@ export const populateAnalytics = /* GraphQL */ `
     }
   }
 `;
+
+export const deleteProfile = /* GraphQL */ `
+  mutation DeleteProfile($username: String!, $profileKey: String!) {
+    deleteProfile(input: {
+      username: $username,
+      profileKey: $profileKey,
+    }) {
+      success
+    }
+  }
+`;

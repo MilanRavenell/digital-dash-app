@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import AddProfileSelection from '../components/AddProfileSelection';
 import "@aws-amplify/ui-react/styles.css";
 import { API } from 'aws-amplify';
-import { deleteUserProfile } from '../aws/graphql/mutations';
+import { deleteProfile } from '../aws/custom-gql';
 import AppContext from '../components/AppContext';
 import axios from "axios";
 import Header from '../components/Header';
@@ -32,16 +32,14 @@ export default function Home() {
   const handleProfileDelete = React.useCallback(async (user, profiles, profileIndex) => {
     try {
       const response = await API.graphql({
-        query: deleteUserProfile,
+        query: deleteProfile,
         variables: {
-          input: {
-            user: user.email,
-            key: `${profiles[profileIndex].platform}_${profiles[profileIndex].profileName}`,
-          }
+          username: user.email,
+          profileKey: `${profiles[profileIndex].platform}_${profiles[profileIndex].profileName}`,
         }
       });
 
-      const deletedProfile = response.data.deleteUserProfile;
+      const deletedProfile = profiles[profileIndex];
 
       const newProfiles = [...profiles];
       newProfiles.splice(profileIndex, 1);
