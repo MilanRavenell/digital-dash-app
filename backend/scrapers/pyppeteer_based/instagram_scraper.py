@@ -59,7 +59,7 @@ class InstagramScraper(ContentDataScraper):
         caption = None
         caption_edges = node.get('edge_media_to_caption', {}).get('edges', [])
         if len(caption_edges) > 0:
-            caption = caption_edges.get('node', {}).get('text')
+            caption = caption_edges[0].get('node', {}).get('text')
 
         print(node)
         return {
