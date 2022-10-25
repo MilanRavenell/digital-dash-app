@@ -217,8 +217,18 @@ type PopulateAnalyticsResponse {
   success: Boolean!
 }
 
+input DeleteProfileInput {
+  username: String!
+  profileKey: String!
+}
+
+type DeleteProfileResponse {
+  success: Boolean!
+}
+
 type Mutation {
-  populateAnalytics(input: PopulateAnalyticsInput!): PopulateAnalyticsResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") 
+  populateAnalytics(input: PopulateAnalyticsInput!): PopulateAnalyticsResponse! @function(name: "digitalDashAppResolver", region: "us-west-2")
+  deleteProfile(input: DeleteProfileInput!): DeleteProfileResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
 }
 
 type Query {

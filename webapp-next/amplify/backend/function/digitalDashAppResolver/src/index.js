@@ -8,6 +8,7 @@ const {
 
 const {
   populateAnalytics,
+  deleteProfile,
 } = require('./mutations');
 
 
@@ -22,6 +23,7 @@ const functions = {
   },
   Mutation: {
     populateAnalytics,
+    deleteProfile,
   }
 }
 
