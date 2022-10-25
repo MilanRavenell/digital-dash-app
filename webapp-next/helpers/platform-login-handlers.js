@@ -9,7 +9,7 @@ async function igBasicLoginHandler({ handle, setVerify }) {
         const profile = {
             profileName: handle,
             profilePicUrl: `/api/fetch-image?url=${profileInfo.profile_pic_url.replace(/&/g, '@@@@')}`,
-            platform: 'instagram',
+            platform: 'instagram-basic',
         };
 
         setVerify([profile]);
