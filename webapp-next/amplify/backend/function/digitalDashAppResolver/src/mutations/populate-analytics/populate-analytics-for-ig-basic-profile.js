@@ -17,7 +17,6 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
 
     const ddbPostIdsSet = new Set(ddbPosts.map(({ id }) => id));
 
-    console.log('scrapping')
     const getContentResponse = await lambda.invoke({
         FunctionName: webScraperLambdaName,
         Payload: JSON.stringify({
@@ -27,7 +26,7 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
             use_tor: false
         }),
     }).promise();
-    const scrapedMediaObjects = JSON.parse(getContentResponse.Payload)
+    const scrapedMediaObjects = JSON.parse(getContentResponse.Payload);
 
     if (!Array.isArray(scrapedMediaObjects)) {
         console.error('Failed to get videos')
@@ -42,17 +41,36 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
                 ...post,
                 timestamp: new Date(post.taken_at_timestamp * 1000).toISOString(),
             })),
-        ...ddbPosts.map(post =>{
-            const scrapedMediaObject = scrapedMediaObjects.find(({ shortcode }) => shortcode === post.id);
+        ...await Promise.all(ddbPosts.map(async post => {
+            let scrapedMediaObject = scrapedMediaObjects.find(({ shortcode }) => shortcode === post.id);
+
+            // If post was not scraped with full run, scrape individually for updates
+            if (!scrapedMediaObject) {
+                const processSingleContentResponse = await lambda.invoke({
+                    FunctionName: webScraperLambdaName,
+                    Payload: JSON.stringify({
+                        platform: 'instagram',
+                        handle: profile.profileName,
+                        task: 'process_single_content',
+                        content_to_process: post.id,
+                        use_tor: false,
+                    }),
+                }).promise();
+
+                scrapedMediaObject = JSON.parse(processSingleContentResponse.Payload);
+            }
 
             return {
                 ...post,
                 views: post.viewCount,
                 shortcode: post.id,
+                timestamp: post.datePosted,
                 ...(scrapedMediaObject || {}),
             }
-        }),
-    ]
+        })),
+    ];
+
+    console.log(mediaObjects)
 
     const items = await Promise.all(mediaObjects.map(async (mediaObject) => {
         // TODO: Process single content page for for items not retrieved in full run

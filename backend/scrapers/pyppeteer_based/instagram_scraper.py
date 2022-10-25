@@ -42,52 +42,37 @@ class InstagramScraper(ContentDataScraper):
             content = self.response_handler_data['data']['user']['edge_owner_to_timeline_media']['edges']
             # Reset response_handler_data to fetch more data
             self.response_handler_data = None
-            return content
+            return [node.get('node') for node in content]
         
         return []
 
     async def get_content_identifier(self, content):
-        return content['node']['id']
+        return content.get('id')
 
     async def process_content(self, content):
         print('getting content')
         # Only do one content discovery iteration
         self.finished = True
 
-        node = content['node']
-
         caption = None
-        caption_edges = node.get('edge_media_to_caption', {}).get('edges', [])
+        caption_edges = content.get('edge_media_to_caption', {}).get('edges', [])
         if len(caption_edges) > 0:
             caption = caption_edges[0].get('node', {}).get('text')
 
-        print(node)
         return {
-            'id': node.get('id'),
-            'shortcode': node.get('shortcode'),
-            'comments': node.get('edge_media_to_comment', {}).get('count'),
-            'views': node.get('video_view_count'),
-            'likes': node.get('edge_media_preview_like', {}).get('count'),
-            'taken_at_timestamp': node.get('taken_at_timestamp'),
-            'media_info': self.__get_media(node),
+            'id': content.get('id'),
+            'shortcode': content.get('shortcode'),
+            'comments': content.get('edge_media_to_comment', {}).get('count', 0),
+            'views': content.get('video_view_count'),
+            'likes': content.get('edge_media_preview_like', {}).get('count'),
+            'taken_at_timestamp': content.get('taken_at_timestamp'),
+            'media_info': self.__get_media(content),
             'caption': caption,
         }
 
     async def process_content_page(self):
-        record = {}
-
         if self.response_handler_data:
-            data = self.response_handler_data
-            if data and 'data' in data and 'shortcode_media' in data['data']:
-                data_shortcode_media = data['data']['shortcode_media']
-                if 'edge_media_preview_like' in data_shortcode_media:
-                    record['likes'] = data_shortcode_media['edge_media_preview_like']['count']
-            
-                if 'edge_media_to_parent_comment' in data_shortcode_media:
-                    record['comments'] = data_shortcode_media['edge_media_to_parent_comment']['count']
-                
-                print(record)
-                return record
+            return await self.process_content(self.response_handler_data.get('data', {}).get('shortcode_media'))
 
     async def close(self):
         await super().close()

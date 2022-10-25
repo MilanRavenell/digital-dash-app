@@ -3,7 +3,7 @@ from scrape_content import handler
 print(handler({
     'platform': 'instagram',
     'handle': 'yungmilly69',
-    'task': 'get_profile_info',
-    # 'content_to_process': '7151891791090814254',
+    'task': 'full_run',
+    # 'content_to_process': 'Chq43E0ruhM',
     'use_tor': False,
 }, {}))
