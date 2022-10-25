@@ -1,6 +1,6 @@
 {
   "typeName": "Mutation",
-  "fieldName": "deleteProfile",
+  "fieldName": "populateAnalytics",
   "arguments": {
     "input": {
       "platform": "instagram",

@@ -27,7 +27,6 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
             use_tor: false
         }),
     }).promise();
-    console.log(getContentResponse)
     const scrapedMediaObjects = JSON.parse(getContentResponse.Payload)
 
     if (!Array.isArray(scrapedMediaObjects)) {
@@ -35,15 +34,20 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
         return;
     }
 
+    // Coalesce and format posts from scraper and from DDB
     const mediaObjects = [
-        ...scrapedMediaObjects.filter(({ shortcode }) => !ddbPostIdsSet.has(shortcode)),
-        ...ddbPosts.map((post) =>{
+        ...scrapedMediaObjects
+            .filter(({ shortcode }) => !ddbPostIdsSet.has(shortcode))
+            .map(post => ({
+                ...post,
+                timestamp: new Date(post.taken_at_timestamp * 1000),
+            })),
+        ...ddbPosts.map(post =>{
             const scrapedMediaObject = scrapedMediaObjects.find(({ shortcode }) => shortcode === post.id);
 
             return {
                 ...post,
                 views: post.viewCount,
-                timestamp: new Date(scrapedMediaObject.taken_at_timestamp * 1000),
                 shortcode: post.id,
                 ...(scrapedMediaObject || {}),
             }
