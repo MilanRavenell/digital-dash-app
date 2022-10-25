@@ -40,7 +40,7 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
             .filter(({ shortcode }) => !ddbPostIdsSet.has(shortcode))
             .map(post => ({
                 ...post,
-                timestamp: new Date(post.taken_at_timestamp * 1000),
+                timestamp: new Date(post.taken_at_timestamp * 1000).toISOString(),
             })),
         ...ddbPosts.map(post =>{
             const scrapedMediaObject = scrapedMediaObjects.find(({ shortcode }) => shortcode === post.id);
