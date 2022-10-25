@@ -70,8 +70,6 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
         })),
     ];
 
-    console.log(mediaObjects)
-
     const items = await Promise.all(mediaObjects.map(async (mediaObject) => {
         // TODO: Process single content page for for items not retrieved in full run
         try {
