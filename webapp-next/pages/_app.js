@@ -11,6 +11,9 @@ import { createUser } from '../graphql/mutations';
 import { useRouter } from 'next/router';
 import { Auth, Hub } from 'aws-amplify';
 
+import AWS from 'aws-sdk';
+AWS.config.update({ accessKeyId: process.env.ACCESS_KEY_ID_AWS, secretAccessKey: process.env.SECRET_ACCESS_KEY_AWS });
+
 import Amplify from 'aws-amplify';
 import config from '../aws/aws-exports';
 Amplify.configure(config);
