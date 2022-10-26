@@ -4,6 +4,8 @@ import { platformToLogoUrlMap } from '../helpers';
 import TextField from '@mui/material/TextField';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 import moment from 'moment';
 
 import styles from '../styles/IndividualPostPopUp.module.css'
@@ -52,25 +54,65 @@ const Media = ({ mediaList }) => {
     )
 }
 
-const IndividualPostPopUp = ({ post, headers }) => {
+const IndividualPostPopUp = ({
+    post,
+    headers,
+    profiles,
+    close
+}) => {
     const platform = post.__typename.split('Post')[0].toLowerCase();
+    const profilePicUrl = profiles.find(profile => profile.profileName === post.profileName).profilePicUrl
 
     return (
         <div className={styles.container}>
             <div className={styles.details}>
                 <div className={styles.header}>
-                    <div className={styles.logo}>
-                        <img
-                            src={platformToLogoUrlMap[platform].url}
-                            alt={'media'}
-                            loading='lazy'
-                            referrerPolicy="no-referrer"
-                            style={{
-                                height: '100%',
-                                width: '100%',
-                                objectFit: 'contain',
-                            }}
-                        />
+                    <div className={styles.headerLeft}>
+                        <div className={styles.logo}>
+                            <img
+                                src={platformToLogoUrlMap[platform].url}
+                                alt={'media'}
+                                loading='lazy'
+                                referrerPolicy="no-referrer"
+                                style={{
+                                    height: '100%',
+                                    width: '100%',
+                                    objectFit: 'contain',
+                                }}
+                            />
+                        </div>
+                        <div className={styles.profPicContainer}>
+                            <div className={styles.profPic}>
+                                <img
+                                    src={profilePicUrl}
+                                    alt={'profile pic'}
+                                    style={{
+                                        height: '100%',
+                                        width: '100%',
+                                        objectFit: 'contain',
+                                    }}
+                                    referrerPolicy="no-referrer"
+                                />
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div className={styles.headerRight}>
+                        <div className={styles.close}>
+                            <IconButton 
+                                onClick={close}
+                                sx={{
+                                    height: '100%',
+                                }}
+                            >
+                                <CloseIcon
+                                    sx={{
+                                        height: '100%',
+                                        width: '100%',
+                                    }}
+                                />
+                            </IconButton>
+                        </div>
                     </div>
                 </div>
                 <div className={styles.title}>

@@ -6,12 +6,52 @@
 }
 
 .header {
+    height: 5vh;
+    min-height: 20px;
     padding-bottom: 3px;
+    display: flex;
+}
+
+.headerLeft {
+    height: 100%;
+    width: 50%;
+    display: flex;
+}
+
+.headerRight {
+    height: 100%;
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .logo {
     height: 100%;
     width: 10%;
+    margin-right: 10px;
+}
+
+.profPicContainer {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profPic {
+    height: 4vmin;
+    width: 4vmin;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.close {
+    height: 100%;
+    width: 15%;
+    color: gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .title {

@@ -195,6 +195,8 @@ const MainContentContainer = ({
                                     ))
                                     .metrics
                             }
+                            profiles={profiles}
+                            close={clearPopUpPost}
                             />
                     </div>)
                 ]
