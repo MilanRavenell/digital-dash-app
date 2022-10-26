@@ -87,18 +87,21 @@ const ProfileCard = ({
                 <Box sx={{ display: 'flex', height: '100%' }}>
                     <CardMedia
                         component="img"
-                        sx={{ width: '25%' }}
+                        sx={{
+                            flex: 1,
+                            maxWidth: '90px',
+                        }}
                         image={profilePicUrl}
                         alt="profile pic"
                     />
                     <Box sx={{
-                        width: '75%',
+                        flex: 1,
                         textAlign: 'right',
                         padding: 0,
-                        marginRight: '2%',
+                        marginRight: '5px',
                         height: '100%',
                         position: 'relative'
-                    }} >
+                    }}>
                         <Box sx={{
                             display: 'flex',
                             justifyContent: 'flex-end',
@@ -108,16 +111,23 @@ const ProfileCard = ({
                             zIndex: '2'
                         }}>
                             { renderIcons() }
-                            <CardMedia
-                                component="img"
-                                sx={{ 
-                                    width: '12%',
-                                    objectFit: 'contain',
-                                    marginLeft: '2%',
-                                }}
-                                image={platformToLogoUrlMap[profile.platform].url}
-                                alt="profile pic"
-                            />
+                            <div style={{
+                                height: '100%',
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}>
+                                <img
+                                    src={platformToLogoUrlMap[profile.platform].url}
+                                    alt="profile pic"
+                                    loading='lazy'
+                                    referrerPolicy="no-referrer"
+                                    style={{
+                                        height: '80%',
+                                        objectFit: 'contain',
+                                        maxHeight: '60px',
+                                    }}
+                                />
+                            </div>
                         </Box>
                         <Typography variant='h6' sx={{
                             height: '50%',
