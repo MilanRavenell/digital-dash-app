@@ -9,12 +9,14 @@ import IconButton from '@mui/material/IconButton';
 import { platformToLogoUrlMap } from '../helpers';
 import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 import WarningOutlined from '@mui/icons-material/WarningOutlined';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const ProfileCard = ({
     profile,
     handleClick,
     handleDelete,
     handleNeedsRefresh,
+    isAddProfileConfirmation = false,
 }) => {
     const profilePicUrl = (profile.profilePicUrl !== null && profile.profilePicUrl !== undefined) ? profile.profilePicUrl : '/';
 
@@ -22,6 +24,21 @@ const ProfileCard = ({
 
     const renderIcons = () => {
         const icons = [];
+
+        if (!profile.postsLastPopulated && !isAddProfileConfirmation) {
+            icons.push(
+                <div
+                    style={{
+                        height: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
+                    key={'loading'}
+                >
+                    <CircularProgress/>
+                </div>
+            )
+        }
 
         if (profile.needsRefresh) {
             icons.push(

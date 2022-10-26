@@ -145,6 +145,7 @@ const AddProfile = ({
                                             ...profile,
                                             platform,
                                         }}
+                                        isAddProfileConfirmation={true}
                                         key={index}
                                     />
                                 </div>

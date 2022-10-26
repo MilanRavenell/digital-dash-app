@@ -51,7 +51,21 @@ const MyApp = ({ Component, pageProps }) => {
     const router = useRouter();
     const [userProfiles, setUserProfiles] = useState(null);
     const [user, setUser] = useState(null);
+    const [numProfileChecks, setNumProfileChecks] = useState(0);
     const windowDimensions = useWindowDimension();
+
+    useEffect(() => {
+        console.log('prof checks: ', numProfileChecks);
+        // If there are new profiles that do not yet have posts collected, wait 10 seconds and fetch profiles
+        // to see if all posts have yet been collected
+        if (userProfiles && userProfiles.some(profile => !profile.postsLastPopulated)) {
+            console.log('need to check D:')
+            setTimeout(async () => {
+                setUserProfiles(await getUserProfiles(user));
+                setNumProfileChecks(prev => prev + 1);
+            }, 10000);
+        }
+    }, [userProfiles, numProfileChecks])
 
     useEffect(() => {
         initialize();
