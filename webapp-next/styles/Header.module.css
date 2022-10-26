@@ -4,6 +4,7 @@
     width: 100%;
     background-color: white;
     display: flex;
+    min-height: 40px;
 }
 
 .left {
