@@ -167,11 +167,11 @@ const PostsContainerPostsView = ({
                                                                         </div>
                                                                     )
                                                                 case 'Date':
-                                                                    return <div className={styles.fieldContent}>{moment.utc(post[field]).format(isMobile ? 'MMM D' : 'MMM D, YYYY')}</div>;
+                                                                    return <div className={styles.fieldContent}>{moment.utc(post[field]).format(isMobile ? 'M/DD/YYYY' : 'MMM D, YYYY HH:mm')}</div>;
                                                                 case 'Engagement Rate':
                                                                     return <div className={styles.fieldContent}>{post[field] ? `${(post[field] * 100).toFixed(2)}%` : '--'}</div>;
                                                                 default:
-                                                                    return <div className={styles.fieldContent}>{(post[field] || '--').toLocaleString()}</div>;
+                                                                    return <div className={displayName === 'Caption' ? styles.fieldContentText : styles.fieldContent}>{(post[field] || '--').toLocaleString()}</div>;
                                                             }
                                                         })()
                                                     }

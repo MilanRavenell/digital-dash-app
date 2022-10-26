@@ -4,6 +4,7 @@ import { platformToLogoUrlMap } from '../helpers';
 import TextField from '@mui/material/TextField';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
+import moment from 'moment';
 
 import styles from '../styles/IndividualPostPopUp.module.css'
 
@@ -96,7 +97,7 @@ const IndividualPostPopUp = ({ post, headers }) => {
                 </div>
                 <div className={styles.extraDetails}>
                     <div className={styles.titleDate}>{post.profileName}</div>
-                    <div className={styles.titleDate}>{new Date(post.datePosted).toLocaleDateString('en-us', { year:'numeric', month:'short', day:'numeric' })}</div>
+                    <div className={styles.titleDate}>{moment.utc(post.datePosted).format('MMM D, YYYY HH:mm')}</div>
                     <div className={styles.titleLink}>
                         <a href={post.link} target='_blank' rel='noreferrer'>Link</a>
                     </div>

@@ -22,6 +22,7 @@
 .headerFieldLong {
     text-align: left;
     flex: 3;
+    border-left: 1px solid lightgray;
 }
 
 .postFieldLong {
@@ -34,12 +35,14 @@
     display: flex;
     flex-direction: column;
     flex: 3;
+    border-left: 1px solid lightgray;
 }
 
 
 .headerFieldShort {
     text-align: left;
     flex: 1;
+    max-width: 60px;
 }
 
 .postFieldShort {
@@ -74,7 +77,15 @@
 }
 
 .fieldContent {
-    flex: 1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin-right: 10%;
+    justify-content: flex-end;
+}
+
+.fieldContentText {
     overflow: hidden;
     display: flex;
     align-items: center;
