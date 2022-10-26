@@ -24,11 +24,11 @@ export default function App() {
   const [timeframe, setTimeframe] = React.useState(null);
   const [sortOrder, setSortOrder] = React.useState(null);
   const [profileToRefresh, setProfileToRefresh] = React.useState(null);
-  const [profilesUpdated, setProfilesUpdated] = React.useState(0);
+  const [updatesMade, setUpdatesMade] = React.useState(0);
 
   const selectedProfileNamesRef = React.useRef(selectedProfileNames);
   const timeframeRef = React.useRef(timeframe);
-  const profilesUpdatedRef = React.useRef(profilesUpdated);
+  const updatesMadeRef = React.useRef(updatesMade);
 
   React.useEffect(() => {
     if (context.user) {
@@ -39,14 +39,14 @@ export default function App() {
   React.useEffect(() => {
     selectedProfileNamesRef.current = selectedProfileNames;
     timeframeRef.current = timeframe;
-    profilesUpdatedRef.current = profilesUpdated;
-  }, [selectedProfileNames, timeframe, profilesUpdated]);
+    updatesMadeRef.current = updatesMade;
+  }, [selectedProfileNames, timeframe, updatesMade]);
 
   React.useEffect(() => {
-    if (profilesUpdated > 0) {
-      const currentProfilesUpdated = profilesUpdated
+    if (updatesMade > 0) {
+      const currentUpdatesMade = updatesMade
       setTimeout(() => {
-        if (currentProfilesUpdated === profilesUpdatedRef.current) {
+        if (currentUpdatesMade === updatesMadeRef.current) {
           getData(
             context.user.email,
             timeframeRef.current,
@@ -57,11 +57,11 @@ export default function App() {
             }
           });
   
-          setProfilesUpdated(0);
+          setUpdatesMade(0);
         }
       }, 2000);
     }
-  }, [profilesUpdated]);
+  }, [updatesMade]);
 
   // Remove custom timeframe option on mobile
   React.useEffect(() => {
@@ -165,7 +165,7 @@ export default function App() {
 
   const updateSelectedProfileName = React.useCallback(async (newSelectedProfileNames) => {
     setSelectedProfileNames(newSelectedProfileNames);
-    setProfilesUpdated((prev) => prev + 1);
+    setUpdatesMade((prev) => prev + 1);
     setStatsLoading();
   }, [data]);
 
@@ -177,18 +177,9 @@ export default function App() {
       return;
     }
 
+    setUpdatesMade((prev) => prev + 1);
     setStatsLoading();
-
-    const newData = await getData(
-      context.user.email,
-      newTimeframe,
-      selectedProfileNamesRef.current,
-    );
-
-    if (newData.success) {
-      setData(newData.data);
-      setTimeframe(newTimeframe);
-    }
+    setTimeframe(newTimeframe);
   }, [context, selectedProfileNames, timeframe, setTimeframe, setData, data]);
 
   const goToAddPlatformSelection = React.useCallback(() => {
