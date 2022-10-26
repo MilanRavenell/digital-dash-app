@@ -223,7 +223,7 @@ export default function App() {
             profileToRefresh={profileToRefresh}
             isMobile={context.isMobile}
             key={'main'}
-          />
+          />,
       ]
     }
 

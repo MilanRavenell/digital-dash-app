@@ -107,6 +107,10 @@
         flex-direction: column;
     }
 
+    .right {
+        margin-bottom: 20vh;
+    }
+
     .leftPicker {
         width: 80vw;
         height: 80%;

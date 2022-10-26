@@ -1,5 +1,6 @@
 .container {
     overflow-y: auto;
+    overflow-x: hidden;
     height: 100vh;
     width: 100vw;
 }
@@ -9,9 +10,8 @@
     width: 96vw;
     margin-left: 2vw;
     margin-right: 2vw;
-    margin-bottom: 1%;
+    margin-bottom: 20vh;
     display: flex;
-    height: 100%;
 }
 
 .contentLeft {
@@ -19,7 +19,7 @@
 
 .contentLeftPicker {
     padding-top: 10px;
-    height: 100%;
+    height: 80vh;
 }
 
 .contentRight {
@@ -83,5 +83,9 @@
 
     .contentBottom {
         margin-left: 0;
+    }
+
+    .contentLeftPicker {
+        height: 100%;
     }
 }
