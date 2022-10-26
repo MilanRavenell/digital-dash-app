@@ -168,3 +168,24 @@ export const deleteProfile = /* GraphQL */ `
     }
   }
 `;
+
+export const invokeWebScraper = /* GraphQL */ `
+  query InvokeWebScraper($options: String!) {
+    invokeWebScraper(input: {
+      options: $options,
+    }) {
+      response
+    }
+  }
+`;
+
+export const triggerSqs = /* GraphQL */ `
+  mutation TriggerSqs($queueUrl: String!, $body: String!) {
+    triggerSqs(input: {
+      queueUrl: $queueUrl,
+      body: $body,
+    }) {
+      success
+    }
+  }
+`;

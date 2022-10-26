@@ -1,7 +1,8 @@
-import axios from 'axios';
 import AWS from 'aws-sdk';
 
 export default async function handler(req, res) {
+    AWS.config.update({ accessKeyId: process.env.ACCESS_KEY_ID_AWS, secretAccessKey: process.env.SECRET_ACCESS_KEY_AWS });
+    
     console.log('Fetching profile with scraper')
     const { handle, platform } = req.query;
 
