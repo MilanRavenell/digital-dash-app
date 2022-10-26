@@ -20,4 +20,5 @@
 
 .graph {
     height: 30vh;
+    min-height: 200px;
 }

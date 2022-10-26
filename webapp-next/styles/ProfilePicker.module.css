@@ -44,6 +44,7 @@
     margin: 5px;
     overflow: hidden;
     height: min(10vh, 90px);
+    min-height: 70px;
     background-color: white;
     /* box-shadow: 3px 3px lightgray; */
 }
