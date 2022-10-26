@@ -70,7 +70,12 @@ const ProfilePicker = ({
                 {
                     !editMode && (
                         <div className={styles.headerMinimize} onClick={toggleExpanded}>
-                            <IconButton>
+                            <IconButton
+                                sx={{
+                                    height: '4vh',
+                                    width: '4vh',
+                                }}
+                            >
                                 { isMobile ? <KeyboardArrowUpIcon/> : <ArrowBackIos/> }
                             </IconButton>
                         </div>

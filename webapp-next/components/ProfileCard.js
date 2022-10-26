@@ -25,17 +25,23 @@ const ProfileCard = ({
     const renderIcons = () => {
         const icons = [];
 
-        if (!profile.postsLastPopulated && !isAddProfileConfirmation) {
+        if (/*!profile.postsLastPopulated && !isAddProfileConfirmation*/true) {
             icons.push(
                 <div
                     style={{
                         height: '100%',
                         display: 'flex',
                         alignItems: 'center',
+                        marginRight: '10px',
                     }}
                     key={'loading'}
                 >
-                    <CircularProgress/>
+                    <CircularProgress
+                        sx={{
+                            height: '3vmin !important',
+                            width: '3vmin !important',
+                        }}
+                    />
                 </div>
             )
         }
