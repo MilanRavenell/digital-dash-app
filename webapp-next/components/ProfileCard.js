@@ -36,12 +36,7 @@ const ProfileCard = ({
                     }}
                     key={'loading'}
                 >
-                    <CircularProgress
-                        sx={{
-                            height: '3vmin !important',
-                            width: '3vmin !important',
-                        }}
-                    />
+                    <CircularProgress/>
                 </div>
             )
         }
