@@ -26,11 +26,7 @@ export default async function handler(req, res) {
 
         res.status(200).send(data);
     } catch (err) {
-        if (err.name === 'AxiosError' && err.response && err.response.data) {
-            console.error(err.response.data)
-        } else {
-            console.log(err);
-        }
-        res.status(200).send(false);
+        console.error(err);
+        res.status(200).send(err);
     }
 }
