@@ -10,6 +10,8 @@ import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import NeedsRefreshDialogue from './NeedsRefreshDialogue';
 import TimeframePicker from './TimeframePicker';
 
+import AppContext from '../components/AppContext';
+
 import styles from '../styles/MainContentContainer.module.css';
 
 const MainContentContainer = ({
@@ -33,6 +35,7 @@ const MainContentContainer = ({
     });
 
     const [bottomView, setBottomView] = React.useState('graph');
+    const context = React.useContext(AppContext);
 
     const setPopUpPost = React.useCallback((post) => {
         setState((prevState) => ({
@@ -167,6 +170,9 @@ const MainContentContainer = ({
                                 : <PostsContainerGraphView graphData={graphData}/>
                         }
                     </div>
+                    {
+                        <div>{context.windowDimensions.width} {context.windowDimensions.height}</div>
+                    }
                 </div>
             </div>
             {
