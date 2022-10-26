@@ -18,8 +18,9 @@ const PostsContainerPostsView = ({
 }) => {
     const totalHeaders = headers.globalHeaders;
 
+    // Remove caption on mobile
     if (isMobile) {
-        ['Platform', 'Caption'].forEach(header => {
+        ['Caption'].forEach(header => {
             const headerIndex = totalHeaders.findIndex(totalHeader => (totalHeader.displayName === header));
             if (headerIndex > -1) {
                 totalHeaders.splice(headerIndex, 1);
@@ -166,7 +167,7 @@ const PostsContainerPostsView = ({
                                                                         </div>
                                                                     )
                                                                 case 'Date':
-                                                                    return <div className={styles.fieldContent}>{moment.utc(post[field]).format('MMM D, YYYY')}</div>;
+                                                                    return <div className={styles.fieldContent}>{moment.utc(post[field]).format(isMobile ? 'MMM D' : 'MMM D, YYYY')}</div>;
                                                                 case 'Engagement Rate':
                                                                     return <div className={styles.fieldContent}>{post[field] ? `${(post[field] * 100).toFixed(2)}%` : '--'}</div>;
                                                                 default:

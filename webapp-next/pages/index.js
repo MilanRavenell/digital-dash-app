@@ -42,6 +42,7 @@ export default function App() {
     updatesMadeRef.current = updatesMade;
   }, [selectedProfileNames, timeframe, updatesMade]);
 
+  // After an update is made, wait 2 seconds after the last update to fetch new data
   React.useEffect(() => {
     if (updatesMade > 0) {
       const currentUpdatesMade = updatesMade
