@@ -213,6 +213,7 @@ const MyApp = ({ Component, pageProps }) => {
             </Script>
             {/* This is so that youtube profile pictures load properly, sometimes get a 403 error when fetching image in img tag */}
             <meta name="referrer" content="no-referrer"></meta>
+            <meta name="viewport" content="width=device-width,initial-scale=1.0"></meta>
             <SessionProvider session={pageProps.session}>
                 <Authenticator.Provider>
                     <Component {...pageProps} />
