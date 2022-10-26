@@ -39,15 +39,14 @@
 }
 
 .profPic {
-    height: 4vmin;
-    width: 4vmin;
+    height: max(4vmin, 20px);
+    width: max(4vmin, 20px);
     border-radius: 50%;
     overflow: hidden;
 }
 
 .close {
     height: 100%;
-    width: 15%;
     color: gray;
     display: flex;
     justify-content: center;
