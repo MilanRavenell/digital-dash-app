@@ -1,30 +1,16 @@
 const AWS = require('aws-sdk');
 const ddbClient = new AWS.DynamoDB.DocumentClient();
 
-const {
-  getData,
-  getBeefedUserProfiles,
-} = require('./queries');
-
-const {
-  populateAnalytics,
-  deleteProfile,
-} = require('./mutations');
-
+const queries = require('./queries');
+const mutations = require('./mutations');
 
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
 
 const functions = {
-  Query: {
-    getData,
-    getBeefedUserProfiles,
-  },
-  Mutation: {
-    populateAnalytics,
-    deleteProfile,
-  }
+  Query: queries,
+  Mutation: mutations,
 }
 
 function populateLocalEnvVars(localEnvvars) {

@@ -1,12 +1,11 @@
 const axios = require("axios");
 const AWS = require('aws-sdk');
-const { makeApiRequest } = require('../../shared');
+const { invokeWebScraper } = require('../../shared');
 
 async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
     const { ddbClient, envVars } = ctx.resources;
-    const { ENV: env, APPSYNC_API_ID: appsync_api_id, WEB_SCRAPER_LAMBDA_NAME: webScraperLambdaName } = envVars;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
     const { debug_noUploadToDDB } = ctx.arguments.input;
-    const lambda = new AWS.Lambda({ region: 'us-west-2' });
 
     // get all DDB posts
     const ddbPosts = await getCollectedPosts(ctx, profile);
@@ -17,16 +16,12 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
 
     const ddbPostIdsSet = new Set(ddbPosts.map(({ id }) => id));
 
-    const getContentResponse = await lambda.invoke({
-        FunctionName: webScraperLambdaName,
-        Payload: JSON.stringify({
-            platform: 'instagram',
-            handle: profile.profileName,
-            task: 'full_run',
-            use_tor: false
-        }),
-    }).promise();
-    const scrapedMediaObjects = JSON.parse(getContentResponse.Payload);
+    const scrapedMediaObjects = await invokeWebScraper(ctx, {
+        platform: 'instagram',
+        handle: profile.profileName,
+        task: 'full_run',
+        use_tor: false
+    });
 
     if (!Array.isArray(scrapedMediaObjects)) {
         console.error('Failed to get videos')
@@ -46,18 +41,13 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
 
             // If post was not scraped with full run, scrape individually for updates
             if (!scrapedMediaObject) {
-                const processSingleContentResponse = await lambda.invoke({
-                    FunctionName: webScraperLambdaName,
-                    Payload: JSON.stringify({
-                        platform: 'instagram',
-                        handle: profile.profileName,
-                        task: 'process_single_content',
-                        content_to_process: post.id,
-                        use_tor: false,
-                    }),
-                }).promise();
-
-                scrapedMediaObject = JSON.parse(processSingleContentResponse.Payload);
+                scrapedMediaObject = await invokeWebScraper(ctx, {
+                    platform: 'instagram',
+                    handle: profile.profileName,
+                    task: 'process_single_content',
+                    content_to_process: post.id,
+                    use_tor: false,
+                });
             }
 
             return {

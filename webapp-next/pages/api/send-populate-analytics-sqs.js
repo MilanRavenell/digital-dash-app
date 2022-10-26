@@ -1,4 +1,3 @@
-import axios from 'axios';
 import AWS from 'aws-sdk';
 
 export default async function handler(req, res) {
@@ -24,13 +23,9 @@ export default async function handler(req, res) {
 
         console.log('done')
 
-        res.status(200).send();
+        res.status(200).send(true);
     } catch (err) {
-        if (err.name === 'AxiosError' && err.response && err.response.data) {
-            console.error(err.response.data)
-        } else {
-            console.log(err);
-        }
+        console.error(err);
         res.status(200).send(false);
     }
 }

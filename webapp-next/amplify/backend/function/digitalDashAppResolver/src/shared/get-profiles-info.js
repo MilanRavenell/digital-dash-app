@@ -2,6 +2,7 @@ const Twitter = require('twitter-lite');
 const axios = require("axios");
 const AWS = require('aws-sdk');
 const makeApiRequest = require('./make-api-request');
+const invokeWebScraper = require('./invoke-web-scraper');
 
 async function getProfileInfo(ctx, profile, accessToken) {
     try {
@@ -79,19 +80,12 @@ async function getInstagramProProfileInfo(ctx, profile) {
 async function getTikTokProfileInfo(ctx, profile) {
     console.log('getting tiktok profile')
     try {
-        const lambda = new AWS.Lambda({ region: 'us-west-2' });
-
-        const response = await lambda.invoke({
-            FunctionName: 'web-scraper-service-staging-scrapeContent',
-            Payload: JSON.stringify({
-                platform: 'tiktok',
-                handle: profile.profileName,
-                task: 'get_profile_info',
-                use_tor: true,
-            }),
-        }).promise();
-        console.log(response)
-        const data = JSON.parse(response.Payload)
+        const data = await invokeWebScraper(ctx, {
+            platform: 'tiktok',
+            handle: profile.profileName,
+            task: 'get_profile_info',
+            use_tor: true,
+        });
 
         return {
             followerCount: data.followers,
@@ -106,19 +100,12 @@ async function getTikTokProfileInfo(ctx, profile) {
 async function getInstagramBasicProfileInfo(ctx, profile) {
     console.log('getting ig basic profile')
     try {
-        const lambda = new AWS.Lambda({ region: 'us-west-2' });
-
-        const response = await lambda.invoke({
-            FunctionName: 'web-scraper-service-staging-scrapeContent',
-            Payload: JSON.stringify({
-                platform: 'instagram',
-                handle: profile.profileName,
-                task: 'get_profile_info',
-                use_tor: false,
-            }),
-        }).promise();
-        console.log(response)
-        const data = JSON.parse(response.Payload)
+        const data = await invokeWebScraper(ctx, {
+            platform: 'instagram',
+            handle: profile.profileName,
+            task: 'get_profile_info',
+            use_tor: false,
+        });
 
         return {
             followerCount: data.followers,

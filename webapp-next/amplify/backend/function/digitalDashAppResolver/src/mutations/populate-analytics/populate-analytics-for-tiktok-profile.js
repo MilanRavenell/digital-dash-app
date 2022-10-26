@@ -1,11 +1,11 @@
 const axios = require("axios");
 const AWS = require('aws-sdk');
+const { invokeWebScraper } = require('../../shared');
 
 async function fetchAnalyticsForTiktokProfile(ctx, profile) {
     const { ddbClient, envVars } = ctx.resources;
-    const { ENV: env, APPSYNC_API_ID: appsync_api_id, WEB_SCRAPER_LAMBDA_NAME: webScraperLambdaName } = envVars;
+    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
     const { debug_noUploadToDDB } = ctx.arguments.input;
-    const lambda = new AWS.Lambda({ region: 'us-west-2' });
 
     // get all DDB posts
     const ddbPosts = await getCollectedPosts(ctx, profile);
@@ -18,17 +18,13 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
     console.log(ddbPostIdsSet)
     
     // get scraped videos
-    const getContentResponse = await lambda.invoke({
-        FunctionName: webScraperLambdaName,
-        Payload: JSON.stringify({
-            platform: 'tiktok',
-            handle: profile.profileName,
-            task: 'full_run',
-            // If this is the first time we're gathering content for the user, use the proxy to get all content. Otherwise, use tor
-            use_tor: Boolean(profile.postsLastPopulated)
-        }),
-    }).promise();
-    const scrapedVideos = JSON.parse(getContentResponse.Payload)
+    const scrapedVideos = await invokeWebScraper(ctx, {
+        platform: 'tiktok',
+        handle: profile.profileName,
+        task: 'full_run',
+        // If this is the first time we're gathering content for the user, use the proxy to get all content. Otherwise, use tor
+        use_tor: Boolean(profile.postsLastPopulated)
+    });
     console.log(scrapedVideos)
 
     if (!Array.isArray(scrapedVideos)) {
@@ -52,18 +48,14 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
     const items = await Promise.all(allVideos.map(async (video) => {
         try {
             console.log(`getting ${video.id}`)
-            const singleContentResponse = await lambda.invoke({
-                FunctionName: webScraperLambdaName,
-                Payload: JSON.stringify({
-                    platform: 'tiktok',
-                    handle: profile.profileName,
-                    task: 'process_single_content',
-                    content_to_process: video.id,
-                    use_tor: true,
-                }),
-            }).promise();
-    
-            const extraInfo = JSON.parse(singleContentResponse.Payload);
+            const extraInfo = await invokeWebScraper(ctx, {
+                platform: 'tiktok',
+                handle: profile.profileName,
+                task: 'process_single_content',
+                content_to_process: video.id,
+                use_tor: true,
+            });
+
             if (extraInfo.errorMessage) {
                 return null
             }
