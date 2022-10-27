@@ -26,14 +26,21 @@ const AddProfile = ({
     const [screen, setScreen] = React.useState('sign-in');
     const [profiles, setProfiles] = React.useState([]);
     const [textFieldValue, setTextFieldValue] = React.useState('');
+    const [didFail, setDidFail] = React.useState(false);
 
     const handleTextFieldChange = (event) => {
         setTextFieldValue(event.target.value);
     }
 
     const setVerify = (profiles) => {
+        setDidFail(false);
         setProfiles(profiles);
         setScreen('verify');
+    }
+
+    const setFail = () => {
+        setDidFail(true);
+        setScreen('sign-in')
     }
 
     React.useEffect(() => {
@@ -59,9 +66,10 @@ const AddProfile = ({
         setScreen('loading');
         loginHandlers[index]({
             currentProfiles,
-            setVerify,
             router,
             handle: textFieldValue,
+            setVerify,
+            setFail,
         });
     };
 
@@ -123,6 +131,11 @@ const AddProfile = ({
                 return (
                     <div className={styles.form}>
                         <div className={styles.formContent}>
+                            {
+                                didFail && (
+                                    <div className={styles.error}>Could not retrieve profile, please try again</div>
+                                )
+                            }
                             <div className={styles.buttons}>
                                 { platformButtons() }
                                 <div>

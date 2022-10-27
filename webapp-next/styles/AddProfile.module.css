@@ -71,6 +71,11 @@
     margin-bottom: 5vh;
 }
 
+.error {
+    font-size: 40%;
+    color: red;
+}
+
 .logo {
     height: 50%;
     width: 12%;

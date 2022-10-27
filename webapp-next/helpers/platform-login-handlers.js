@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
 
-async function igBasicLoginHandler({ handle, setVerify }) {
+async function igBasicLoginHandler({ handle, setVerify, setFail }) {
     const profileInfo = (await axios.get(`/api/auth/fetch-profile-with-scraper?handle=${handle}&platform=instagram`)).data;
     console.log(profileInfo)
 
@@ -13,10 +13,12 @@ async function igBasicLoginHandler({ handle, setVerify }) {
         };
 
         setVerify([profile]);
+    } else {
+        setFail();
     }
 }
 
-async function igProLoginHandler({ currentProfiles, setVerify }) {
+async function igProLoginHandler({ currentProfiles, setVerify, setFail }) {
     const onSignIn = async (shortTermToken) => {
         const accessToken = (await axios.get(`/api/auth/get-fb-long-lived-token?shortTermToken=${shortTermToken}`)).data;
 
@@ -26,6 +28,7 @@ async function igProLoginHandler({ currentProfiles, setVerify }) {
             pages.push(...response.data.data);
         } catch (err) {
             console.error('Failed to get users pages', err);
+            setFail();
             return;
         }
 
@@ -48,6 +51,7 @@ async function igProLoginHandler({ currentProfiles, setVerify }) {
                 }
             } catch (err) {
                 console.error('Failed to get user accounts', err);
+                setFail();
                 return;
             }
         }));
@@ -67,36 +71,41 @@ async function twitterLoginHandler({ router }) {
     signIn('twitter')
 }
 
-async function youtubeLoginHandler({ currentProfiles, setVerify }) {
+async function youtubeLoginHandler({ currentProfiles, setVerify, setFail }) {
     const onSignIn = async (response) => {
-        const tokenResponse = await axios.get(`/api/auth/get-google-tokens?code=${response.code}`);
+        try {
+            const tokenResponse = await axios.get(`/api/auth/get-google-tokens?code=${response.code}`);
 
-        const { access_token: accessToken, refresh_token: refreshToken, expiry_date } = tokenResponse.data;
+            const { access_token: accessToken, refresh_token: refreshToken, expiry_date } = tokenResponse.data;
 
-        const getChannelsResponse = await axios.get(`https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet,contentDetails&mine=true&access_token=${accessToken}`);
-        console.log(getChannelsResponse)
+            const getChannelsResponse = await axios.get(`https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet,contentDetails&mine=true&access_token=${accessToken}`);
+            console.log(getChannelsResponse)
 
-        if (getChannelsResponse.status === 200) {
-            const channels = getChannelsResponse.data.items;
-            const profiles = channels.map((channel) => ({
-                profileName: channel.snippet.title,
-                meta: JSON.stringify({
-                    id: channel.id,
-                    uploadsId: channel.contentDetails.relatedPlaylists.uploads,
-                    accessToken,
-                    refreshToken,
-                    expires: new Date(expiry_date),
-                }),
-                profilePicUrl: channel.snippet.thumbnails['default'].url,
-                platform: 'youtube',
-            }));
-    
-            if (currentProfiles === null) {
-                return;
+            if (getChannelsResponse.status === 200) {
+                const channels = getChannelsResponse.data.items;
+                const profiles = channels.map((channel) => ({
+                    profileName: channel.snippet.title,
+                    meta: JSON.stringify({
+                        id: channel.id,
+                        uploadsId: channel.contentDetails.relatedPlaylists.uploads,
+                        accessToken,
+                        refreshToken,
+                        expires: new Date(expiry_date),
+                    }),
+                    profilePicUrl: channel.snippet.thumbnails['default'].url,
+                    platform: 'youtube',
+                }));
+        
+                if (currentProfiles === null) {
+                    return;
+                }
+        
+                setVerify(profiles);
             }
-    
-            setVerify(profiles);
-        }
+        } catch (err) {
+            console.error('Failed to get youtube profile', err);
+            setFail();        
+        }        
     }
 
     const client = google.accounts.oauth2.initCodeClient({
@@ -121,6 +130,8 @@ async function tiktokLoginHandler({ handle, setVerify }) {
         };
 
         setVerify([profile]);
+    } else {
+        setFail();
     }
 }
 

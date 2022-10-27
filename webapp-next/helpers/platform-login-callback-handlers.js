@@ -1,21 +1,27 @@
 import axios from "axios";
 import { signOut } from 'next-auth/react';
 
-async function twitterLoginCallbackHandler({ sessionData, currentProfiles, setVerify }) {
-    const profile = {
-        profileName: sessionData.profileName,
-        meta: JSON.stringify({
-            id: sessionData.id,
-            accessToken: sessionData.accessToken,
-            refreshToken: sessionData.refreshToken,
-            expires: sessionData.expires,
-        }),
-        profilePicUrl: sessionData.profilePicUrl,
-        platform: 'twitter',
-    };
-
-    signOut({ redirect: false })
-    setVerify([profile]);
+async function twitterLoginCallbackHandler({ sessionData, currentProfiles, setVerify, setFail }) {
+    try {
+        const profile = {
+            profileName: sessionData.profileName,
+            meta: JSON.stringify({
+                id: sessionData.id,
+                accessToken: sessionData.accessToken,
+                refreshToken: sessionData.refreshToken,
+                expires: sessionData.expires,
+            }),
+            profilePicUrl: sessionData.profilePicUrl,
+            platform: 'twitter',
+        };
+    
+        signOut({ redirect: false })
+        setVerify([profile]);
+    } catch (err) {
+        console.error('Failed to get twitter profile');
+        setFail()
+    }
+    
 }
 
 async function igBasicLoginCallbackHandler({ code, currentProfiles, setVerify }) {
