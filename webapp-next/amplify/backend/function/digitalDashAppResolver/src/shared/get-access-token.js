@@ -98,6 +98,8 @@ async function refreshTwitterTokens(ctx, profile) {
         },
     }).promise();
 
+    console.log(`Successfully refreshed token for profile ${profile.key}`);
+
     return access_token;
 }
 

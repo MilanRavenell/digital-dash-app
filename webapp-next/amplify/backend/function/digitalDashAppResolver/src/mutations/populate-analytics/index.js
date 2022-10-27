@@ -30,6 +30,13 @@ async function fetchAnalytics(ctx) {
     try {
         const accessToken = await getAccessToken(ctx, profile);
 
+        if (!accessToken) {
+            return {
+                dataUpdated: false,
+                success: false,
+            }
+        }
+
         await Promise.all([populateProfile(ctx, profile, accessToken), populatePosts(ctx, profile, accessToken)])
 
         if (!debug_noUploadToDDB) {
@@ -73,6 +80,10 @@ async function populateProfile(ctx, profile, accessToken) {
 
     const profileInfo = await getProfileInfo(ctx, profile, accessToken);
 
+    if (!profileInfo) {
+        return;
+    }
+
     if (!debug_noUploadToDDB) {
         try {
             await ddbClient.put({
@@ -107,42 +118,47 @@ async function populateProfile(ctx, profile, accessToken) {
 }
 
 async function populatePosts(ctx, profile, accessToken) {
-    switch(profile.platform) {
-        case 'instagram-pro':
-            let tries = 0;
-            let success = false;
-            while (tries < 10 && !success) {
-                try {
-                    await populateAnalyticsForIgProProfile(ctx, profile);
-                    success = true;
-                } catch (err) {
-                    console.log(err)
-                    tries += 1;
-                    // sleep for 2 seconds
-                    console.log(`hit timeout, retrying (${tries})`)
-                    await new Promise(r => setTimeout(r, 2000));
+    try {
+        switch(profile.platform) {
+            case 'instagram-pro':
+                let tries = 0;
+                let success = false;
+                while (tries < 10 && !success) {
+                    try {
+                        await populateAnalyticsForIgProProfile(ctx, profile);
+                        success = true;
+                    } catch (err) {
+                        console.log(err)
+                        tries += 1;
+                        // sleep for 2 seconds
+                        console.log(`hit timeout, retrying (${tries})`)
+                        await new Promise(r => setTimeout(r, 2000));
+                    }
                 }
-            }
-            
-            if (tries >= 10) {
-                console.error('hit instagram retry limit');
-            }
-            break;
-        case 'instagram-basic':
-            await populateAnalyticsForIgBasicProfile(ctx, profile);
-            break;
-        case 'twitter':
-            await populateAnalyticsForTwitterProfile(ctx, profile, accessToken);
-            break;
-        case 'youtube':
-            await populateAnalyticsForYtProfile(ctx, profile, accessToken);
-            break;
-        case 'tiktok':
-            await populateAnalyticsForTiktokProfile(ctx, profile);
-            break;
-        default:
-            console.log(`Platform ${profile.platform} not supported`);
-    };
+                
+                if (tries >= 10) {
+                    console.error('hit instagram retry limit');
+                }
+                break;
+            case 'instagram-basic':
+                await populateAnalyticsForIgBasicProfile(ctx, profile);
+                break;
+            case 'twitter':
+                await populateAnalyticsForTwitterProfile(ctx, profile, accessToken);
+                break;
+            case 'youtube':
+                await populateAnalyticsForYtProfile(ctx, profile, accessToken);
+                break;
+            case 'tiktok':
+                await populateAnalyticsForTiktokProfile(ctx, profile);
+                break;
+            default:
+                console.log(`Platform ${profile.platform} not supported`);
+        };
+    } catch (err) {
+        console.error(`Failed to populate posts for profile ${profile.key}`);
+    }
+    
 }
 
 module.exports = fetchAnalytics;

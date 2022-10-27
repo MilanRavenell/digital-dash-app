@@ -8,7 +8,7 @@ async function getProfileInfo(ctx, profile, accessToken) {
     try {
         return await platformToProfileInfoGetterMap[profile.platform](ctx, profile, accessToken);
     } catch (err) {
-        console.error(`Failed to fetch profile for user ${profile.username}`, err);
+        console.error(`Failed to fetch profile info for profile ${profile.key}`, err);
         return {};
     }
 }
