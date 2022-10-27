@@ -27,8 +27,7 @@ const ProfileCard = ({
     const renderIcons = () => {
         const icons = [];
 
-        // if (!profile.postsLastPopulated && !isAddProfileConfirmation) {
-        if (true) {
+        if (!profile.postsLastPopulated && !isAddProfileConfirmation) {
             icons.push(
                 <div
                     className={styles.loading}
