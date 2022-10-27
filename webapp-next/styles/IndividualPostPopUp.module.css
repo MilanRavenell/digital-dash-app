@@ -6,9 +6,10 @@
 }
 
 .header {
-    height: 5vh;
+    height: 7vh;
     min-height: 20px;
-    padding-bottom: 3px;
+    padding-bottom: 5px;
+    padding-top: 5px;
     display: flex;
 }
 
@@ -27,8 +28,11 @@
 
 .logo {
     height: 100%;
-    width: 10%;
+    width: 20%;
     margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .profPicContainer {
@@ -39,8 +43,8 @@
 }
 
 .profPic {
-    height: max(4vmin, 20px);
-    width: max(4vmin, 20px);
+    height: min(10vmin, 50px);
+    width: min(10vmin, 50px);
     border-radius: 50%;
     overflow: hidden;
 }
@@ -91,13 +95,15 @@
 
 .stat {
     display: flex;
-    height: 5vh;
+    padding-top: 6px;
+    padding-bottom: 6px;
 }
 
 .statName {
     flex: 1;
     display: flex;
     align-items: center;
+    flex-grow: 2;
 }
 
 .statValue {

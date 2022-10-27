@@ -75,8 +75,7 @@ const IndividualPostPopUp = ({
                                 loading='lazy'
                                 referrerPolicy="no-referrer"
                                 style={{
-                                    height: '100%',
-                                    width: '100%',
+                                    height: 'min(10vmin, 50px)',
                                     objectFit: 'contain',
                                 }}
                             />
@@ -102,7 +101,9 @@ const IndividualPostPopUp = ({
                             <IconButton 
                                 onClick={close}
                                 sx={{
-                                    height: '100%',
+                                    height: 'min(10vmin, 50px)',
+                                    width: 'min(10vmin, 50px)',
+                                    padding: 0,
                                 }}
                             >
                                 <CloseIcon
