@@ -43,10 +43,14 @@
 
 .headerText {
     color: grey;
-    padding-bottom: 4vh;
 }
 
 .platforms {
+    height: 87%;
+    overflow-y: auto;
+}
+
+.platformRow {
     display: flex;
 }
 
@@ -58,7 +62,8 @@
     border-radius: 4px;
     padding-left: 5px;
     padding-right: 5px;
-    flex: 1
+    flex: 1;
+    min-height: 100px;
 }
 
 .platformInner {
@@ -118,5 +123,12 @@
 
     .rightContentContainer {
         width: 80vw;
+    }
+}
+
+/* mobile landscape mode */
+@media only screen and (max-device-height: 400px) {
+    .rightContent {
+        height: 80vh;
     }
 }
