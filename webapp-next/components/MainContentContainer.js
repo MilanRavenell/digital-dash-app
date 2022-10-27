@@ -170,9 +170,6 @@ const MainContentContainer = ({
                                 : <PostsContainerGraphView graphData={graphData}/>
                         }
                     </div>
-                    {
-                        <div>{context.windowDimensions.width} {context.windowDimensions.height}</div>
-                    }
                 </div>
             </div>
             {
