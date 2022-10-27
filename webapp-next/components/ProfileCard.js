@@ -11,6 +11,8 @@ import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 import WarningOutlined from '@mui/icons-material/WarningOutlined';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import styles from '../styles/ProfileCard.module.css';
+
 const ProfileCard = ({
     profile,
     handleClick,
@@ -25,18 +27,14 @@ const ProfileCard = ({
     const renderIcons = () => {
         const icons = [];
 
-        if (!profile.postsLastPopulated && !isAddProfileConfirmation) {
+        // if (!profile.postsLastPopulated && !isAddProfileConfirmation) {
+        if (true) {
             icons.push(
                 <div
-                    style={{
-                        height: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        marginRight: '10px',
-                    }}
+                    className={styles.loading}
                     key={'loading'}
                 >
-                    <CircularProgress/>
+                    <CircularProgress size={'max(3vmin, 20px)'}/>
                 </div>
             )
         }
@@ -46,11 +44,7 @@ const ProfileCard = ({
                 <div 
                     onMouseOver={() => {setIconIsHovered(true)}}
                     onMouseOut={() => {setIconIsHovered(false)}}
-                    style={{
-                        height: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                    }}
+                    className={styles.warning}
                     key={'refresh-warning'}
                 >
                     <IconButton onClick={() => {handleNeedsRefresh(profile)}}>
@@ -65,11 +59,7 @@ const ProfileCard = ({
                 <div
                     onMouseOver={() => {setIconIsHovered(true)}}
                     onMouseOut={() => {setIconIsHovered(false)}}
-                    style={{
-                        height: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                    }}
+                    className={styles.delete}
                     key={'delete'}
                 >
                     <IconButton onClick={handleDelete}>
@@ -85,61 +75,36 @@ const ProfileCard = ({
     return (
         <Card sx={{ width: '100%', height: '100%' }} onClick={iconIsHovered ? null : handleClick}>
             <CardActionArea sx={{ width: '100%', height: '100%' }}>
-                <Box sx={{ display: 'flex', height: '100%' }}>
-                    <CardMedia
-                        component="img"
-                        sx={{
-                            flex: 1,
-                            maxWidth: '90px',
-                        }}
-                        image={profilePicUrl}
-                        alt="profile pic"
-                    />
-                    <Box sx={{
-                        flex: 1,
-                        textAlign: 'right',
-                        padding: 0,
-                        marginRight: '5px',
-                        height: '100%',
-                        position: 'relative'
-                    }}>
-                        <Box sx={{
-                            display: 'flex',
-                            justifyContent: 'flex-end',
-                            height: '50%',
-                            position: 'absolute',
-                            width: '100%',
-                            zIndex: '2'
-                        }}>
+                <div className={styles.container}>
+                    <div className={styles.left}>
+                        <img
+                            src={profilePicUrl}
+                            alt="profile pic"
+                            loading='lazy'
+                            referrerPolicy="no-referrer"
+                            className={styles.profPic}
+                        />
+                    </div>
+                    <div className={styles.right}>
+                        <div className={styles.icons}>
                             { renderIcons() }
-                            <div style={{
-                                height: '100%',
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}>
+                            <div className={styles.logoContainer}>
                                 <img
                                     src={platformToLogoUrlMap[profile.platform].url}
                                     alt="profile pic"
                                     loading='lazy'
                                     referrerPolicy="no-referrer"
-                                    style={{
-                                        height: '80%',
-                                        objectFit: 'contain',
-                                        maxHeight: '60px',
-                                    }}
+                                    className={styles.logo}
                                 />
                             </div>
-                        </Box>
-                        <Typography variant='h6' sx={{
-                            height: '50%',
-                            position: 'absolute',
-                            top: '50%',
-                            width: '100%',
-                        }}>
-                            {profile.profileName}
-                        </Typography>
-                    </Box>
-                </Box>
+                        </div>
+                        <div className={styles.rightBottom}>
+                            <div className={styles.profileName}>
+                                {profile.profileName}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </CardActionArea>
         </Card>
     )

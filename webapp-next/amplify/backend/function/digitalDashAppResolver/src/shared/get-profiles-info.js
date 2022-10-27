@@ -9,7 +9,7 @@ async function getProfileInfo(ctx, profile, accessToken) {
         return await platformToProfileInfoGetterMap[profile.platform](ctx, profile, accessToken);
     } catch (err) {
         console.error(`Failed to fetch profile info for profile ${profile.key}`, err);
-        return {};
+        return null;
     }
 }
 
@@ -17,7 +17,7 @@ async function getTwitterProfileInfo(ctx, profile, accessToken) {
     const { id } = JSON.parse(profile.meta);
 
         if (!accessToken) {
-            return {}
+            return null;
         }
 
     try {
@@ -32,7 +32,7 @@ async function getTwitterProfileInfo(ctx, profile, accessToken) {
         }
     } catch (err) {
         console.error('Failed to get twitter profile information', err);
-        return {};
+        return null;
     }
     
 }
@@ -54,7 +54,7 @@ async function getYoutubeProfileInfo(ctx, profile, accessToken) {
         }
     } catch (err) {
         console.error('Failed to get youtube profile information', err);
-        return {};
+        return null;
     }
 }
 
@@ -73,7 +73,7 @@ async function getInstagramProProfileInfo(ctx, profile) {
         }
     } catch (err) {
         console.error('Failed to get instagram pro profile information', err);
-        return {};
+        return null;
     }
 }
 
@@ -93,7 +93,7 @@ async function getTikTokProfileInfo(ctx, profile) {
         }
     } catch (err) {
         console.error('Failed to get tiktok profile information', err);
-        return {};
+        return null;
     }
 }
 
@@ -113,7 +113,7 @@ async function getInstagramBasicProfileInfo(ctx, profile) {
         }
     } catch (err) {
         console.error('Failed to get instagram basic profile information', err);
-        return {};
+        return null;
     }
 }
 

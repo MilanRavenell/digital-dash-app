@@ -29,14 +29,7 @@ async function fetchAnalytics(ctx) {
 
     try {
         const accessToken = await getAccessToken(ctx, profile);
-
-        if (!accessToken) {
-            return {
-                dataUpdated: false,
-                success: false,
-            }
-        }
-
+        
         await Promise.all([populateProfile(ctx, profile, accessToken), populatePosts(ctx, profile, accessToken)])
 
         if (!debug_noUploadToDDB) {
