@@ -1,0 +1,82 @@
+.container {
+    display: flex;
+    height: 100%;
+}
+
+.left {
+    width: 30%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 5px;
+}
+
+.profPic {
+    height: 80%;
+    object-fit: contain;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.right {
+    width: 70%;
+    padding: 0;
+    margin-right: 5px;
+    height: 100%;
+    position: relative
+}
+
+.icons {
+    display: flex;
+    justify-content: flex-end;
+    height: 50%;
+    position: absolute;
+    width: 100%;
+    z-index: 2
+}
+
+.loading {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.warning {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.delete {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.logoContainer {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 60%;
+    object-fit: contain;
+    max-height: 40px;
+}
+
+.rightBottom {
+    height: 50%;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.profileName {
+    margin-bottom: 5px;
+    font-size: 60%;
+}
