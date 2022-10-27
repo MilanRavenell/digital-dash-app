@@ -167,7 +167,7 @@ const PostsContainerPostsView = ({
                                                                         </div>
                                                                     )
                                                                 case 'Date':
-                                                                    return <div className={styles.fieldContent}>{moment.utc(post[field]).format(isMobile ? 'M/DD/YYYY' : 'M/DD/YYYY HH:mm')}</div>;
+                                                                    return <div className={styles.fieldContent}>{moment.utc(post[field]).format(isMobile ? 'M/DD/YYYY' : 'h:mm A · MMM DD, YYYY ')}</div>;
                                                                 case 'Engagement Rate':
                                                                     return <div className={styles.fieldContent}>{post[field] ? `${(post[field] * 100).toFixed(2)}%` : '--'}</div>;
                                                                 default:

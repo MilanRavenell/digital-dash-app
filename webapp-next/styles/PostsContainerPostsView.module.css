@@ -82,7 +82,8 @@
     display: flex;
     align-items: center;
     height: 100%;
-    margin-right: 10%;
+    width: 100%;
+    padding-right: 5px;
     justify-content: flex-end;
 }
 
@@ -91,7 +92,8 @@
     display: flex;
     align-items: center;
     height: 100%;
-    margin-right: 10%;
+    width: 100%;
+    padding-left: 5px;
 }
 
 .headerInner {
@@ -103,6 +105,7 @@
     width: 80%;
     display: flex;
     align-items: center;
+    margin-left: 5px;
 }
 
 .headerIcon {

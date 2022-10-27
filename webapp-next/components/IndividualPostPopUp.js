@@ -140,7 +140,7 @@ const IndividualPostPopUp = ({
                 </div>
                 <div className={styles.extraDetails}>
                     <div className={styles.titleDate}>{post.profileName}</div>
-                    <div className={styles.titleDate}>{moment.utc(post.datePosted).format('MMM D, YYYY HH:mm')}</div>
+                    <div className={styles.titleDate}>{moment.utc(post.datePosted).format('h:mm A · MMM DD, YYYY')}</div>
                     <div className={styles.titleLink}>
                         <a href={post.link} target='_blank' rel='noreferrer'>Link</a>
                     </div>
