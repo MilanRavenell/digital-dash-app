@@ -9,6 +9,10 @@ async function getAccessToken(ctx, profile) {
     const { ddbClient, envVars } = ctx.resources;
     const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
 
+    if (profile.needsRefresh) {
+        return null;
+    }
+
     const platformRefresher = platformRefresherMap[profile.platform];
     if (!platformRefresher) {
         return null;
@@ -20,7 +24,7 @@ async function getAccessToken(ctx, profile) {
         return accessToken;
     }
 
-    console.log(`Refreshing token for ${profile.user}'s ${profile.platform} profile ${profile.profileName}`);
+    console.log(`Refreshing token for ${profile.key}`);
 
     try {
         return await platformRefresherMap[profile.platform](ctx, profile);
