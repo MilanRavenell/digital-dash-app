@@ -18,6 +18,8 @@ Amplify.configure(config);
 
 import '../styles/global.css';
 
+const nullAuthUser = 'nullAuthUser';
+
 const useWindowDimension = () => {
     const getWindowDimensions = () => {
         if (typeof window !== "undefined") {
@@ -64,6 +66,7 @@ const MyApp = ({ Component, pageProps }) => {
                     if (router.pathname !== '/sign-in') {
                         router.push('/sign-in');
                         setLoading(false);
+                        setAuthUser(nullAuthUser);
                     }
                 } else {
                     console.error(err);
@@ -82,7 +85,9 @@ const MyApp = ({ Component, pageProps }) => {
             if (!user) {
                 setUserCallback(authUser);
             }
-        } else {
+        }
+
+        if (authUser === nullAuthUser) {
             if (router.pathname !== '/sign-in') {
                 router.push('/sign-in');
                 setLoading(false);
@@ -141,7 +146,7 @@ const MyApp = ({ Component, pageProps }) => {
     }
 
     const setUserCallback = useCallback(async (authUser) => {
-        if (user) {
+        if (user || authUser === nullAuthUser) {
             return;
         }
 
@@ -173,7 +178,7 @@ const MyApp = ({ Component, pageProps }) => {
     const signOut = useCallback(() => {
         Auth.signOut();
         setUser(null);
-        setAuthUser(null);
+        setAuthUser(nullAuthUser);
     }, []);
 
     const listener = (data) => {
