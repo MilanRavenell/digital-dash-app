@@ -19,7 +19,19 @@ const Header = ({ user, goToAddPlatformSelection, signOut }) => {
         <div className={styles.container}>
             <div className={styles.left}>
                 <div className={styles.leftBanner}>
-                    {'[Name here]'}
+                    <div className={styles.logo}>
+                        <img
+                            src={'/logo_name.png'}
+                            alt={'media'}
+                            loading='lazy'
+                            referrerPolicy="no-referrer"
+                            style={{
+                                height: '100%',
+                                width: '100%',
+                                objectFit: 'contain',
+                            }}
+                        />
+                    </div>
                 </div>
             </div>
             <div className={styles.right}>
