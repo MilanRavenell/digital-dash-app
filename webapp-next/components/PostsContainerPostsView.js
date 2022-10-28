@@ -16,7 +16,7 @@ const PostsContainerPostsView = ({
     setSortOrder,
     isMobile,
 }) => {
-    const totalHeaders = headers.globalHeaders;
+    const totalHeaders = [...headers.globalHeaders];
 
     // Remove caption on mobile
     if (isMobile) {
@@ -79,16 +79,14 @@ const PostsContainerPostsView = ({
         let base = isHeader ? `${styles.headerField} ` : '';
         let type = isHeader ? styles.headerFieldLong : styles.postFieldLong;
 
+        if (isHeader && fieldName.length > 10) {
+            base = `${styles.headerFieldSmallFont} `;
+        }
+
         switch(fieldName) {
             case 'Platform':
             case 'Profile':
                 type = isHeader ? styles.headerFieldShort : styles.postFieldShort;
-                break;
-            case 'Total Engagement':
-            case 'Engagement Rate':
-                if (isHeader) {
-                    base = `${styles.headerFieldSmallFont} `;
-                }
                 break;
         }
 
