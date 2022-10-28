@@ -16,9 +16,9 @@ class InstagramScraper(ContentDataScraper):
     
     def get_url(self):
         if self.task == 'process_single_content':
-            return f'https://www.instagram.com/p/{self.content_id}/'
+            return f'https://www.instagram.com/p/{self.content_id}'
         
-        return f'https://www.instagram.com/{self.handle}/'
+        return f'https://www.instagram.com/{self.handle}'
 
     async def get_profile(self):
         record = {}

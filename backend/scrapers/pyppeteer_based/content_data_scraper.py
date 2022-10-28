@@ -231,6 +231,7 @@ class ContentDataScraper:
 
     async def close(self):
         print('closing')
+        print('num requests: ', self.num_requests)
         if self.browser:
             await self.browser.close()
         if self.tor_process:
@@ -315,6 +316,7 @@ class ContentDataScraper:
         raise  NotImplementedError()
 
     async def request_handler(self, request):
+        self.num_requests += 1
         await request.continue_()
         return
     

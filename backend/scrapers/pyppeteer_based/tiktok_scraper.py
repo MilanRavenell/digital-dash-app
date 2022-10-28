@@ -12,6 +12,7 @@ class TikTokScraper(ContentDataScraper):
         self.page_test_el = '//strong[@data-e2e="like-count"]' if task == 'process_single_content' else '//div[@data-e2e="user-avatar"]'
         self.response_handler_data = None
         self.finished = False
+        self.num_requests = 0
 
     def get_url(self):
         if self.task == 'process_single_content':
@@ -26,15 +27,12 @@ class TikTokScraper(ContentDataScraper):
         await self.page.evaluate('window.scrollTo(0, document.body.scrollHeight);')
         start = time.time()
         
-        try:
-            response = await self.page.waitForResponse(lambda res: 'api/post/item_list/' in res.url, { 'timeout': 10000 })
-            print(await response.text())
-            text = await response.text()
-            self.response_handler_data = json.loads(text)
+        response = await self.page.waitForResponse(lambda res: 'api/post/item_list/' in res.url, { 'timeout': 10000 })
+        print(await response.text())
+        text = await response.text()
+        self.response_handler_data = json.loads(text)
 
-            print(f'Found content in {time.time() - start}')
-        except:
-            self.finished = True
+        print(f'Found content in {time.time() - start}')
         
     
     async def process_content(self, content):
@@ -96,6 +94,16 @@ class TikTokScraper(ContentDataScraper):
     
     def is_finished(self):
         return self.finished
+
+    async def request_handler(self, request):
+        if self.task == 'get_profile_info' or self.task == 'process_single_content':
+            if request.url == self.get_url():
+                await request.continue_()
+            else:
+                await request.abort()
+        
+        else:
+            await request.continue_()
 
     ########################## TikTok Methods ##############################
     async def __process_video_html(self, video):

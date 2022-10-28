@@ -22,8 +22,7 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
         platform: 'tiktok',
         handle: profile.profileName,
         task: 'full_run',
-        // If this is the first time we're gathering content for the user, use the proxy to get all content. Otherwise, use tor
-        use_tor: Boolean(profile.postsLastPopulated)
+        use_tor: true,
     });
     console.log(scrapedVideos)
 
