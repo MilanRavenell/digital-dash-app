@@ -5,12 +5,13 @@
     width: 100%;
     background-color: white;
     box-shadow: 5px 5px lightgray;
+    display: flex;
+    flex-direction: column;
 }
 
 .header {
     display: flex;
     margin-top: 4%;
-    height: 6%;
 }
 
 .headerText {
@@ -30,11 +31,9 @@
 }
 
 .buttonExpanded {
-    height: 6%;
 }
 
 .profilesExpanded {
-    height: 85%;
     overflow-y: auto;
 }
 
