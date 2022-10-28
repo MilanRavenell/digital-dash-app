@@ -141,7 +141,7 @@ const AddProfile = () => {
     };
 
     const getContent = () => {
-      if (context.user) {
+      if (context.user  && !context.loading) {
         return [
             <Header
               user={context.user}

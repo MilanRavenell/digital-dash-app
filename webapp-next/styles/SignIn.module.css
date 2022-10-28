@@ -60,6 +60,7 @@
     padding: 5%;
     box-shadow: 5px 5px lightgrey;
     width: 45vw;
+    max-width: 600px;
 }
 
 .grow { 

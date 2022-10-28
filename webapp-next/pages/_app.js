@@ -48,14 +48,75 @@ const useWindowDimension = () => {
 const MyApp = ({ Component, pageProps }) => {
     const router = useRouter();
     const [userProfiles, setUserProfiles] = useState(null);
+    const [authUser, setAuthUser] = useState(null);
     const [user, setUser] = useState(null);
     const [numProfileChecks, setNumProfileChecks] = useState(0);
+    const [loading, setLoading] = useState(true);
     const windowDimensions = useWindowDimension();
 
     useEffect(() => {
+        Auth.currentAuthenticatedUser()
+            .then((response) => {
+                setAuthUser(response);
+            })
+            .catch((err) => {
+                if (err === 'The user is not authenticated') {
+                    if (router.pathname !== '/sign-in') {
+                        router.push('/sign-in');
+                        setLoading(false);
+                    }
+                } else {
+                    console.error(err);
+                }
+            }); 
+    }, []);
+
+    useEffect(() => {
+        setLoading(true);
+        console.log('found auth user')
+        if (authUser) {
+            if (router.pathname === '/sign-in') {
+                router.push('/');
+            }
+
+            if (!user) {
+                setUserCallback(authUser);
+            }
+        } else {
+            if (router.pathname !== '/sign-in') {
+                router.push('/sign-in');
+                setLoading(false);
+            }
+        }
+    }, [authUser]);
+
+    useEffect(() => {
+        if (user) {
+            getUserProfiles(user)
+                .then((profiles) => {
+                    setUserProfiles(profiles);
+                    
+                    // If the user has no profiles, send them to add-profile-selection
+                    if (profiles.length <= 0) {
+                        router.push({
+                            pathname: `/add-profile-selection`,
+                            query: { f: 1 },
+                        });
+                    }
+
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    console.error('Failed to get user profiles', err);
+                });
+        }
+    }, [user]);
+
+     // If there are new profiles that do not yet have posts collected, wait 10 seconds and fetch profiles
+    // to see if all posts have yet been collected
+    useEffect(() => {
         console.log('prof checks: ', numProfileChecks);
-        // If there are new profiles that do not yet have posts collected, wait 10 seconds and fetch profiles
-        // to see if all posts have yet been collected
+        
         if (userProfiles && userProfiles.some(profile => !profile.postsLastPopulated)) {
             console.log('need to check D:')
             setTimeout(async () => {
@@ -63,44 +124,7 @@ const MyApp = ({ Component, pageProps }) => {
                 setNumProfileChecks(prev => prev + 1);
             }, 10000);
         }
-    }, [userProfiles, numProfileChecks])
-
-    useEffect(() => {
-        initialize();
-    }, [user]);
-
-    const initialize = async () => {
-        if (user === null) {
-            getAuthUser();
-            return;
-        }
-
-        if (userProfiles) {
-            return;
-        }
-        
-        setUserProfiles(await getUserProfiles(user));
-    }
-
-    const getAuthUser = async () => {
-        try {
-            const user = await Auth.currentAuthenticatedUser();
-            console.log(user)
-            setUserCallback(user);
-
-            if (router.pathname === '/sign-in') {
-                router.push('/');
-            }
-        } catch (err) {
-            if (err === 'The user is not authenticated') {
-                if (router.pathname !== '/sign-in') {
-                    router.push('/sign-in');
-                }
-            } else {
-                console.error(err);
-            }
-        }
-    }
+    }, [userProfiles, numProfileChecks]);
 
     const getUserProfiles = async (user) => {
         const profiles = (await API.graphql({
@@ -136,29 +160,28 @@ const MyApp = ({ Component, pageProps }) => {
             await API.graphql({ query: createUser, variables: { input: ddbUser }});
 
             setUser(ddbUser);
-            router.push({
-                pathname: `/add-profile-selection`,
-                query: { f: 1 },
-              });
         } else {
-            setUser({
+            ddbUser = {
                 ...ddbUser,
                 owner: authUser.username,
-            });
+            };
         }
+
+        setUser(ddbUser);
     }, [user]);
 
     const signOut = useCallback(() => {
         Auth.signOut();
         setUser(null);
+        setAuthUser(null);
     }, []);
 
     const listener = (data) => {
-        switch (data.payload.event) {
+        console.log(data)
+        switch ('listen: ', data.payload.event) {
             case 'signIn':
-            case 'signOut':
-                console.log('signing')
-                initialize();
+                console.log('setting auth: ', data.payload.data)
+                setAuthUser(data.payload.data);
                 break;
         }
     }
@@ -166,6 +189,7 @@ const MyApp = ({ Component, pageProps }) => {
 
     return (
         <AppContext.Provider value={{
+            loading,
             user,
             userProfiles,
             windowDimensions,

@@ -14,7 +14,7 @@ export default function Home() {
   const context = React.useContext(AppContext);
   const [profileToRefresh, setProfileToRefresh] = React.useState(null);
 
-  const isFirstLogin = (router.query.f === 1);
+  const isFirstLogin = (router.query.f === '1');
 
   React.useEffect(() => {
     if (router.query.profiles !== undefined && context.userProfiles) {
@@ -84,7 +84,7 @@ export default function Home() {
   }, []);
 
   const getContent = () => {
-    if (context.user) {
+    if (context.user  && !context.loading) {
       return [
         <Header
           user={context.user}

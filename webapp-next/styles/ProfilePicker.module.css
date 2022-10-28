@@ -163,7 +163,7 @@
 
 @media only screen and (max-device-width: 800px) {
     .containerExpanded {
-        max-width: 300px;
+        max-width: 350px;
     }
 
     .profileExpanded {
@@ -171,7 +171,7 @@
     }
 
     .containerMinimized {
-        max-width: 400px;
+        max-width: 350px;
     }
 
     .header {

@@ -200,7 +200,7 @@ export default function App() {
   }, []);
 
   const getContent = () => {
-    if (context.user && context.userProfiles && data) {
+    if (context.user && context.userProfiles && data && !context.loading) {
       return [
           <Header
             user={context.user}
