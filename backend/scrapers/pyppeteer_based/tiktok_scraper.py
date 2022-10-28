@@ -12,7 +12,6 @@ class TikTokScraper(ContentDataScraper):
         self.page_test_el = '//strong[@data-e2e="like-count"]' if task == 'process_single_content' else '//div[@data-e2e="user-avatar"]'
         self.response_handler_data = None
         self.finished = False
-        self.num_requests = 0
 
     def get_url(self):
         if self.task == 'process_single_content':

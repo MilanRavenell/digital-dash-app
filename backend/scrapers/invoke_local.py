@@ -1,9 +1,9 @@
 from scrape_content import handler
 
 print(handler({
-    'platform': 'tiktok',
-    'handle': 'techroastshow',
-    'task': 'full_run',
-    # 'content_to_process': '7159595680594529582',
-    'use_tor': True,
+    'platform': 'instagram',
+    'handle': 'amyslatenighteats',
+    'task': 'process_single_content',
+    'content_to_process': 'CjBT20EPxIy',
+    'use_tor': False,
 }, {}))

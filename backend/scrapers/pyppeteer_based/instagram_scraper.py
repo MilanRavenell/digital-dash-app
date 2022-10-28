@@ -13,12 +13,15 @@ class InstagramScraper(ContentDataScraper):
         self.response_handler_data = None
         self.mobile = True
         self.finished = False
+        self.num_script_requests = 0
+        self.done_sending_requests = False
+        self.num_user_requests_sent = 0
     
     def get_url(self):
         if self.task == 'process_single_content':
-            return f'https://www.instagram.com/p/{self.content_id}'
+            return f'https://www.instagram.com/p/{self.content_id}/'
         
-        return f'https://www.instagram.com/{self.handle}'
+        return f'https://www.instagram.com/{self.handle}/'
 
     async def get_profile(self):
         record = {}
@@ -75,6 +78,9 @@ class InstagramScraper(ContentDataScraper):
             return await self.process_content(self.response_handler_data.get('data', {}).get('shortcode_media'))
 
     async def close(self):
+        self.num_requests = 0
+        self.done_sending_requests = False
+        self.num_user_requests_sent = 0
         await super().close()
 
     async def response_handler(self, response):
@@ -93,10 +99,24 @@ class InstagramScraper(ContentDataScraper):
             pass
 
     async def request_handler(self, request):
+        if request.resourceType == 'script':
+            self.num_script_requests += 1
+
         try:
-            if self.response_handler_data or 'jpg' in request.url:
+            if self.done_sending_requests or self.filter_request(request):
                 await request.abort()
             else:
+                print(request.url)
+                self.num_requests += 1
+
+                if self.task == 'process_single_content' and 'query_hash' in request.url:
+                    self.done_sending_requests = True
+
+                if not self.task == 'process_single_content' and '?username=' in request.url:
+                    self.num_user_requests_sent += 1
+                    if (self.num_user_requests_sent > 1):
+                        self.done_sending_requests = True
+                
                 await request.continue_()
         except Exception as e:
             print(e)
@@ -116,3 +136,26 @@ class InstagramScraper(ContentDataScraper):
             'thumbnail_url': node.get('thumbnail_src'),
             'media_type': node.get('__typename'),
         }]
+
+    def filter_request(self, request):
+        if request.resourceType not in ['document', 'script', 'xhr', 'fetch']:
+            return True
+
+        if request.resourceType == 'script' and self.num_script_requests > 5:
+            return True
+
+        if request.resourceType == 'xhr':
+            if not self.task == 'process_single_content'\
+                and '?username=' not in request.url:
+                return True
+
+            if self.task == 'process_single_content'\
+                and 'query_hash' not in request.url\
+                and 'bootloader-endpoint' not in request.url\
+                and 'get_ruling_for_content' not in request.url\
+                and 'ajax' not in request.url:
+                return True
+
+        return False
+
+        

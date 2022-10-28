@@ -28,6 +28,7 @@ class ContentDataScraper:
         self.mobile = False
         self.task = task
         self.content_id = content_id
+        self.num_requests = 0
     
     def run(self):
         return asyncio.get_event_loop().run_until_complete(self.arun(
