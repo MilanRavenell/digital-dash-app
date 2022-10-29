@@ -26,10 +26,13 @@ class TikTokScraper(ContentDataScraper):
         await self.page.evaluate('window.scrollTo(0, document.body.scrollHeight);')
         start = time.time()
         
-        response = await self.page.waitForResponse(lambda res: 'api/post/item_list/' in res.url, { 'timeout': 10000 })
-        print(await response.text())
-        text = await response.text()
-        self.response_handler_data = json.loads(text)
+        try:
+            response = await self.page.waitForResponse(lambda res: 'api/post/item_list/' in res.url, { 'timeout': 30000 })
+            print(await response.text())
+            text = await response.text()
+            self.response_handler_data = json.loads(text)
+        except:
+            self.finished = True
 
         print(f'Found content in {time.time() - start}')
         
@@ -48,7 +51,10 @@ class TikTokScraper(ContentDataScraper):
             self.response_handler_data = None
             return content
         else:
-            return await self.page.Jx('//div[@data-e2e="user-post-item"]')
+            content =  await self.page.Jx('//div[@data-e2e="user-post-item"]')
+            if len(content) < 30:
+                self.finished = True
+            return content
 
     async def get_content_identifier(self, content):
         if type(content).__name__ == 'ElementHandle':

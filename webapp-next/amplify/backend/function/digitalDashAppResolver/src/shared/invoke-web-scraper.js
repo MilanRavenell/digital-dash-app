@@ -12,7 +12,7 @@ async function invokeWebScraper(ctx, options) {
 
         return JSON.parse(response.Payload);
     } catch (err) {
-        console.error(`Failed to invoke web scraper with options ${options}`, err);
+        console.error(`Failed to invoke web scraper with options`, options, err);
         return null;
     }
 }

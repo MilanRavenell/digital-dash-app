@@ -43,7 +43,7 @@ class ContentDataScraper:
         success = False
         result = None
 
-        while not success and (time.time() - self.time_start < 900):
+        while not success and (time.time() - self.time_start < 90):
             tries = tries + 1
 
             try:
