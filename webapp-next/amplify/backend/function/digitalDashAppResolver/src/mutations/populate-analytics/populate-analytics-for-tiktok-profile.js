@@ -45,7 +45,7 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
         ...scrapedVideos.filter(({ id }) => !ddbPostIdsSet.has(id)),
     ]
 
-    const items = await Promise.all(allVideos.map(async (video) => {
+    const items = await Promise.all(allVideos.slice(0, 300).map(async (video) => {
         try {
             const extraInfo = await invokeWebScraper(ctx, {
                 platform: 'tiktok',
