@@ -20,6 +20,7 @@ async function getAccessToken(ctx, profile) {
 
     const { accessToken, expires } = JSON.parse(profile.meta);
 
+    console.log('expires: ', expires)
     if (new Date() < new Date(expires)) {
         return accessToken;
     }
@@ -61,6 +62,8 @@ async function refreshTwitterTokens(ctx, profile) {
     const { ddbClient, envVars } = ctx.resources;
     const { ENV: env, APPSYNC_API_ID: appsync_api_id, TWITTER_API_KEY } = envVars;
 
+    console.log('refresh token: ', refreshToken)
+
     const params = new URLSearchParams();
     params.append('refresh_token', refreshToken);
     params.append('grant_type', 'refresh_token');
@@ -85,6 +88,8 @@ async function refreshTwitterTokens(ctx, profile) {
         refreshToken: refresh_token,
         expires,
     });
+
+    console.log('new meta: ', newMeta)
 
     // Update profile with new tokens
     await ddbClient.update({
