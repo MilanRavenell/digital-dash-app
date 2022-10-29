@@ -18,11 +18,11 @@
 }
 
 .right {
-    width: 70%;
     padding: 0;
     margin-right: 5px;
     height: 100%;
-    position: relative
+    position: relative;
+    flex: 1;
 }
 
 .icons {

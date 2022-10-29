@@ -47,6 +47,8 @@ async function fetchAnalytics(ctx) {
             }).promise();
         }
 
+        console.log('done')
+
         return {
             dataUpdated: true,
             success: true,
@@ -67,9 +69,13 @@ async function fetchAnalytics(ctx) {
 
 // Fetch  latest profile info
 async function populateProfile(ctx, profile, accessToken) {
+    console.log('populateProfile')
     const { ddbClient, envVars } = ctx.resources;
     const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
     const { debug_noUploadToDDB } = ctx.arguments.input;
+
+    // TODO: Retrieve from configuration table
+    const metrics = ['followerCount']
 
     const profileInfo = await getProfileInfo(ctx, profile, accessToken);
 
@@ -77,40 +83,62 @@ async function populateProfile(ctx, profile, accessToken) {
         return;
     }
 
-    if (!debug_noUploadToDDB) {
-        try {
-            await ddbClient.put({
+    try {
+        await Promise.all(Object.entries(profileInfo).map(async ([key, value]) => {
+            // Update user profile
+            const updateParams = {
                 TableName: `UserProfile-${appsync_api_id}-${env}`,
-                Item: {
-                    ...profile,
-                    ...profileInfo,
-                }
-            }).promise();
+                Key: {
+                    user: profile.user,
+                    key: profile.key,
+                },
+                UpdateExpression: 'SET #property = :value',
+                ExpressionAttributeNames: {
+                    "#property": key,
+                },
+                ExpressionAttributeValues: {
+                    ":value": value,
+                },
+            };
 
-            if (profileInfo.followerCount === null || profileInfo.followerCount === undefined) {
-                throw new Error('followerCount was null');
+            if (!debug_noUploadToDDB) {
+                await ddbClient.update(updateParams).promise();
+            } else {
+                console.log(updateParams);
             }
-    
-            await ddbClient.put({
-                TableName: `MetricHistory-${appsync_api_id}-${env}`,
-                Item: {
-                    key: `${profile.key}_followerCount`,
+
+            if (metrics.includes(key) && value) {
+                const item = {
+                    key: `${profile.key}_${key}`,
                     profileKey: profile.key,
-                    metric: 'followerCount',
+                    metric: key,
                     createdAt: new Date().toISOString(),
-                    value: profileInfo.followerCount,
+                    value,
+                };
+
+                if (!debug_noUploadToDDB) {
+                    await ddbClient.put({
+                        TableName: `MetricHistory-${appsync_api_id}-${env}`,
+                        Item: item,
+                    }).promise();
+                } else {
+                    console.log(item);
                 }
-            }).promise();
-        } catch (err) {
-            console.error('Failed to update profile info', err)
+            }
+        }));
+
+        if (profileInfo.followerCount === null || profileInfo.followerCount === undefined) {
+            throw new Error('followerCount was null');
         }
-    }
-    else {
-        console.log(profileInfo);
+
+        
+    } catch (err) {
+        console.error('Failed to update profile info', err)
     }
 }
 
 async function populatePosts(ctx, profile, accessToken) {
+    console.log('populatePosts')
     try {
         switch(profile.platform) {
             case 'instagram-pro':

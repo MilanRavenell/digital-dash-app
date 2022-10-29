@@ -96,7 +96,7 @@ async function refreshTwitterTokens(ctx, profile) {
         TableName: `UserProfile-${appsync_api_id}-${env}`,
         Key: {
             user: profile.user,
-            key: `${profile.platform}_${profile.profileName}`,
+            key: profile.key,
         },
         UpdateExpression: 'SET #meta = :meta',
         ExpressionAttributeNames: {

@@ -5,6 +5,7 @@ const makeApiRequest = require('./make-api-request');
 const invokeWebScraper = require('./invoke-web-scraper');
 
 async function getProfileInfo(ctx, profile, accessToken) {
+    console.log('getProfileInfo')
     try {
         return await platformToProfileInfoGetterMap[profile.platform](ctx, profile, accessToken);
     } catch (err) {
