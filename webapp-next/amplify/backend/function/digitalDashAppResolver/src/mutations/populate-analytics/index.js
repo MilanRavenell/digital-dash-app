@@ -25,7 +25,7 @@ async function fetchAnalytics(ctx) {
         }
     }
     
-    console.log('Fetching data');
+    console.log(`fetching analytics for ${profile.key}`);
 
     try {
         const accessToken = await getAccessToken(ctx, profile);

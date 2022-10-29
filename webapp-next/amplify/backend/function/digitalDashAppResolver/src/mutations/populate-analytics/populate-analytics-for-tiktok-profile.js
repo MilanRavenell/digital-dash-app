@@ -7,15 +7,16 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
     const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
     const { debug_noUploadToDDB } = ctx.arguments.input;
 
+    console.log(`fetching analytics for ${profile.key}`);
+
     // get all DDB posts
-    const ddbPosts = await getCollectedPosts(ctx, profile);
+    const ddbPosts = await getDDBPosts(ctx, profile);
 
     if (ddbPosts === null) {
         return;
     }
 
     const ddbPostIdsSet = new Set(ddbPosts.map(({ id }) => id));
-    console.log(ddbPostIdsSet)
     
     // get scraped videos
     const scrapedVideos = await invokeWebScraper(ctx, {
@@ -24,10 +25,10 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
         task: 'full_run',
         use_tor: true,
     });
-    console.log(scrapedVideos)
+    console.log('scraped videos: ', scrapedVideos)
 
     if (!Array.isArray(scrapedVideos)) {
-        console.error('Failed to get videos')
+        console.error('Failed to get videos', scrapedVideos.errorMessage)
         return;
     }
 
@@ -46,7 +47,6 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
 
     const items = await Promise.all(allVideos.map(async (video) => {
         try {
-            console.log(`getting ${video.id}`)
             const extraInfo = await invokeWebScraper(ctx, {
                 platform: 'tiktok',
                 handle: profile.profileName,
@@ -56,7 +56,7 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
             });
 
             if (extraInfo.errorMessage) {
-                return null
+                throw new Error(`webscraper error ${extraInfo.errorMessage}`);
             }
     
             const now = new Date().toISOString();
@@ -96,12 +96,13 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
                 console.log(item)
             }
         } catch (err) {
-            console.error(`Failed to get analytics for tiktok ${video.id}`, err)
+            console.error(`Failed to get analytics for tiktok ${video.id}`, err);
+            return null;
         }
     }));
 }
 
-async function getCollectedPosts(ctx, profile) {
+async function getDDBPosts(ctx, profile) {
     const { ddbClient, envVars } = ctx.resources;
     const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
 
