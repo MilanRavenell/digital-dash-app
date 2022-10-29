@@ -40,15 +40,15 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
             let scrapedMediaObject = scrapedMediaObjects.find(({ shortcode }) => shortcode === post.id);
 
             // If post was not scraped with full run, scrape individually for updates
-            if (!scrapedMediaObject) {
-                scrapedMediaObject = await invokeWebScraper(ctx, {
-                    platform: 'instagram',
-                    handle: profile.profileName,
-                    task: 'process_single_content',
-                    content_to_process: post.id,
-                    use_tor: false,
-                });
-            }
+            // if (!scrapedMediaObject) {
+            //     scrapedMediaObject = await invokeWebScraper(ctx, {
+            //         platform: 'instagram',
+            //         handle: profile.profileName,
+            //         task: 'process_single_content',
+            //         content_to_process: post.id,
+            //         use_tor: false,
+            //     });
+            // }
 
             return {
                 ...post,
