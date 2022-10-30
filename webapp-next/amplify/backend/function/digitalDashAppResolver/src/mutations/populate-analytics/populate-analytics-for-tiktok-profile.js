@@ -33,6 +33,7 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
     }
 
     const allVideos = [
+        ...scrapedVideos.filter(({ id }) => !ddbPostIdsSet.has(id)),
         ...ddbPosts.map((post) =>{
             const scrapedVideo = scrapedVideos.find(({ id }) => id === post.id);
 
@@ -42,7 +43,6 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
                 ...(scrapedVideo || {}),
             }
         }),
-        ...scrapedVideos.filter(({ id }) => !ddbPostIdsSet.has(id)),
     ]
 
     const items = await Promise.all(allVideos.slice(0, 300).map(async (video) => {
