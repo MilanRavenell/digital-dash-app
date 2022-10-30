@@ -34,7 +34,7 @@ export default function App() {
     if (context.user) {
       initialize();
     }
-  }, [context]);
+  }, [context.user]);
 
   React.useEffect(() => {
     selectedProfileNamesRef.current = selectedProfileNames;
@@ -94,36 +94,6 @@ export default function App() {
       console.error('Failed to initialize user', err);
       throw new Error();
     }
-  }
-
-  const fetchMostRecentPostData = () => {
-    console.log('fetching data');
-    setFetchRecentData(false);
-
-    context.userProfiles.map(async (profile) => {
-      try {
-        const response = (await API.graphql({
-          query: populateAnalytics,
-          variables: {
-            username: context.user.email,
-            profileKey: profile.key
-          }
-        })).data.populateAnalytics;
-        
-        console.log(`done fetching for ${profile.key}`);
-        console.log(response)
-  
-        if (response.success && response.dataUpdated) {
-          const response = await getData(context.user.email);
-          if (response && response.success) {
-            console.log('Updating')
-            setData(response.data);
-          }
-        }
-      } catch (err) {
-        console.error(`Failed to fetch most recent post data for ${profile.key}`, err);
-      }
-    });
   }
 
   // Put stat containers in shimmering state

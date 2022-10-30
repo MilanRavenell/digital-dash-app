@@ -179,11 +179,12 @@
     
     .profilesMinimized {
         display: flex;
+        margin-bottom: 10px;
     }
 
     .containerMinimized {
         border-radius: 10px;
-        padding-bottom: 3vh;
+        padding-bottom: 1vh;
     }
 
     .profilePicMinimized {
