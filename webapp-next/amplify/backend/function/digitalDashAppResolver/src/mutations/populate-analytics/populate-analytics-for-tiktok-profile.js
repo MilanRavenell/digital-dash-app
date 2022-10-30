@@ -117,7 +117,8 @@ async function getDDBPosts(ctx, profile) {
             },
             ExpressionAttributeNames: {
                 '#profileName': 'profileName',
-            }
+            },
+            ScanIndexForward: false,
         }).promise())
             .Items;
     } catch (err) {
