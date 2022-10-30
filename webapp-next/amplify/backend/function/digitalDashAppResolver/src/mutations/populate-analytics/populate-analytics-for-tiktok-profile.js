@@ -45,6 +45,8 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
         }),
     ]
 
+    let numItemsInserted = 0;
+
     const items = await Promise.all(allVideos.slice(0, 300).map(async (video) => {
         try {
             const extraInfo = await invokeWebScraper(ctx, {
@@ -88,10 +90,26 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
             };
     
             if (!debug_noUploadToDDB) {
+                ++numItemsInserted;
                 await ddbClient.put({
                     TableName: `TiktokPost-${appsync_api_id}-${env}`,
                     Item: item
                 }).promise();
+
+                // If 100 items have been collected and stored in DDB, set posts last populated 
+                if (numItemsInserted > 100) {
+                    await ddbClient.update({
+                        TableName: `UserProfile-${appsync_api_id}-${env}`,
+                        Key: { user: profile.user, key: profile.key },
+                        UpdateExpression: 'SET #postsLastPopulated = :postsLastPopulated',
+                        ExpressionAttributeNames: { 
+                            '#postsLastPopulated': 'postsLastPopulated',
+                        },
+                        ExpressionAttributeValues: {
+                            ':postsLastPopulated': new Date().toISOString(),
+                        },
+                    }).promise();
+                }
             } else {
                 console.log(item)
             }
