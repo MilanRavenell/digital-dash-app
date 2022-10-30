@@ -6,7 +6,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import IconButton from '@mui/material/IconButton';
-import { platformToLogoUrlMap } from '../helpers';
+import { platformProperties } from '../helpers';
 import DeleteOutlined from '@mui/icons-material/DeleteOutlined';
 import WarningOutlined from '@mui/icons-material/WarningOutlined';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -89,7 +89,7 @@ const ProfileCard = ({
                             { renderIcons() }
                             <div className={styles.logoContainer}>
                                 <img
-                                    src={platformToLogoUrlMap[profile.platform].url}
+                                    src={platformProperties[profile.platform].logoUrl}
                                     alt="profile pic"
                                     loading='lazy'
                                     referrerPolicy="no-referrer"

@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import { Add } from '@mui/icons-material';
 import ProfilePicker from './ProfilePicker';
-import { platformToLogoUrlMap } from '../helpers';
+import { platformProperties } from '../helpers';
 import NeedsRefreshDialogue from './NeedsRefreshDialogue';
 
 import { batchArray } from '../helpers';
@@ -87,7 +87,7 @@ const AddProfileSelection = ({
                                                                 <div className={styles.platformLogoName}>
                                                                     <div className={styles.platformLogo}>
                                                                         <img
-                                                                            src={platformToLogoUrlMap[platform].url}
+                                                                            src={platformProperties[platform].logoUrl}
                                                                             alt='profile pic'
                                                                             style={{
                                                                                 height: '100%',

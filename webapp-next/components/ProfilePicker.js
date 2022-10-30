@@ -3,7 +3,7 @@ import { Button, IconButton } from '@mui/material';
 import { ArrowForwardIos, ArrowBackIos } from '@mui/icons-material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { batchArray } from '../helpers';
+import { batchArray, platformProperties } from '../helpers';
 import ProfileCard from './ProfileCard';
 
 
@@ -150,7 +150,10 @@ const ProfilePicker = ({
                                         const profilePicUrl = (profile.profilePicUrl !== null && profile.profilePicUrl !== undefined) ? profile.profilePicUrl : '/';
                                         return (
                                             <div className={styles.profileMinimized} key={index}>
-                                                <div className={styles.profilePicMinimized}>
+                                                <div
+                                                    className={styles.profilePicMinimized}
+                                                    style={{ border: `2px solid ${platformProperties[profile.platform].profileBorderColor}` }}
+                                                >
                                                     <img
                                                         src={profilePicUrl}
                                                         alt='profile pic'

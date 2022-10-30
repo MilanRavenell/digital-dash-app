@@ -1,5 +1,5 @@
 import React from 'react';
-import { platformToLogoUrlMap } from '../helpers';
+import { platformProperties } from '../helpers';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import { ExpandLess, ExpandMore, LteMobiledataOutlined } from '@mui/icons-material';
@@ -138,7 +138,7 @@ const PostsContainerPostsView = ({
                                                                     return (
                                                                         <div className={styles.logo}>
                                                                             <img
-                                                                                src={platformToLogoUrlMap[platform].url}
+                                                                                src={platformProperties[platform].logoUrl}
                                                                                 alt='platform logo'
                                                                                 style={{
                                                                                     height: '100%',

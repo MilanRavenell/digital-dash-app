@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import { platformToLogoUrlMap } from '../helpers';
+import { platformProperties } from '../helpers';
 import ProfileCard from './ProfileCard';
 import AddPlatformInstructions from './AddPlatformInstructions';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -205,7 +205,7 @@ const AddProfile = ({
                     <div className={styles.header}>
                         <div className={styles.logo}>
                             <img
-                                src={platformToLogoUrlMap[platform].url}
+                                src={platformProperties[platform].logoUrl}
                                 alt='profile pic'
                                 style={{
                                     height: '100%',

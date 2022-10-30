@@ -5,7 +5,7 @@ import {
     useAuthenticator,
     Authenticator,
 } from "@aws-amplify/ui-react";
-import { platformToLogoUrlMap } from '../helpers';
+import { platformProperties } from '../helpers';
 
 import styles from '../styles/SignIn.module.css';
 
@@ -46,7 +46,7 @@ const SignIn = ({}) => {
                         platforms.map(platform => (
                             <div className={styles.icon}>
                                 <img
-                                    src={platformToLogoUrlMap[platform].url}
+                                    src={platformProperties[platform].logoUrl}
                                     alt='profile pic'
                                     style={{
                                         height: '100%',

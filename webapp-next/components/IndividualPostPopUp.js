@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { platformToLogoUrlMap } from '../helpers';
+import { platformProperties } from '../helpers';
 import TextField from '@mui/material/TextField';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
@@ -70,7 +70,7 @@ const IndividualPostPopUp = ({
                     <div className={styles.headerLeft}>
                         <div className={styles.logo}>
                             <img
-                                src={platformToLogoUrlMap[platform].url}
+                                src={platformProperties[platform].logoUrl}
                                 alt={'media'}
                                 loading='lazy'
                                 referrerPolicy="no-referrer"
