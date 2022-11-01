@@ -15,21 +15,17 @@
             {
               "Effect": "Allow",
               "Action": [
-                "ses:SendEmail"
+                "ses:SendTemplatedEmail"
               ],
-              "Resource": "arn:aws:ses:us-west-2:125288872271:identity/orbrealtimeanalytics@gmail.com"
+              "Resource": [
+                "arn:aws:ses:us-west-2:125288872271:identity/*@gmail.com",
+                "arn:aws:ses:us-west-2:125288872271:template/*"
+              ]
             },
             {
               "Effect": "Allow",
               "Action": [
-                "dynamodb:Scan"
-              ],
-              "Resource": "arn:aws:dynamodb:us-west-2:125288872271:table/User-b7rvoho6bjf3xcicxkq6ivubgy-prod"
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "dynamodb:Put"
+                "dynamodb:Query"
               ],
               "Resource": "arn:aws:dynamodb:us-west-2:125288872271:table/Configuration-b7rvoho6bjf3xcicxkq6ivubgy-prod"
             }
@@ -184,7 +180,20 @@
                         "$ref": "$[\"service\"][\"provider\"][\"iam\"][\"role\"][\"statements\"][1]"
                       },
                       {
-                        "$ref": "$[\"service\"][\"provider\"][\"iam\"][\"role\"][\"statements\"][2]"
+                        "Effect": "Allow",
+                        "Action": [
+                          "sqs:ReceiveMessage",
+                          "sqs:DeleteMessage",
+                          "sqs:GetQueueAttributes"
+                        ],
+                        "Resource": [
+                          {
+                            "Fn::GetAtt": [
+                              "HandleAccessCodeRequestQueue",
+                              "Arn"
+                            ]
+                          }
+                        ]
                       }
                     ]
                   }
@@ -213,7 +222,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/handle-access-code-request/prod/1667264106929-2022-11-01T00:55:06.929Z/handle-access-code-request.zip"
+                "S3Key": "serverless/handle-access-code-request/prod/1667311471375-2022-11-01T14:04:31.375Z/handle-access-code-request.zip"
               },
               "Handler": "src/index.handler",
               "Runtime": "nodejs14.x",
@@ -237,14 +246,37 @@
               "HandleAccessCodeRequestLogGroup"
             ]
           },
-          "HandleAccessCodeRequestLambdaVersionvOHAocUjUYIvmU337xckzmr3xbIScs21TfQNmuzQ1Y": {
+          "HandleAccessCodeRequestLambdaVersionk8Mah8WthQlaRYFHdyzmaKwiKnCiMGBob5e1BR8s": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "HandleAccessCodeRequestLambdaFunction"
               },
-              "CodeSha256": "zg2Gf1rtcEZDlwx8ANif+7efEZZYy4/dgyIMvXUbU34="
+              "CodeSha256": "fGjzQHLBj7MpQFELZvbjN4A6tILtJygM4WG6xuvL9ls="
+            }
+          },
+          "HandleAccessCodeRequestEventSourceMappingSQSHandleAccessCodeRequestQueue": {
+            "Type": "AWS::Lambda::EventSourceMapping",
+            "DependsOn": [
+              "IamRoleLambdaExecution"
+            ],
+            "Properties": {
+              "BatchSize": 10,
+              "MaximumBatchingWindowInSeconds": 1,
+              "EventSourceArn": {
+                "Fn::GetAtt": [
+                  "HandleAccessCodeRequestQueue",
+                  "Arn"
+                ]
+              },
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "HandleAccessCodeRequestLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Enabled": true
             }
           },
           "HandleAccessCodeRequestQueue": {
@@ -266,7 +298,7 @@
           "HandleAccessCodeRequestLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "HandleAccessCodeRequestLambdaVersionvOHAocUjUYIvmU337xckzmr3xbIScs21TfQNmuzQ1Y"
+              "Ref": "HandleAccessCodeRequestLambdaVersionk8Mah8WthQlaRYFHdyzmaKwiKnCiMGBob5e1BR8s"
             },
             "Export": {
               "Name": "sls-handle-access-code-request-prod-HandleAccessCodeRequestLambdaFunctionQualifiedArn"
@@ -370,14 +402,12 @@
         "handler": "src/index.handler",
         "events": [
           {
-            "arn": {
-              "Fn::GetAtt": [
-                "HandleAccessCodeRequestQueue",
-                "Arn"
-              ]
-            },
-            "maximumBatchingWindow": 1,
-            "sqs": null
+            "sqs": {
+              "arn": {
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"IamRoleLambdaExecution\"][\"Properties\"][\"Policies\"][0][\"PolicyDocument\"][\"Statement\"][4][\"Resource\"][0]"
+              },
+              "maximumBatchingWindow": 1
+            }
           }
         ],
         "name": "handle-access-code-request-prod-handleAccessCodeRequest",
@@ -386,7 +416,7 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "HandleAccessCodeRequestLambdaVersionvOHAocUjUYIvmU337xckzmr3xbIScs21TfQNmuzQ1Y"
+        "versionLogicalId": "HandleAccessCodeRequestLambdaVersionk8Mah8WthQlaRYFHdyzmaKwiKnCiMGBob5e1BR8s"
       }
     },
     "resources": {
@@ -422,7 +452,7 @@
     "artifact": "/Users/milanravenell/Documents/digital_dash/services/handle-access-code-request/.serverless/handle-access-code-request.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/handle-access-code-request/prod/1667264106929-2022-11-01T00:55:06.929Z",
+    "artifactDirectoryName": "serverless/handle-access-code-request/prod/1667311471375-2022-11-01T14:04:31.375Z",
     "artifact": "handle-access-code-request.zip"
   }
 }

@@ -29,6 +29,10 @@
     {
       "cloudFormationParameterName": "twitterApiKey",
       "environmentVariableName": "TWITTER_API_KEY"
+    },
+    {
+      "cloudFormationParameterName": "userPoolId",
+      "environmentVariableName": "USER_POOL_ID"
     }
   ]
 }

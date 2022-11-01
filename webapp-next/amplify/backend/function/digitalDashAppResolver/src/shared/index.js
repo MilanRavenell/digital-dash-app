@@ -3,4 +3,5 @@ module.exports = {
     getAccessToken: require('./get-access-token'),
     makeApiRequest: require('./make-api-request'),
     invokeWebScraper: require('./invoke-web-scraper'),
+    deleteProfile: require('./delete-profile'),
 };

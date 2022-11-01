@@ -18,14 +18,15 @@
       "function": {
         "digitalDashAppResolver": {
           "deploymentBucketName": "amplify-amplify36cf6a1d3b6e4-staging-162021-deployment",
-          "s3Key": "amplify-builds/digitalDashAppResolver-71644a325236454c5570-build.zip",
+          "s3Key": "amplify-builds/digitalDashAppResolver-366f4f384e3236696733-build.zip",
+          "googOauthClientId": "581336452597-6c80lf8ijdvhlmi00odvrqsj1iah9lad.apps.googleusercontent.com",
+          "googOauthClientSecret": "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",
           "twitterApiSecret": "FaIS5ICp0qvbrRO30zSvngjZLyVU8VEY4V0lsklrsvu0CkK384",
           "appsyncApiId": "7hdw3dtfmbhhbmqwm7qi7fgbki",
           "env": "staging",
           "webScraperLambdaName": "web-scraper-service-staging-scrapeContent",
           "twitterApiKey": "dTAwRDBqOFl3ZmpkOGw4RmpIT1c6MTpjaQ",
-          "googOauthClientId": "581336452597-6c80lf8ijdvhlmi00odvrqsj1iah9lad.apps.googleusercontent.com",
-          "googOauthClientSecret": "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"
+          "userPoolId": "us-west-2_FgSEWYy2P"
         }
       }
     }

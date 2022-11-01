@@ -13,24 +13,16 @@ const platformTableMap = Object.freeze({
 // Must be reverse ordered chronologically
 const now = new Date();
 
-const zerodOut = new Date();
-zerodOut.setHours(0, 0, 0, 0)
-
 const timeframes = (timezoneOffset) => {
     const nowTimezone = getDateWithTimezoneOffset(now, timezoneOffset);
 
-    const zerodOut = new Date();
+    const zerodOut = new Date(nowTimezone);
     zerodOut.setHours(0, 0, 0, 0);
 
+    const weekAgo = new Date(zerodOut.getTime() - (6 * 24 * 60 * 60 * 1000));
+    const monthAgo = new Date(zerodOut.getTime() - (29 * 24 * 60 * 60 * 1000));
+    const yearAgo = new Date(zerodOut.getTime() - (364 * 24 * 60 * 60 * 1000));
 
-    const weekAgo = new Date(zerodOut);
-    weekAgo.setDate(nowTimezone.getDate() - 6);
-
-    const monthAgo = new Date(zerodOut);
-    monthAgo.setDate(nowTimezone.getDate() - 29);
-
-    const yearAgo = new Date(zerodOut);
-    yearAgo.setDate(nowTimezone.getDate() - 364);
 
     return [
         {

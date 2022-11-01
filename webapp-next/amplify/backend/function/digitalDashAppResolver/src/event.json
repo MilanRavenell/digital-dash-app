@@ -1,17 +1,22 @@
 {
   "typeName": "Mutation",
-  "fieldName": "populateAnalytics",
+  "fieldName": "deleteUser",
   "arguments": {
     "input": {
       "platform": "instagram",
       "accessToken": "EAApFdlyGMG4BAO48fx8ZBTCVrCI8vZCSTf6ZAnPoxpu7FRMFfiqSMNaAayWQZCFM4onldAZCZBcXkvgITYpRIfZCyXzZCznGxb4gogHCnE5A83Bvx1277B6NWG50wZCZBvvsEJRxPNSNBdg6TvnGiKm8dLGAKx92YL09oeO8rV8AWMbYYZBMuJZCB1BXZC0U4EdvcEioZCLXcPEGOuAwZDZD",
-      "username": "milanravenell@gmail.com",
+      "username": "ravenellmilan162@gmail.com",
       "profileKey": "tiktok_techroastshow",
       "timezoneOffset": 420,
       "debug_noUploadToDDB": true,
       "options": "{\"platform\":\"instagram\",\"handle\":\"yungmilly69\",\"task\":\"process_single_content\",\"content_to_process\":\"Chq43E0ruhM\",\"use_tor\":false}",
       "queueUrl": "https://sqs.us-west-2.amazonaws.com/125288872271/update-analytics-queue-staging",
-      "body": "{\"typeName\":\"Mutation\",\"fieldName\":\"populateAnalytics\",\"arguments\":{\"input\":{\"username\":\"milanravenell@gmail.com\",\"profileKey\":\"instagram-pro_milly_rock89\"}}"
+      "body": "{\"typeName\":\"Mutation\",\"fieldName\":\"populateAnalytics\",\"arguments\":{\"input\":{\"username\":\"milanravenell@gmail.com\",\"profileKey\":\"instagram-pro_milly_rock89\"}}",
+      "email": "milanravenell@gmail.com",
+      "firstName": "Cool",
+      "lastName": "DOnny",
+      "owner": "a9f97ed9-61ca-4eb0-9d3f-5ecf5e7f0c2b",
+      "accessCode": "15f3c21b-0dcf-4aed-aa96-9dfedf6a5305"
     },
     "startDate": "2014-09-13T01:12:01.560Z",
     "endDate": "2022-09-13T00:38:01.525Z",
@@ -29,6 +34,7 @@
     "TWITTER_API_KEY": "dTAwRDBqOFl3ZmpkOGw4RmpIT1c6MTpjaQ",
     "TWITTER_API_SECRET": "FaIS5ICp0qvbrRO30zSvngjZLyVU8VEY4V0lsklrsvu0CkK384",
     "GOOG_OAUTH_CLIENT_ID": "581336452597-6c80lf8ijdvhlmi00odvrqsj1iah9lad.apps.googleusercontent.com",
-    "GOOG_OAUTH_CLIENT_SECRET": "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"
+    "GOOG_OAUTH_CLIENT_SECRET": "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",
+    "USER_POOL_ID": "us-west-2_FgSEWYy2P"
   }
 }

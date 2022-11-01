@@ -15,18 +15,31 @@ exports.handler = async (event) => {
     
     const { ENV: env, APPSYNC_API_ID: appsync_api_id } = process.env;
 
-    // check number users is less than threshold
-    const users = [];
+    // check that an access code is available
+    const accessCodes = [];
     try {
         let nextToken = null;
 
         do {
-            const response = await ddbClient.scan({
-                TableName: `User-${appsync_api_id}-${env}`,
+            const response = await ddbClient.query({
+                TableName: `Configuration-${appsync_api_id}-${env}`,
+                KeyConditionExpression: '#key = :key',
+                ExpressionAttributeNames: {
+                    '#key': 'key',
+                },
+                ExpressionAttributeValues: {
+                    ':key': `AccessCode`,
+                },
                 ExclusiveStartKey: nextToken,
             }).promise();
 
-            users.push(...response.Items);
+            console.log(response)
+
+            accessCodes.push(
+                ...response
+                    .Items
+                    .map(({ value }) => value)
+            );
             nextToken = response.LastEvaluatedKey;
         } while (nextToken)
     } catch (err) {
@@ -34,12 +47,20 @@ exports.handler = async (event) => {
         return;
     }
 
-    const thresholdReached = users.length > USER_THRESHOLD;
+    // select access tokens
+    const selectedAccessCodes = event.Records.map(() => {
+        if (accessCodes.length === 0 ) {
+            return null;
+        }
 
-    await Promise.all(event.Records.map(async (record) => {
+        const randIndex = Math.floor(Math.random() * accessCodes.length);
+        return accessCodes.splice(randIndex, 1)[0];
+    });
+
+    await Promise.all(event.Records.map(async (record, index) => {
         const { email, firstName } = JSON.parse(record.body);
 
-        if (thresholdReached) {
+        if (!selectedAccessCodes[index]) {
             console.log('Sending waitlist email');
             // Send email without access code
             await sendEmail({
@@ -52,19 +73,6 @@ exports.handler = async (event) => {
             return;
         }
     
-        // Generate uuid
-        const newAccessCode = uuid.v4();
-    
-        // add uuid to table of valid access codes
-        await ddbClient.put({
-            TableName: `Configuration-${appsync_api_id}-${env}`,
-            Item: {
-                key: 'AccessToken',
-                value: newAccessCode,
-                createdAt: new Date().toISOString(),
-            },
-        }).promise();
-    
         // email access code to requesting user
         console.log('Sending access token email')
         await sendEmail({
@@ -72,7 +80,7 @@ exports.handler = async (event) => {
             template: 'SendAccessToken',
             templateData: JSON.stringify({
                 firstName,
-                accessCode: newAccessCode, 
+                accessCode: selectedAccessCodes[index],
             }),
         });
     }));

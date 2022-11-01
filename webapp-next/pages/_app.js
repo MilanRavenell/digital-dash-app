@@ -6,8 +6,8 @@ import { listUserProfiles } from '../aws/graphql/queries';
 import Head from 'next/head';
 import Script from 'next/script';
 import { Authenticator } from '@aws-amplify/ui-react';
-import { getUser } from '../graphql/queries';
-import { createUser } from '../graphql/mutations';
+import { getUser } from '../aws/graphql/queries';
+import { initUser, submitAccessCode } from '../aws/graphql/mutations';
 import { useRouter } from 'next/router';
 import { Auth, Hub } from 'aws-amplify';
 
@@ -54,6 +54,8 @@ const MyApp = ({ Component, pageProps }) => {
     const [user, setUser] = useState(null);
     const [numProfileChecks, setNumProfileChecks] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [requestAccessCode, setRequestAccessCode] = useState(false);
+    const [invalidAccessCode, setInvalidAccessCode] = useState(false);
     const windowDimensions = useWindowDimension();
 
     useEffect(() => {
@@ -63,10 +65,10 @@ const MyApp = ({ Component, pageProps }) => {
             })
             .catch((err) => {
                 if (err === 'The user is not authenticated') {
+                    setLoading(false);
+                    setAuthUser(nullAuthUser);
                     if (router.pathname !== '/sign-in') {
                         router.push('/sign-in');
-                        setLoading(false);
-                        setAuthUser(nullAuthUser);
                     }
                 } else {
                     console.error(err);
@@ -78,25 +80,35 @@ const MyApp = ({ Component, pageProps }) => {
         setLoading(true);
         console.log('found auth user')
         if (authUser) {
-            if (router.pathname === '/sign-in') {
-                router.push('/');
-            }
-
             if (!user) {
                 setUserCallback(authUser);
             }
         }
 
         if (authUser === nullAuthUser) {
+            setLoading(false);
             if (router.pathname !== '/sign-in') {
                 router.push('/sign-in');
-                setLoading(false);
             }
         }
     }, [authUser]);
 
     useEffect(() => {
+        console.log('updating user')
         if (user) {
+            if (!user.submittedAccessCode) {
+                setRequestAccessCode(true);
+                setLoading(false);
+                if (router.pathname !== '/sign-in') {
+                    router.push('/sign-in');
+                }
+                return;
+            }
+
+            if (router.pathname === '/sign-in') {
+                router.push('/');
+            }
+
             getUserProfiles(user)
                 .then((profiles) => {
                     setUserProfiles(profiles);
@@ -162,9 +174,14 @@ const MyApp = ({ Component, pageProps }) => {
                 owner: authUser.username,
             }
 
-            await API.graphql({ query: createUser, variables: { input: ddbUser }});
+            const { success } = await API.graphql({ query: initUser, variables: { input: ddbUser }});
 
-            setUser(ddbUser);
+            if (success) {
+                setUser(ddbUser);
+            } else {
+                console.error('Failed to create new ddb user')
+            }
+            
         } else {
             ddbUser = {
                 ...ddbUser,
@@ -173,6 +190,36 @@ const MyApp = ({ Component, pageProps }) => {
         }
 
         setUser(ddbUser);
+    }, [user]);
+
+    const submitAccessCodeCallback = useCallback(async (accessCode) => {
+        if (user) {
+            try {
+                const response = await API.graphql({
+                    query: submitAccessCode,
+                    variables: {
+                        input: {
+                            username: user.email,
+                            accessCode,
+                        }
+                    }
+                });
+
+                console.log(response)
+    
+                if (response?.data?.submitAccessCode?.success) {
+                    setUser({
+                        ...user,
+                        submittedAccessCode: true,
+                    })
+                } else {
+                    setInvalidAccessCode(true);
+                }
+            } catch (err) {
+                console.error('Failed to submit access token', err);
+            }
+            
+        }
     }, [user]);
 
     const signOut = useCallback(() => {
@@ -197,10 +244,13 @@ const MyApp = ({ Component, pageProps }) => {
             loading,
             user,
             userProfiles,
+            requestAccessCode,
+            invalidAccessCode,
             windowDimensions,
             isMobile: windowDimensions ? windowDimensions.width < 800 : false,
             setUserProfiles,
             setUserCallback,
+            submitAccessCodeCallback,
             signOut,
         }}>
             <Head>

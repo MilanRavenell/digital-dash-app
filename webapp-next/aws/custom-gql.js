@@ -189,3 +189,22 @@ export const triggerSqs = /* GraphQL */ `
     }
   }
 `;
+
+export const initUser = /* GraphQL */ `
+  mutation InitUser($email: String!, $firstName: String!, $lastName: String!, $owner: String!) {
+    initUser(input: {
+      email: $email,
+      firstName: $firstName,
+      lastName: $lastName,
+      owner: $owner,
+    }) {
+      success
+      user {
+        owner
+        email
+        firstName
+        lastName
+      }
+    }
+  }
+`;

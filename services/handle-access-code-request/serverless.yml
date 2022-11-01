@@ -9,15 +9,13 @@ provider:
       statements:
         - Effect: 'Allow'
           Action:
-            - ses:SendEmail
-          Resource: arn:aws:ses:us-west-2:125288872271:identity/orbrealtimeanalytics@gmail.com
+            - ses:SendTemplatedEmail
+          Resource: 
+            - arn:aws:ses:us-west-2:125288872271:identity/*@gmail.com
+            - arn:aws:ses:us-west-2:125288872271:template/*
         - Effect: Allow
           Action:
-            - dynamodb:Scan
-          Resource: arn:aws:dynamodb:us-west-2:125288872271:table/User-${self:custom.appsync_api_id.${opt:stage, self:provider.stage}}-${self:provider.stage}
-        - Effect: Allow
-          Action:
-            - dynamodb:Put
+            - dynamodb:Query
           Resource: arn:aws:dynamodb:us-west-2:125288872271:table/Configuration-${self:custom.appsync_api_id.${opt:stage, self:provider.stage}}-${self:provider.stage}
   environment:
     ENV: ${self:provider.stage}
@@ -28,11 +26,11 @@ functions:
     handler: src/index.handler
     events:
       - sqs:
-        arn:
-          Fn::GetAtt:
-            - HandleAccessCodeRequestQueue
-            - Arn
-        maximumBatchingWindow: 1
+          arn:
+            Fn::GetAtt:
+              - HandleAccessCodeRequestQueue
+              - Arn
+          maximumBatchingWindow: 1
 
 resources:
   Resources:

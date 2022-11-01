@@ -61,6 +61,52 @@
     box-shadow: 5px 5px lightgrey;
     width: 45vw;
     max-width: 600px;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.accessCode {
+    border: 1px solid lightgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 90%;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+}
+
+.header {
+    font-size: 2vh;
+    color: grey;
+    width: 90%;
+}
+
+.headerSmallText {
+    font-size: 2vh;
+    color: grey;
+    width: 90%
+}
+
+.status {
+    font-size: max(1vh, 13px);
+}
+
+.submit {
+    margin-top: 3vh;
+}
+
+.smallButton {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.textField {
+    margin-top: 2vh;
+    width: 60%;
 }
 
 .grow { 

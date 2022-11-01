@@ -33,6 +33,9 @@
     },
     "twitterApiKey": {
       "Type": "String"
+    },
+    "userPoolId": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -105,6 +108,9 @@
             },
             "TWITTER_API_KEY": {
               "Ref": "twitterApiKey"
+            },
+            "USER_POOL_ID": {
+              "Ref": "userPoolId"
             }
           }
         },

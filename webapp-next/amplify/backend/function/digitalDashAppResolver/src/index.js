@@ -1,6 +1,8 @@
 const AWS = require('aws-sdk');
 const ddbClient = new AWS.DynamoDB.DocumentClient({ region: 'us-west-2', apiVersion: 'latest' });
 const sesClient = new AWS.SES({ region: 'us-west-2', apiVersion: 'latest' });
+const sqsClient = new AWS.SQS({ region: 'us-west-2', apiVersion: 'latest' });
+const cognitoClient = new AWS.CognitoIdentityServiceProvider({ region: 'us-west-2', apiVersion: 'latest' });
 
 const queries = require('./queries');
 const mutations = require('./mutations');
@@ -39,6 +41,8 @@ exports.handler = async (event) => {
     resources: {
       ddbClient,
       sesClient,
+      sqsClient,
+      cognitoClient,
       envVars: process.env,
     },
     arguments,

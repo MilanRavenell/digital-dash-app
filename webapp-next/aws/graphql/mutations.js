@@ -23,6 +23,29 @@ export const triggerSqs = /* GraphQL */ `
     }
   }
 `;
+export const initUser = /* GraphQL */ `
+  mutation InitUser($input: InitUserInput!) {
+    initUser(input: $input) {
+      success
+      user {
+        owner
+        email
+        firstName
+        lastName
+        submittedAccessCode
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+export const submitAccessCode = /* GraphQL */ `
+  mutation SubmitAccessCode($input: SubmitAccessCodeInput!) {
+    submitAccessCode(input: $input) {
+      success
+    }
+  }
+`;
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!
@@ -33,6 +56,7 @@ export const createUser = /* GraphQL */ `
       email
       firstName
       lastName
+      submittedAccessCode
       createdAt
       updatedAt
     }
@@ -48,6 +72,7 @@ export const updateUser = /* GraphQL */ `
       email
       firstName
       lastName
+      submittedAccessCode
       createdAt
       updatedAt
     }
@@ -63,6 +88,7 @@ export const deleteUser = /* GraphQL */ `
       email
       firstName
       lastName
+      submittedAccessCode
       createdAt
       updatedAt
     }
