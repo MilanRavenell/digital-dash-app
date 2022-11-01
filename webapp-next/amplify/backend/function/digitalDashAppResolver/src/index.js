@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
-const ddbClient = new AWS.DynamoDB.DocumentClient();
+const ddbClient = new AWS.DynamoDB.DocumentClient({ region: 'us-west-2', apiVersion: 'latest' });
+const sesClient = new AWS.SES({ region: 'us-west-2', apiVersion: 'latest' });
 
 const queries = require('./queries');
 const mutations = require('./mutations');
@@ -37,6 +38,7 @@ exports.handler = async (event) => {
   const response = functions[typeName][fieldName]({
     resources: {
       ddbClient,
+      sesClient,
       envVars: process.env,
     },
     arguments,

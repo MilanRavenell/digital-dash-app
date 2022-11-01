@@ -47,7 +47,7 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
 
     let numItemsInserted = 0;
 
-    const items = await Promise.all(allVideos.slice(0, 300).map(async (video) => {
+    const items = await Promise.all(allVideos.map(async (video) => {
         try {
             const extraInfo = await invokeWebScraper(ctx, {
                 platform: 'tiktok',
@@ -97,7 +97,7 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
                 }).promise();
 
                 // If 100 items have been collected and stored in DDB, set posts last populated 
-                if (numItemsInserted > 100) {
+                if (numItemsInserted > 50) {
                     await ddbClient.update({
                         TableName: `UserProfile-${appsync_api_id}-${env}`,
                         Key: { user: profile.user, key: profile.key },

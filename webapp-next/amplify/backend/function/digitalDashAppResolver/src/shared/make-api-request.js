@@ -28,25 +28,6 @@ async function makeApiRequest(ctx, profile, endpoint, accessToken, params = {}) 
             console.error(err);
         }
 
-        if (err.message === 'InvalidAccessToken') {
-            console.log('profile needs refresh')
-            
-            await ddbClient.update({
-                TableName: `UserProfile-${appsync_api_id}-${env}`,
-                Key: {
-                    user: profile.user,
-                    key: `${profile.platform}_${profile.profileName}`,
-                },
-                UpdateExpression: 'SET #needsRefresh = :needsRefresh',
-                ExpressionAttributeNames: {
-                    "#needsRefresh": "needsRefresh"
-                },
-                ExpressionAttributeValues: {
-                    ":needsRefresh": true,
-                },
-            }).promise();
-        }
-
         return null;
     }
 }

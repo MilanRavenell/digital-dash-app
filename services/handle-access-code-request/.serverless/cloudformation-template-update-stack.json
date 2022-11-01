@@ -1,0 +1,245 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "The AWS CloudFormation template for this Serverless application",
+  "Resources": {
+    "ServerlessDeploymentBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ServerlessDeploymentBucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "ServerlessDeploymentBucket"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      },
+                      "/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      }
+                    ]
+                  ]
+                }
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": false
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "HandleAccessCodeRequestLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/handle-access-code-request-prod-handleAccessCodeRequest"
+      }
+    },
+    "IamRoleLambdaExecution": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": {
+              "Fn::Join": [
+                "-",
+                [
+                  "handle-access-code-request",
+                  "prod",
+                  "lambda"
+                ]
+              ]
+            },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogStream",
+                    "logs:CreateLogGroup"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/handle-access-code-request-prod*:*"
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/handle-access-code-request-prod*:*:*"
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "ses:SendEmail"
+                  ],
+                  "Resource": "arn:aws:ses:us-west-2:125288872271:identity/orbrealtimeanalytics@gmail.com"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:Scan"
+                  ],
+                  "Resource": "arn:aws:dynamodb:us-west-2:125288872271:table/User-b7rvoho6bjf3xcicxkq6ivubgy-prod"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:Put"
+                  ],
+                  "Resource": "arn:aws:dynamodb:us-west-2:125288872271:table/Configuration-b7rvoho6bjf3xcicxkq6ivubgy-prod"
+                }
+              ]
+            }
+          }
+        ],
+        "Path": "/",
+        "RoleName": {
+          "Fn::Join": [
+            "-",
+            [
+              "handle-access-code-request",
+              "prod",
+              {
+                "Ref": "AWS::Region"
+              },
+              "lambdaRole"
+            ]
+          ]
+        }
+      }
+    },
+    "HandleAccessCodeRequestLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/handle-access-code-request/prod/1667264106929-2022-11-01T00:55:06.929Z/handle-access-code-request.zip"
+        },
+        "Handler": "src/index.handler",
+        "Runtime": "nodejs14.x",
+        "FunctionName": "handle-access-code-request-prod-handleAccessCodeRequest",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "ENV": "prod",
+            "APPSYNC_API_ID": "b7rvoho6bjf3xcicxkq6ivubgy"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "HandleAccessCodeRequestLogGroup"
+      ]
+    },
+    "HandleAccessCodeRequestLambdaVersionvOHAocUjUYIvmU337xckzmr3xbIScs21TfQNmuzQ1Y": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "HandleAccessCodeRequestLambdaFunction"
+        },
+        "CodeSha256": "zg2Gf1rtcEZDlwx8ANif+7efEZZYy4/dgyIMvXUbU34="
+      }
+    },
+    "HandleAccessCodeRequestQueue": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": "handle-access-code-request-queue-prod"
+      }
+    }
+  },
+  "Outputs": {
+    "ServerlessDeploymentBucketName": {
+      "Value": {
+        "Ref": "ServerlessDeploymentBucket"
+      },
+      "Export": {
+        "Name": "sls-handle-access-code-request-prod-ServerlessDeploymentBucketName"
+      }
+    },
+    "HandleAccessCodeRequestLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "HandleAccessCodeRequestLambdaVersionvOHAocUjUYIvmU337xckzmr3xbIScs21TfQNmuzQ1Y"
+      },
+      "Export": {
+        "Name": "sls-handle-access-code-request-prod-HandleAccessCodeRequestLambdaFunctionQualifiedArn"
+      }
+    }
+  }
+}

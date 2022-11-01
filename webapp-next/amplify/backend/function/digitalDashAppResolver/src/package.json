@@ -15,6 +15,7 @@
     "login-with-twitter": "^1.2.4",
     "moment": "^2.29.4",
     "rainbowvis.js": "^1.1.1",
-    "twitter-lite": "^1.1.0"
+    "twitter-lite": "^1.1.0",
+    "uuid": "^9.0.0"
   }
 }

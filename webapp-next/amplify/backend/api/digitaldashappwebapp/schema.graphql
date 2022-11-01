@@ -11,6 +11,7 @@ type User
   email: String! @primaryKey
   firstName: String!
   lastName: String!
+  submittedAccessCode: Boolean
 }
 
 type UserProfile
@@ -113,6 +114,13 @@ type MetricHistory @model
   metric: String!
   createdAt: String!
   value: Float!
+}
+
+type Configuration @model
+{
+  key: String! @primaryKey(sortKeyFields: ["value"])
+  value: String!
+  createdAt: String!
 }
 
 type PostMedia {

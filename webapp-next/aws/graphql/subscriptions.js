@@ -448,3 +448,39 @@ export const onDeleteMetricHistory = /* GraphQL */ `
     }
   }
 `;
+export const onCreateConfiguration = /* GraphQL */ `
+  subscription OnCreateConfiguration(
+    $filter: ModelSubscriptionConfigurationFilterInput
+  ) {
+    onCreateConfiguration(filter: $filter) {
+      key
+      value
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateConfiguration = /* GraphQL */ `
+  subscription OnUpdateConfiguration(
+    $filter: ModelSubscriptionConfigurationFilterInput
+  ) {
+    onUpdateConfiguration(filter: $filter) {
+      key
+      value
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteConfiguration = /* GraphQL */ `
+  subscription OnDeleteConfiguration(
+    $filter: ModelSubscriptionConfigurationFilterInput
+  ) {
+    onDeleteConfiguration(filter: $filter) {
+      key
+      value
+      createdAt
+      updatedAt
+    }
+  }
+`;

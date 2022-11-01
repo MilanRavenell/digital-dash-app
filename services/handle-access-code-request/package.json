@@ -1,0 +1,20 @@
+{
+  "name": "handle-access-code-request-service",
+  "version": "1.0.0",
+  "description": "Lambda function for handling access code requests",
+  "main": "index.js",
+  "license": "Apache-2.0",
+  "scripts": {
+    "deploy:staging": "sls deploy --stage staging",
+    "deploy:prod": "sls deploy --stage prod",
+    "test": "sls invoke local --function handleAccessCodeRequest --path event.json",
+    "save-templates": "node scripts/save-email-templates.js"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.92"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1194.0",
+    "uuid": "^9.0.0"
+  }
+}

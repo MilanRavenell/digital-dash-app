@@ -1,0 +1,7 @@
+{
+  "Template": {
+    "TemplateName": "SendAccessToken",
+    "SubjectPart": "Orb Real Time Analytics",
+    "TextPart": "Hello {{firstName}},\r\n\r\nThank you so much for your interest in Orb Real Time Analytics! Here is a code to gain access to the alpha version of our product. Please feel free to reach out to us at orbrealtimeanalytics@gmail.com if you have any questions or feedback.\r\n\r\nAccess Code: {{accessCode}}\r\n"
+  }
+}

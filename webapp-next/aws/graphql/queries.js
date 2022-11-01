@@ -19,6 +19,13 @@ export const findProfiles = /* GraphQL */ `
     }
   }
 `;
+export const invokeWebScraper = /* GraphQL */ `
+  query InvokeWebScraper($input: InvokeWebScraperInput!) {
+    invokeWebScraper(input: $input) {
+      response
+    }
+  }
+`;
 export const getUser = /* GraphQL */ `
   query GetUser($email: String!) {
     getUser(email: $email) {
@@ -384,6 +391,43 @@ export const listMetricHistories = /* GraphQL */ `
         metric
         createdAt
         value
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getConfiguration = /* GraphQL */ `
+  query GetConfiguration($key: String!, $value: String!) {
+    getConfiguration(key: $key, value: $value) {
+      key
+      value
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listConfigurations = /* GraphQL */ `
+  query ListConfigurations(
+    $key: String
+    $value: ModelStringKeyConditionInput
+    $filter: ModelConfigurationFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listConfigurations(
+      key: $key
+      value: $value
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        key
+        value
+        createdAt
         updatedAt
       }
       nextToken

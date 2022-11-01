@@ -1,0 +1,48 @@
+service: handle-access-code-request
+provider:
+  name: aws
+  stage: ${opt:stage, 'staging'}
+  region: us-west-2
+  profile: milan
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - ses:SendEmail
+          Resource: arn:aws:ses:us-west-2:125288872271:identity/orbrealtimeanalytics@gmail.com
+        - Effect: Allow
+          Action:
+            - dynamodb:Scan
+          Resource: arn:aws:dynamodb:us-west-2:125288872271:table/User-${self:custom.appsync_api_id.${opt:stage, self:provider.stage}}-${self:provider.stage}
+        - Effect: Allow
+          Action:
+            - dynamodb:Put
+          Resource: arn:aws:dynamodb:us-west-2:125288872271:table/Configuration-${self:custom.appsync_api_id.${opt:stage, self:provider.stage}}-${self:provider.stage}
+  environment:
+    ENV: ${self:provider.stage}
+    APPSYNC_API_ID: ${self:custom.appsync_api_id.${opt:stage, self:provider.stage}}
+
+functions:
+  handleAccessCodeRequest:
+    handler: src/index.handler
+    events:
+      - sqs:
+        arn:
+          Fn::GetAtt:
+            - HandleAccessCodeRequestQueue
+            - Arn
+        maximumBatchingWindow: 1
+
+resources:
+  Resources:
+    HandleAccessCodeRequestQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: handle-access-code-request-queue-${self:provider.stage}
+
+custom:
+  appsync_api_id:
+    staging: 7hdw3dtfmbhhbmqwm7qi7fgbki
+    prod: b7rvoho6bjf3xcicxkq6ivubgy
+  

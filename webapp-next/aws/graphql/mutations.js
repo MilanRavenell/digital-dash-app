@@ -9,6 +9,20 @@ export const populateAnalytics = /* GraphQL */ `
     }
   }
 `;
+export const deleteProfile = /* GraphQL */ `
+  mutation DeleteProfile($input: DeleteProfileInput!) {
+    deleteProfile(input: $input) {
+      success
+    }
+  }
+`;
+export const triggerSqs = /* GraphQL */ `
+  mutation TriggerSqs($input: TriggerSqsInput!) {
+    triggerSqs(input: $input) {
+      success
+    }
+  }
+`;
 export const createUser = /* GraphQL */ `
   mutation CreateUser(
     $input: CreateUserInput!
@@ -485,6 +499,45 @@ export const deleteMetricHistory = /* GraphQL */ `
       metric
       createdAt
       value
+      updatedAt
+    }
+  }
+`;
+export const createConfiguration = /* GraphQL */ `
+  mutation CreateConfiguration(
+    $input: CreateConfigurationInput!
+    $condition: ModelConfigurationConditionInput
+  ) {
+    createConfiguration(input: $input, condition: $condition) {
+      key
+      value
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateConfiguration = /* GraphQL */ `
+  mutation UpdateConfiguration(
+    $input: UpdateConfigurationInput!
+    $condition: ModelConfigurationConditionInput
+  ) {
+    updateConfiguration(input: $input, condition: $condition) {
+      key
+      value
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteConfiguration = /* GraphQL */ `
+  mutation DeleteConfiguration(
+    $input: DeleteConfigurationInput!
+    $condition: ModelConfigurationConditionInput
+  ) {
+    deleteConfiguration(input: $input, condition: $condition) {
+      key
+      value
+      createdAt
       updatedAt
     }
   }

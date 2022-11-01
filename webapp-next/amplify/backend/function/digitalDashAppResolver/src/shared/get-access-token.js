@@ -20,8 +20,9 @@ async function getAccessToken(ctx, profile) {
 
     const { accessToken, expires } = JSON.parse(profile.meta);
 
-    console.log('expires: ', expires)
-    if (new Date() < new Date(expires)) {
+    console.log('expires: ', expires);
+    // Possible for token to not be expired at this check, but be expired by the time we make the call. Give a buffer of 2 seconds
+    if (new Date(new Date().getTime() - 2000) < new Date(expires)) {
         return accessToken;
     }
 
@@ -37,7 +38,7 @@ async function getAccessToken(ctx, profile) {
             console.error(err);
         }
 
-        console.log('profile needs refresh')
+        console.log(`profile ${profile.key} needs refresh`)
         await ddbClient.update({
             TableName: `UserProfile-${appsync_api_id}-${env}`,
             Key: {

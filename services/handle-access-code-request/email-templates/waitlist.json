@@ -1,0 +1,7 @@
+{
+    "Template": {
+      "TemplateName": "Waitlist",
+      "SubjectPart": "Orb Real Time Analytics",
+      "TextPart": "Hello {{firstName}},\r\n\r\nThank you so much for your interest in Orb Real Time Analytics! Unfortunately, we are currently unable to generate a code for access to the alpha version of our product, but your email has been added to a waitlist and you will be among the first to be notified when we're able to increase capacity. Please feel free to reach out to us at orbrealtimeanalytics@gmail.com if you have any questions or feedback."
+    }
+  }
