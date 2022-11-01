@@ -107,7 +107,7 @@ const SignIn = ({
                 </div>
             </div>
             <div className={styles.right}>
-                <div className={styles.authenticator}>
+                <div className={styles.contentRight}>
                     {
                         (() => {
                             if (loading) {
@@ -163,7 +163,11 @@ const SignIn = ({
                                 )
                             }
 
-                            return (<Authenticator formFields={authenticatorFormFields}/>);
+                            return (
+                                <div className={styles.authenticator}>
+                                    <Authenticator formFields={authenticatorFormFields}/>
+                                </div>
+                            );
                         })()
                     }
                 </div>
