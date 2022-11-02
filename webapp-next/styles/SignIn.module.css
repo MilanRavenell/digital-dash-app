@@ -136,6 +136,12 @@
         flex: 1;
     }
 
+    .contentRight {
+        width: 95vw;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
     .authenticator {
         width: 95%;
     }
