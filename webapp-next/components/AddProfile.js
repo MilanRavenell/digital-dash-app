@@ -100,11 +100,6 @@ const AddProfile = ({
                         return (
                             <div>
                                 <div>
-                                    <Button onClick={() => { setScreen('sign-in-register-ig-basic'); }}>
-                                        Register Instagram Account
-                                    </Button>
-                                </div>
-                                <div>
                                     <Button onClick={() => { login(1); }}>Register Instagram Pro Account</Button>
                                 </div>
                             </div>

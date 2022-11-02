@@ -14,7 +14,7 @@ export default function Home() {
   const context = React.useContext(AppContext);
   const [profileToRefresh, setProfileToRefresh] = React.useState(null);
 
-  const platformList = ['twitter', 'youtube', 'instagram', 'tiktok'];
+  const platformList = ['twitter', 'youtube', 'instagram'];
 
   const isFirstLogin = (router.query.f === '1');
 
