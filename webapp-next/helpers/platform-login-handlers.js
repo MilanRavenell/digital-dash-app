@@ -109,7 +109,7 @@ async function youtubeLoginHandler({ currentProfiles, setVerify, setFail }) {
     }
 
     const client = google.accounts.oauth2.initCodeClient({
-        client_id: '581336452597-6c80lf8ijdvhlmi00odvrqsj1iah9lad.apps.googleusercontent.com',
+        client_id:  process.env.GOOG_OAUTH_CLIENT_ID,
         scope: 'https://www.googleapis.com/auth/youtube.readonly',
         ux_mode: 'popup',
         callback: onSignIn,
