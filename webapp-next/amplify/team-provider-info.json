@@ -50,14 +50,15 @@
       "function": {
         "digitalDashAppResolver": {
           "deploymentBucketName": "amplify-digitaldashappwebapp-prod-224358-deployment",
-          "s3Key": "amplify-builds/digitalDashAppResolver-7651574a6c5a52504859-build.zip",
+          "s3Key": "amplify-builds/digitalDashAppResolver-68686e4d6c4b53735254-build.zip",
           "googOauthClientId": "97892154036-pqkjljs24ffsin8s0srqrcu1btpjung8.apps.googleusercontent.com",
           "googOauthClientSecret": "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",
           "twitterApiSecret": "jIVGcIVRWGoI1in9fJlHOXCgK4KcLmCi2629WpZLxFqLJKrSSK",
           "appsyncApiId": "b7rvoho6bjf3xcicxkq6ivubgy",
           "env": "prod",
           "webScraperLambdaName": "web-scraper-service-prod-scrapeContent",
-          "twitterApiKey": "aTV3WEVuRlhnNTN6MlMwTmF1UGE6MTpjaQ"
+          "twitterApiKey": "aTV3WEVuRlhnNTN6MlMwTmF1UGE6MTpjaQ",
+          "userPoolId": "us-west-2_SqcEmDHka"
         }
       }
     }

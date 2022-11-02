@@ -13,6 +13,9 @@
     "s3Key": {
       "Type": "String"
     },
+    "userPoolId": {
+      "Type": "String"
+    },
     "googOauthClientId": {
       "Type": "String"
     },
@@ -32,9 +35,6 @@
       "Type": "String"
     },
     "twitterApiKey": {
-      "Type": "String"
-    },
-    "userPoolId": {
       "Type": "String"
     }
   },
@@ -88,6 +88,9 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
+            "USER_POOL_ID": {
+              "Ref": "userPoolId"
+            },
             "GOOG_OAUTH_CLIENT_ID": {
               "Ref": "googOauthClientId"
             },
@@ -108,9 +111,6 @@
             },
             "TWITTER_API_KEY": {
               "Ref": "twitterApiKey"
-            },
-            "USER_POOL_ID": {
-              "Ref": "userPoolId"
             }
           }
         },
