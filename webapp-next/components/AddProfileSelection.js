@@ -18,6 +18,7 @@ import styles from '../styles/AddProfileSelection.module.css';
 const AddProfileSelection = ({
     user,
     profiles,
+    platformList,
     handleProfileDelete,
     handlePlatformClick,
     handleContinueClick,
@@ -38,8 +39,6 @@ const AddProfileSelection = ({
         handleProfileDelete(user, profiles, profileIndexToDelete);
         handleClose();
     }
-
-    const platformList = ['twitter', 'youtube', 'instagram', 'tiktok'];
 
     const nBatch = (() => {
         const width = windowDimensions.width;
