@@ -79,31 +79,32 @@ const AddProfileSelection = ({
                                             batch.map((platform, index) => (
                                                 <div className={styles.platform} key={index}>
                                                     <Button
-                                                        className={styles.platformInner}
                                                         variant="outlined"
                                                         onClick={() => {handlePlatformClick(platform)}}
                                                         key={platform}>
-                                                            <div className={styles.platformLogoNameContainer}>
-                                                                <div className={styles.platformLogoName}>
-                                                                    <div className={styles.platformLogo}>
-                                                                        <img
-                                                                            src={platformProperties[platform].logoUrl}
-                                                                            alt='profile pic'
-                                                                            style={{
-                                                                                height: '100%',
-                                                                                width: '100%',
-                                                                                objectFit: 'contain',
-                                                                            }}
-                                                                            referrerPolicy="no-referrer"
-                                                                        />
-                                                                    </div>
-                                                                    <div className={styles.platformName}>
-                                                                        { platform }
+                                                            <div className={styles.platformInner}>
+                                                                <div className={styles.platformLogoNameContainer}>
+                                                                    <div className={styles.platformLogoName}>
+                                                                        <div className={styles.platformLogo}>
+                                                                            <img
+                                                                                src={platformProperties[platform].logoUrl}
+                                                                                alt='profile pic'
+                                                                                style={{
+                                                                                    height: '100%',
+                                                                                    width: '100%',
+                                                                                    objectFit: 'contain',
+                                                                                }}
+                                                                                referrerPolicy="no-referrer"
+                                                                            />
+                                                                        </div>
+                                                                        <div className={styles.platformName}>
+                                                                            { platform }
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div className={styles.platformPlus}>
-                                                                <Add fontSize="large"/>
+                                                                <div className={styles.platformPlus}>
+                                                                    <Add fontSize="large"/>
+                                                                </div>
                                                             </div>
                                                     </Button>
                                                 </div>
