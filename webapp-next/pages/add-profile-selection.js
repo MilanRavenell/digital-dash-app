@@ -14,6 +14,8 @@ export default function Home() {
   const context = React.useContext(AppContext);
   const [profileToRefresh, setProfileToRefresh] = React.useState(null);
 
+  const platformList = ['twitter', 'youtube', 'instagram'];
+
   const isFirstLogin = (router.query.f === '1');
 
   React.useEffect(() => {
@@ -94,6 +96,7 @@ export default function Home() {
         <AddProfileSelection
           user={context.user}
           profiles={context.userProfiles}
+          platformList={platformList}
           handleProfileDelete={handleProfileDelete}
           handlePlatformClick={navigateToPlatform}
           handleContinueClick={navigateToMain}

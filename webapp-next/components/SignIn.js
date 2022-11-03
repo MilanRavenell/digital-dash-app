@@ -13,7 +13,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import styles from '../styles/SignIn.module.css';
 
-const platforms = ['twitter', 'youtube', 'instagram', 'tiktok']
+const platforms = ['twitter', 'youtube', 'instagram']
 
 const SignIn = ({
     requestAccessCode,
