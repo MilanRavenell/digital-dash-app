@@ -100,7 +100,7 @@ const AddProfile = ({
                         return (
                             <div>
                                 <div>
-                                    <Button onClick={() => { login(1); }}>Register Instagram Pro Account</Button>
+                                    <Button onClick={() => { login(1); }}>Register Instagram Account</Button>
                                 </div>
                             </div>
                         )
