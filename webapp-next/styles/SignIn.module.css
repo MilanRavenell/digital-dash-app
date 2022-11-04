@@ -131,7 +131,7 @@
 }
 
 @media only screen and (max-device-width: 800px) {
-    .container {
+    .content {
         flex-direction: column;
     }
 

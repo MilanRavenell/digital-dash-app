@@ -107,7 +107,7 @@
 }
 
 @media only screen and (max-device-width: 600px) {
-    .container {
+    .content {
         flex-direction: column-reverse;
     }
 
