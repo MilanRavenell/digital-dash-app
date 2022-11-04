@@ -19,5 +19,18 @@ module.exports = {
     GOOG_OAUTH_CLIENT_SECRET: process.env.GOOG_OAUTH_CLIENT_SECRET,
     ACCESS_KEY_ID_AWS: process.env.ACCESS_KEY_ID_AWS,
     SECRET_ACCESS_KEY_AWS: process.env.SECRET_ACCESS_KEY_AWS,
+  },
+  webpack: (config, options) => {
+    config.module.rules.push({
+      test: /\.html$/i,
+      use: [
+        options.defaultLoaders.babel,
+        {
+          loader: 'html-loader',
+        },
+      ]
+    });
+
+    return config;
   }
 }

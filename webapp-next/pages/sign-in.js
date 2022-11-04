@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import SignIn from '../components/SignIn';
 import AppContext from '../components/AppContext';
 import axios from 'axios';
@@ -10,6 +11,7 @@ Amplify.configure(config);
 
 export default function Home() {
     const context = React.useContext(AppContext);
+    const router = useRouter();
 
     const [statusMessage, setStatusMessage] = React.useState(null);
 
@@ -39,6 +41,10 @@ export default function Home() {
         
         return false;
     }, [context.user]);
+
+    const openPrivacyPolicy = () => {
+        router.push('/privacy-policy');
+    }
     
     return (
         <div className='container'>
@@ -50,6 +56,7 @@ export default function Home() {
                 submitAccessCodeCallback={context.submitAccessCodeCallback}
                 resendAccessCodeEmail={resendAccessCodeEmail}
                 signOut={context.signOut}
+                openPrivacyPolicy={openPrivacyPolicy}
             />
         </div>
     )

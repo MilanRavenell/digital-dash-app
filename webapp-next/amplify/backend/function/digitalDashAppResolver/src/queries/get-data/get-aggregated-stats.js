@@ -50,7 +50,7 @@ async function getTotalFollowerCount(ctx, profiles, end, timezoneOffset) {
                 },
                 ExpressionAttributeValues: {
                     ':key': `${profile.key}_followerCount`,
-                    ':end': getDateWithTimezoneOffset(end, -1 * timezoneOffset).toISOString(),
+                    ':end': getDateWithTimezoneOffset(end, -1 * timezoneOffset).toISOString(), //utc
                 },
                 ScanIndexForward: false,
                 Limit: 1,

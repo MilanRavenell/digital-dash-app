@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import AppContext from '../components/AppContext';
 import MainContentContainer from '../components/MainContentContainer';
 import Loading from '../components/Loading';
+
 import "@aws-amplify/ui-react/styles.css";
 import { useRouter } from 'next/router';
 import { useAuthenticator } from "@aws-amplify/ui-react";
