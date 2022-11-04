@@ -157,6 +157,10 @@ export default function App() {
     router.push(`/add-profile-selection`);
   }, []);
 
+  const goToPrivacyPolicy = React.useCallback(() => {
+    router.push('/privacy-policy');
+  }, []);
+
   const handleNeedsRefresh = React.useCallback((profile) => {
     setProfileToRefresh(profile)
   }, []);
@@ -192,6 +196,7 @@ export default function App() {
             handleRefreshCancel={handleRefreshCancel}
             profileToRefresh={profileToRefresh}
             isMobile={context.isMobile}
+            goToPrivacyPolicy={goToPrivacyPolicy}
             key={'main'}
           />,
       ]
