@@ -2,20 +2,26 @@ import axios from 'axios';
 import { signIn } from 'next-auth/react';
 
 async function igBasicLoginHandler({ handle, setVerify, setFail }) {
-    const profileInfo = (await axios.get(`/api/auth/fetch-profile-with-scraper?handle=${handle}&platform=instagram`)).data;
-    console.log(profileInfo)
+    try {
+        const profileInfo = (await axios.get(`/api/auth/fetch-profile-with-scraper?handle=${handle}&platform=instagram`)).data;
+        console.log(profileInfo)
 
-    if (profileInfo) {
-        const profile = {
-            profileName: handle,
-            profilePicUrl: `/api/fetch-image?url=${profileInfo.profile_pic_url.replace(/&/g, '@@@@')}`,
-            platform: 'instagram-basic',
-        };
+        if (profileInfo) {
+            const profile = {
+                profileName: handle,
+                profilePicUrl: `/api/fetch-image?url=${profileInfo.profile_pic_url.replace(/&/g, '@@@@')}`,
+                platform: 'instagram-basic',
+            };
 
-        setVerify([profile]);
-    } else {
+            setVerify([profile]);
+        } else {
+            setFail();
+        }
+    } catch (err) {
+        console.log('Failed to login with ig basic', err);
         setFail();
     }
+    
 }
 
 async function igProLoginHandler({ currentProfiles, setVerify, setFail }) {

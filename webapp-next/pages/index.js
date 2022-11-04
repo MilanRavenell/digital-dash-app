@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import AppContext from '../components/AppContext';
 import MainContentContainer from '../components/MainContentContainer';
 import Loading from '../components/Loading';
+
 import "@aws-amplify/ui-react/styles.css";
 import { useRouter } from 'next/router';
 import { useAuthenticator } from "@aws-amplify/ui-react";
@@ -157,6 +158,10 @@ export default function App() {
     router.push(`/add-profile-selection`);
   }, []);
 
+  const goToPrivacyPolicy = React.useCallback(() => {
+    router.push('/privacy-policy');
+  }, []);
+
   const handleNeedsRefresh = React.useCallback((profile) => {
     setProfileToRefresh(profile)
   }, []);
@@ -192,6 +197,7 @@ export default function App() {
             handleRefreshCancel={handleRefreshCancel}
             profileToRefresh={profileToRefresh}
             isMobile={context.isMobile}
+            goToPrivacyPolicy={goToPrivacyPolicy}
             key={'main'}
           />,
       ]

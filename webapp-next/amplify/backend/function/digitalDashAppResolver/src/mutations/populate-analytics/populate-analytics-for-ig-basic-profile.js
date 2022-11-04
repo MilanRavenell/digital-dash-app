@@ -74,7 +74,7 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
             const now = new Date().toISOString();
             const viewCount = mediaObject.views ? parseInt(mediaObject.views) : null;
             const commentCount = parseInt(mediaObject.comments || 0);
-            const likeCount = parseInt(mediaObject.likes || 0);
+            const likeCount = (mediaObject.likes && mediaObject.likes >= 0) ? parseInt(mediaObject.likes) : null;
             const engagementCount = commentCount + likeCount;
 
             const item = {

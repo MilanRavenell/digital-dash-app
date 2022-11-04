@@ -43,7 +43,7 @@ class ContentDataScraper:
         success = False
         result = None
 
-        while not success and (time.time() - self.time_start < 90):
+        while not success and (tries < 5):
             tries = tries + 1
 
             try:
@@ -221,7 +221,7 @@ class ContentDataScraper:
         if not self.use_tor:
             await page.authenticate({
                 'username': 'digitaldash',
-                'password': 'digitaldash02',
+                'password': 'digitaldash03',
             })
 
         await page.setRequestInterception(True)
@@ -269,16 +269,20 @@ class ContentDataScraper:
 
     @staticmethod
     def get_int_from_string(num):
-        num = num.replace(',', '')
+        try:
+            num = num.replace(',', '')
 
-        if (num == ''):
+            if (num == ''):
+                return 0
+            if 'K' in num:
+                num = float(num.split('K')[0]) * 1000
+            elif 'M' in num:
+                num = float(num.split('M')[0]) * 1000000
+
+            return int(num)
+        # String could not be coalesced into number
+        except:
             return 0
-        if 'K' in num:
-            num = float(num.split('K')[0]) * 1000
-        elif 'M' in num:
-            num = float(num.split('M')[0]) * 1000000
-
-        return int(num)
 
     @staticmethod
     async def handle_failure(page):

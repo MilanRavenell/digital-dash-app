@@ -53,68 +53,70 @@ const AddProfileSelection = ({
 
     return (
         <div className={styles.container}>
-            <div className={styles.left}>
-                <div className={styles.leftPicker}>
-                    <ProfilePicker
-                        profiles={profiles}
-                        user={user}
-                        setProfileIndexToDelete={setProfileIndexToDelete}
-                        editMode
-                        handleNeedsRefresh={handleNeedsRefresh}
-                    />
+            <div className={styles.content}>
+                <div className={styles.left}>
+                    <div className={styles.leftPicker}>
+                        <ProfilePicker
+                            profiles={profiles}
+                            user={user}
+                            setProfileIndexToDelete={setProfileIndexToDelete}
+                            editMode
+                            handleNeedsRefresh={handleNeedsRefresh}
+                        />
+                    </div>
                 </div>
-            </div>
-            <div className={styles.right}>
-                <div className={styles.rightContentContainer}>
-                    <div className={styles.rightContent}>
-                        <div className={styles.headerText}>
-                            Add Profile
-                        </div>
-                        <div className={styles.platforms}>
-                            {
-                                batchArray(platformList, nBatch, false).map((batch, batchIndex) => (
-                                    <div className={styles.platformRow} key={batchIndex}>
-                                        {
-                                            batch.map((platform, index) => (
-                                                <div className={styles.platform} key={index}>
-                                                    <Button
-                                                        variant="outlined"
-                                                        onClick={() => {handlePlatformClick(platform)}}
-                                                        key={platform}>
-                                                            <div className={styles.platformInner}>
-                                                                <div className={styles.platformLogoNameContainer}>
-                                                                    <div className={styles.platformLogoName}>
-                                                                        <div className={styles.platformLogo}>
-                                                                            <img
-                                                                                src={platformProperties[platform].logoUrl}
-                                                                                alt='profile pic'
-                                                                                style={{
-                                                                                    height: '100%',
-                                                                                    width: '100%',
-                                                                                    objectFit: 'contain',
-                                                                                }}
-                                                                                referrerPolicy="no-referrer"
-                                                                            />
-                                                                        </div>
-                                                                        <div className={styles.platformName}>
-                                                                            { platform }
+                <div className={styles.right}>
+                    <div className={styles.rightContentContainer}>
+                        <div className={styles.rightContent}>
+                            <div className={styles.headerText}>
+                                Add Profile
+                            </div>
+                            <div className={styles.platforms}>
+                                {
+                                    batchArray(platformList, nBatch, false).map((batch, batchIndex) => (
+                                        <div className={styles.platformRow} key={batchIndex}>
+                                            {
+                                                batch.map((platform, index) => (
+                                                    <div className={styles.platform} key={index}>
+                                                        <Button
+                                                            variant="outlined"
+                                                            onClick={() => {handlePlatformClick(platform)}}
+                                                            key={platform}>
+                                                                <div className={styles.platformInner}>
+                                                                    <div className={styles.platformLogoNameContainer}>
+                                                                        <div className={styles.platformLogoName}>
+                                                                            <div className={styles.platformLogo}>
+                                                                                <img
+                                                                                    src={platformProperties[platform].logoUrl}
+                                                                                    alt='profile pic'
+                                                                                    style={{
+                                                                                        height: '100%',
+                                                                                        width: '100%',
+                                                                                        objectFit: 'contain',
+                                                                                    }}
+                                                                                    referrerPolicy="no-referrer"
+                                                                                />
+                                                                            </div>
+                                                                            <div className={styles.platformName}>
+                                                                                { platform }
+                                                                            </div>
                                                                         </div>
                                                                     </div>
+                                                                    <div className={styles.platformPlus}>
+                                                                        <Add fontSize="large"/>
+                                                                    </div>
                                                                 </div>
-                                                                <div className={styles.platformPlus}>
-                                                                    <Add fontSize="large"/>
-                                                                </div>
-                                                            </div>
-                                                    </Button>
-                                                </div>
-                                            ))
-                                        }
-                                    </div>
-                                ))
-                            }
-                        </div>
-                        <div className={styles.button}>
-                            <Button onClick={handleContinueClick}>{isFirstLogin ? 'Continue to Dashboard' : 'Back to Dashboard'}</Button>
+                                                        </Button>
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                            <div className={styles.button}>
+                                <Button onClick={handleContinueClick}>{isFirstLogin ? 'Continue to Dashboard' : 'Back to Dashboard'}</Button>
+                            </div>
                         </div>
                     </div>
                 </div>

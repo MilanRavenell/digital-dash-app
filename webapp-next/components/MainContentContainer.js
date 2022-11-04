@@ -9,6 +9,7 @@ import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBullet
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 import NeedsRefreshDialogue from './NeedsRefreshDialogue';
 import TimeframePicker from './TimeframePicker';
+import Footer from '../components/Footer';
 
 import AppContext from '../components/AppContext';
 
@@ -28,6 +29,7 @@ const MainContentContainer = ({
     handleRefreshCancel,
     profileToRefresh,
     isMobile,
+    goToPrivacyPolicy,
 }) => {
     const [state, setState] = React.useState({
         popUpPost: null,
@@ -172,6 +174,9 @@ const MainContentContainer = ({
                     </div>
                 </div>
             </div>
+            <Footer
+                openPrivacyPolicy={goToPrivacyPolicy}
+            />
             {
                 (state.popUpPost !== null) && [
                     (<div className={styles.popupBackground} onClick={clearPopUpPost} key={'background'}/>),

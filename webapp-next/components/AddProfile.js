@@ -190,31 +190,33 @@ const AddProfile = ({
 
     return (
         <div className={styles.container}>
-            <div className={styles.left}>
-                <div className={styles.contentLeft}>
-                    <AddPlatformInstructions platform={platform}/>
-                </div>
-            </div>
-            <div className={styles.right}>
-                <div className={styles.contentRight}>
-                    <div className={styles.header}>
-                        <div className={styles.logo}>
-                            <img
-                                src={platformProperties[platform].logoUrl}
-                                alt='profile pic'
-                                style={{
-                                    height: '100%',
-                                    width: '100%',
-                                    objectFit: 'contain',
-                                }}
-                                referrerPolicy="no-referrer"
-                            />
-                        </div>
-                        <div className={styles.title}>
-                            Add {platform[0].toUpperCase() + platform.slice(1)} Account
-                        </div>
+            <div className={styles.content}>
+                <div className={styles.left}>
+                    <div className={styles.contentLeft}>
+                        <AddPlatformInstructions platform={platform}/>
                     </div>
-                    { getContent() }
+                </div>
+                <div className={styles.right}>
+                    <div className={styles.contentRight}>
+                        <div className={styles.header}>
+                            <div className={styles.logo}>
+                                <img
+                                    src={platformProperties[platform].logoUrl}
+                                    alt='profile pic'
+                                    style={{
+                                        height: '100%',
+                                        width: '100%',
+                                        objectFit: 'contain',
+                                    }}
+                                    referrerPolicy="no-referrer"
+                                />
+                            </div>
+                            <div className={styles.title}>
+                                Add {platform[0].toUpperCase() + platform.slice(1)} Account
+                            </div>
+                        </div>
+                        { getContent() }
+                    </div>
                 </div>
             </div>
         </div>
