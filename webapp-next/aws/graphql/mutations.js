@@ -33,6 +33,7 @@ export const initUser = /* GraphQL */ `
         firstName
         lastName
         submittedAccessCode
+        canEmail
         createdAt
         updatedAt
       }
@@ -42,6 +43,13 @@ export const initUser = /* GraphQL */ `
 export const submitAccessCode = /* GraphQL */ `
   mutation SubmitAccessCode($input: SubmitAccessCodeInput!) {
     submitAccessCode(input: $input) {
+      success
+    }
+  }
+`;
+export const removeUser = /* GraphQL */ `
+  mutation RemoveUser($input: RemoveUserInput!) {
+    removeUser(input: $input) {
       success
     }
   }
@@ -57,6 +65,7 @@ export const createUser = /* GraphQL */ `
       firstName
       lastName
       submittedAccessCode
+      canEmail
       createdAt
       updatedAt
     }
@@ -73,6 +82,7 @@ export const updateUser = /* GraphQL */ `
       firstName
       lastName
       submittedAccessCode
+      canEmail
       createdAt
       updatedAt
     }
@@ -89,6 +99,7 @@ export const deleteUser = /* GraphQL */ `
       firstName
       lastName
       submittedAccessCode
+      canEmail
       createdAt
       updatedAt
     }

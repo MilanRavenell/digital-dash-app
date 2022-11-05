@@ -7,9 +7,10 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { Authenticator } from '@aws-amplify/ui-react';
 import { getUser } from '../aws/graphql/queries';
-import { initUser, submitAccessCode } from '../aws/graphql/mutations';
+import { createUser, submitAccessCode, updateUser, removeUser } from '../aws/graphql/mutations';
 import { useRouter } from 'next/router';
 import { Auth, Hub } from 'aws-amplify';
+import axios from 'axios';
 
 
 import Amplify from 'aws-amplify';
@@ -54,8 +55,8 @@ const MyApp = ({ Component, pageProps }) => {
     const [user, setUser] = useState(null);
     const [numProfileChecks, setNumProfileChecks] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [requestAccessCode, setRequestAccessCode] = useState(false);
     const [invalidAccessCode, setInvalidAccessCode] = useState(false);
+    const [signInStatusMessage, setSignInStatusMessage] = useState(null);
     const windowDimensions = useWindowDimension();
 
     useEffect(() => {
@@ -91,13 +92,15 @@ const MyApp = ({ Component, pageProps }) => {
                 router.push('/sign-in');
             }
         }
+
+        // Clear sign in status if any
+        setSignInStatusMessage(null);
     }, [authUser]);
 
     useEffect(() => {
         console.log('updating user')
         if (user) {
             if (!user.submittedAccessCode) {
-                setRequestAccessCode(true);
                 setLoading(false);
                 if (router.pathname !== '/sign-in') {
                     router.push('/sign-in');
@@ -174,7 +177,7 @@ const MyApp = ({ Component, pageProps }) => {
                 owner: authUser.username,
             }
 
-            const { success } = await API.graphql({ query: initUser, variables: { input: ddbUser }});
+            const { success } = await API.graphql({ query: createUser, variables: { input: ddbUser }});
 
             if (success) {
                 setUser(ddbUser);
@@ -211,7 +214,7 @@ const MyApp = ({ Component, pageProps }) => {
                     setUser({
                         ...user,
                         submittedAccessCode: true,
-                    })
+                    });
                 } else {
                     setInvalidAccessCode(true);
                 }
@@ -219,6 +222,64 @@ const MyApp = ({ Component, pageProps }) => {
                 console.error('Failed to submit access token', err);
             }
             
+        }
+    }, [user]);
+
+    const setCanEmailCallback = useCallback(async (canEmail) => {
+        try {
+            await API.graphql({
+                query: updateUser,
+                variables: {
+                    input: {
+                        email: user.email,
+                        canEmail,
+                    },
+                },
+            });
+    
+            if (canEmail) {
+                // send email
+                await axios.get(`/api/send-request-access-code-sqs?email=${user.email}&firstName=${user.firstName}`);
+            }
+    
+            setUser((prevUser) => ({
+                ...prevUser,
+                canEmail,
+            }));
+
+            setSignInStatusMessage({
+                message: canEmail
+                    ? 'Added to email list'
+                    : 'Removed from email list',
+                isPositive: true,
+            });
+        } catch (err) {
+            console.error(`Failed to set canEmail for user ${user.email}`, err);
+            setSignInStatusMessage({
+                message: canEmail
+                    ? 'Failed to add to email list'
+                    : 'Failed to remove from email list',
+                isPositive: false,
+            });
+        }
+        
+    }, [user]);
+
+    const deleteUserCallback = useCallback(async () => {
+        try {
+            const response = await API.graphql({
+                query: removeUser,
+                variables: {
+                    input: {
+                        username: user.email,
+                        owner: user.owner,
+                    },
+                },
+            });
+
+            signOut();
+        } catch (err) {
+            console.error(`Failed to delete user, ${user.email}`);
         }
     }, [user]);
 
@@ -244,18 +305,21 @@ const MyApp = ({ Component, pageProps }) => {
             loading,
             user,
             userProfiles,
-            requestAccessCode,
             invalidAccessCode,
             windowDimensions,
             isMobile: windowDimensions ? windowDimensions.width < 800 : false,
+            signInStatusMessage,
             setUserProfiles,
+            setSignInStatusMessage,
             setUserCallback,
             submitAccessCodeCallback,
+            setCanEmailCallback,
+            deleteUserCallback,
             signOut,
         }}>
             <Head>
-                <title>Create Next App</title>
-                <link rel="icon" href="/favicon.ico" />
+                <title>Orb Real Time Analytics</title>
+                <link rel="icon" href="/orb_512.png" />
             </Head>
             <Script strategy="lazyOnload" async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"/>
             <Script>

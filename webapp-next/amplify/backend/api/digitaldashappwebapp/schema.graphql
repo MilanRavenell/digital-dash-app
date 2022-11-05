@@ -12,6 +12,7 @@ type User
   firstName: String!
   lastName: String!
   submittedAccessCode: Boolean
+  canEmail: Boolean
 }
 
 type UserProfile
@@ -272,12 +273,22 @@ type SubmitAccessCodeResponse {
   success: Boolean!
 }
 
+input RemoveUserInput {
+  username: String!
+  owner: String!
+}
+
+type RemoveUserResponse {
+  success: Boolean!
+}
+
 type Mutation {
   populateAnalytics(input: PopulateAnalyticsInput!): PopulateAnalyticsResponse! @function(name: "digitalDashAppResolver", region: "us-west-2")
   deleteProfile(input: DeleteProfileInput!): DeleteProfileResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
   triggerSqs(input: TriggerSqsInput!): TriggerSqsResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
   initUser(input: InitUserInput!): InitUserResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
   submitAccessCode(input: SubmitAccessCodeInput!): SubmitAccessCodeResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
+  removeUser(input: RemoveUserInput!): RemoveUserResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
 }
 
 type Query {

@@ -1,6 +1,6 @@
 const { deleteProfile } = require('../shared');
 
-async function deleteUser(ctx) {
+async function removeUser(ctx) {
     const { username } = ctx.arguments.input;
 
     try {
@@ -57,4 +57,4 @@ async function deleteUserCognito(ctx) {
     }).promise();
 }
 
-module.exports = deleteUser;
+module.exports = removeUser;

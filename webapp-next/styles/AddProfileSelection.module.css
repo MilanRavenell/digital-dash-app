@@ -162,7 +162,7 @@
 }
 
 /* 1 platform per row */
-@media only screen and (max-device-width: 950px) and (min-device-width: 601px) {
+@media only screen and (max-device-width: 950px) and (min-device-width: 500px) {
     .platformInner {
         width: 20vw;
     }

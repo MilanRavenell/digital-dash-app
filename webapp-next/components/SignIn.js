@@ -9,14 +9,16 @@ import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
-import Footer from '../components/Footer';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
 
 import styles from '../styles/SignIn.module.css';
 
 const platforms = ['twitter', 'youtube', 'instagram']
 
 const SignIn = ({
-    requestAccessCode,
+    screen,
     user,
     loading,
     statusMessage,
@@ -24,25 +26,106 @@ const SignIn = ({
     resendAccessCodeEmail,
     signOut,
     openPrivacyPolicy,
+    setScreen,
+    signUpForEmail,
+    removeFromEmail,
+    deleteUser,
 }) => {
     const [submitLoading, setSubmmitLoading] = React.useState(false);
-    const [resendLoading, setResendLoading] = React.useState(false);
+    const [emailToggleLoading, setEmailToggleLoadingLoading] = React.useState(false);
+    const [deleteLoading, setDeleteLoading] = React.useState(false);
     const [textFieldValue, setTextFieldValue] = React.useState('');
+
+    const [dialogueOpen, setDialogueOpen] = React.useState(false);
+    const [dialogueDescription, setDialogueDescription] = React.useState(null);
+    const [dialogueOnClick, setDialogueOnClick] = React.useState(null);
+
+    React.useEffect(() => {
+        console.log('loading:', emailToggleLoading)
+    }, [emailToggleLoading])
 
     const handleTextFieldChange = (event) => {
         setTextFieldValue(event.target.value);
     }
 
-    const submit = async () => {
+    const submitPressed = async () => {
         setSubmmitLoading(true);
         await submitAccessCodeCallback(textFieldValue);
         setSubmmitLoading(false);
     }
 
-    const resend = async () => {
-        setResendLoading(true);
-        await resendAccessCodeEmail();
-        setResendLoading(false);
+    const emailSignUpPressed = () => {
+        openDialogue(
+            '',
+            'Sign up for email list?',
+            emailSignUpConfirmed,
+        )
+    }
+
+    const emailRemovePressed = () => {
+        openDialogue(
+            '',
+            'Remove from email list?',
+            emailRemoveConfirmed,
+        )
+    }
+
+    const signOutPressed = () => {
+        openDialogue(
+            '',
+            'Sign out?',
+            signOut,
+        )
+    }
+
+    const deleteUserPressed = () => {
+        openDialogue(
+            '',
+            'Delete account?',
+            deleteUserConfirmed,
+        )
+    }
+
+    const emailSignUpConfirmed = async () => {
+        setEmailToggleLoadingLoading(true);
+        await signUpForEmail();
+        console.log('lmao')
+        setEmailToggleLoadingLoading(false);
+    }
+
+    const emailRemoveConfirmed = async () => {
+        setEmailToggleLoadingLoading(true);
+        await removeFromEmail();
+        console.log('lmao')
+        setEmailToggleLoadingLoading(false);
+    }
+
+    const deleteUserConfirmed = async () => {
+        setDeleteLoading(true);
+        await deleteUser()
+        setDeleteLoading(false);
+    }
+
+    const closeDialogue = () => {
+        setDialogueOpen(false);
+        setDialogueTitle(null);
+        setDialogueDescription(null);
+        setDialogueOnClick(null);
+    }
+
+    const openDialogue = (
+        title,
+        description,
+        onClick,
+    ) => {
+        const confirm = async () => {
+            closeDialogue();
+            await onClick();
+
+        setDialogueTitle(title);
+        setDialogueDescription(description);
+        setDialogueOnClick(()=>confirm);
+        setDialogueOpen(true);
     }
 
     const authenticatorFormFields = {
@@ -67,6 +150,11 @@ const SignIn = ({
         },
     };
 
+    const accessCodeHeaderText = (name) => (`Hi ${name}, Orb is still in early development, \
+so not everyone can use it quite yet. Sign up for the email list for a chance to receive an access \
+code to the alpha version of our product. Otherwise, keep an eye out for future emails from us to \
+stay in the loop for updates.`);
+
     return (
         <div className={styles.container}>
             <div className={styles.content}>
@@ -78,7 +166,7 @@ const SignIn = ({
                         <div className={`${styles.icons} ${styles.grow}`}>
                         {
                             platforms.map(platform => (
-                                <div className={styles.icon}>
+                                <div className={styles.icon} key={platform}>
                                     <img
                                         src={platformProperties[platform].logoUrl}
                                         alt='profile pic'
@@ -126,50 +214,105 @@ const SignIn = ({
                                     return (<CircularProgress/>)
                                 }
 
-                                if (user && requestAccessCode) {
+                                if (user && screen === 'emailSignUp') {
                                     return (
                                         <div className={styles.accessCode}>
                                             <div className={styles.header}>
-                                                Hi {user.firstName}, Orb is still in early development, so not everyone can use it quite yet. If you received an access code after signing up, submit it here. Otherwise, keep an eye out for future emails from us to stay in the loop for updates.
+                                                { accessCodeHeaderText(user.firstName) }
                                             </div>
-                                            <div className={styles.textField}>
-                                                <TextField
-                                                    label="Access code"
-                                                    onChange={handleTextFieldChange}
-                                                />
-                                            </div>
-                                            {
-                                                statusMessage &&
-                                                    <div
-                                                        className={styles.status}
-                                                        style={{ color: statusMessage.isPositive ? 'green' : 'red' }}
+                                            <div className={styles.buttons}>
+                                                {
+                                                    statusMessage &&
+                                                        <div
+                                                            className={styles.status}
+                                                            style={{ color: statusMessage.isPositive ? 'green' : 'red' }}
+                                                        >
+                                                            { statusMessage.message }
+                                                        </div>
+                                                }
+                                                <div className={styles.bigButton}>
+                                                    <LoadingButton
+                                                        loading={emailToggleLoading}
+                                                        variant='outlined'
+                                                        onClick={ user.canEmail
+                                                            ? emailRemovePressed
+                                                            : emailSignUpPressed
+                                                        }
                                                     >
-                                                        { statusMessage.message }
-                                                    </div>
-                                            }
-                                            <div className={styles.submit}>
-                                                <LoadingButton
-                                                    loading={submitLoading}
-                                                    variant='outlined'
-                                                    onClick={submit}
-                                                >
-                                                    Submit
-                                                </LoadingButton>
+                                                        {
+                                                            user.canEmail
+                                                                ? 'Remove me from Email List'
+                                                                : 'Sign Up For Email List'
+                                                        }
+                                                        
+                                                    </LoadingButton>
+                                                    <Button
+                                                        variant='outlined'
+                                                        onClick={()=>{setScreen('submitAccessCode')}}
+                                                        sx={{ marginTop: '10px' }}
+                                                    >
+                                                        Submit Access Code
+                                                    </Button>
+                                                </div>
+                                                <div className={styles.smallButton}>
+                                                    <Button
+                                                        onClick={signOutPressed}
+                                                        sx={{ fontSize: '10px'}}
+                                                    >
+                                                        Sign out
+                                                    </Button>
+                                                    <LoadingButton
+                                                        loading={deleteLoading}
+                                                        sx={{ fontSize: '10px', marginTop: '2px' }}
+                                                        onClick={deleteUserPressed}
+                                                    >
+                                                        Delete Account
+                                                    </LoadingButton>
+                                                </div>
                                             </div>
-                                            <div className={styles.smallButton}>
-                                                <Button
-                                                    onClick={signOut}
-                                                    sx={{ fontSize: '10px'}}
-                                                >
-                                                    Sign out
-                                                </Button>
-                                                <LoadingButton
-                                                    loading={resendLoading}
-                                                    sx={{ fontSize: '10px', marginTop: '2px' }}
-                                                    onClick={resend}
-                                                >
-                                                    Didn't receive an email? Click here to resend
-                                                </LoadingButton>
+                                        </div>
+                                    )
+                                }
+
+                                if (screen === 'submitAccessCode') {
+                                    return (
+                                        <div className={styles.accessCode}>
+                                            <div className={styles.header}>
+                                                { accessCodeHeaderText(user.firstName) }
+                                            </div>
+                                            <div className={styles.buttons}>
+                                                {
+                                                    statusMessage &&
+                                                        <div
+                                                            className={styles.status}
+                                                            style={{ color: statusMessage.isPositive ? 'green' : 'red' }}
+                                                        >
+                                                            { statusMessage.message }
+                                                        </div>
+                                                }
+                                                <div className={styles.textField}>
+                                                    <TextField
+                                                        label="Access code"
+                                                        onChange={handleTextFieldChange}
+                                                    />
+                                                </div>
+                                                <div className={styles.bigButton}>
+                                                    <LoadingButton
+                                                        loading={submitLoading}
+                                                        variant='outlined'
+                                                        onClick={submitPressed}
+                                                    >
+                                                        Submit
+                                                    </LoadingButton>
+                                                </div>
+                                                <div className={styles.smallButton}>
+                                                    <Button
+                                                        onClick={() => {setScreen('emailSignUp')}}
+                                                        sx={{ fontSize: '10px'}}
+                                                    >
+                                                        Cancel
+                                                    </Button>
+                                                </div>
                                             </div>
                                         </div>
                                     )
@@ -184,6 +327,22 @@ const SignIn = ({
                         }
                     </div>
                 </div>
+                <Dialog
+                    open={dialogueOpen}
+                    onClose={closeDialogue}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        { dialogueDescription }
+                    </DialogTitle>
+                    <DialogActions>
+                        <Button onClick={closeDialogue}>Cancel</Button>
+                        <Button onClick={dialogueOnClick} autoFocus>
+                            Confirm
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </div>
     );

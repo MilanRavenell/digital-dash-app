@@ -3,6 +3,6 @@ module.exports = {
     deleteProfile: require('./delete-profile'),
     triggerSqs: require('./trigger-sqs'),
     initUser: require('./init-user'),
-    deleteUser: require('./delete-user'),
+    removeUser: require('./remove-user'),
     submitAccessCode: require('./submit-access-code'),
 };
