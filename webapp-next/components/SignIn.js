@@ -104,7 +104,6 @@ const SignIn = ({
 
     const closeDialogue = () => {
         setDialogueOpen(false);
-        setDialogueTitle(null);
         setDialogueDescription(null);
         setDialogueOnClick(null);
     }
@@ -119,7 +118,6 @@ const SignIn = ({
             await onClick();
         };
 
-        setDialogueTitle(title);
         setDialogueDescription(description);
         setDialogueOnClick(()=>confirm);
         setDialogueOpen(true);
