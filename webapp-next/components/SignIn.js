@@ -40,10 +40,6 @@ const SignIn = ({
     const [dialogueDescription, setDialogueDescription] = React.useState(null);
     const [dialogueOnClick, setDialogueOnClick] = React.useState(null);
 
-    React.useEffect(() => {
-        console.log('loading:', emailToggleLoading)
-    }, [emailToggleLoading])
-
     const handleTextFieldChange = (event) => {
         setTextFieldValue(event.target.value);
     }
@@ -121,6 +117,7 @@ const SignIn = ({
         const confirm = async () => {
             closeDialogue();
             await onClick();
+        };
 
         setDialogueTitle(title);
         setDialogueDescription(description);
