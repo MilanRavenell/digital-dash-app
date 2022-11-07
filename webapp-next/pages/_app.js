@@ -88,7 +88,7 @@ const MyApp = ({ Component, pageProps }) => {
 
         if (authUser === nullAuthUser) {
             setLoading(false);
-            if (router.pathname !== '/sign-in') {
+            if (router.pathname !== '/sign-in' && router.pathname !== '/homepage') {
                 router.push('/sign-in');
             }
         }
@@ -102,7 +102,7 @@ const MyApp = ({ Component, pageProps }) => {
         if (user) {
             if (!user.submittedAccessCode) {
                 setLoading(false);
-                if (router.pathname !== '/sign-in') {
+                if (router.pathname !== '/sign-in' && router.pathname !== '/homepage') {
                     router.push('/sign-in');
                 }
                 return;
@@ -117,7 +117,7 @@ const MyApp = ({ Component, pageProps }) => {
                     setUserProfiles(profiles);
                     
                     // If the user has no profiles, send them to add-profile-selection
-                    if (profiles.length <= 0) {
+                    if (profiles.length <= 0 && router.pathname !== '/homepage') {
                         router.push({
                             pathname: `/add-profile-selection`,
                             query: { f: 1 },

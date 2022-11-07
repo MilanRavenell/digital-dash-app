@@ -61,7 +61,7 @@ const SignIn = ({
     const emailRemovePressed = () => {
         openDialogue(
             '',
-            'Remove from email list?',
+            'Leave email list?',
             emailRemoveConfirmed,
         )
     }
