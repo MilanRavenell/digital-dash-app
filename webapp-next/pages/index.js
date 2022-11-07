@@ -174,12 +174,17 @@ export default function App() {
     setProfileToRefresh(null);
   }, []);
 
+  const navigateToHomepage = () => {
+    router.push('/homepage');
+  }
+
   const getContent = () => {
     if (context.user && context.userProfiles && data && !context.loading) {
       return [
           <Header
             user={context.user}
             goToAddPlatformSelection={goToAddPlatformSelection}
+            onLogoClick={navigateToHomepage}
             signOut={context.signOut}
             key={'header'}
           />,

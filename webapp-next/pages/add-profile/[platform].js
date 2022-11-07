@@ -140,12 +140,17 @@ const AddProfile = () => {
       router.push(`/add-profile-selection`);
     };
 
+    const navigateToHomepage = () => {
+      router.push('/homepage');
+    }
+
     const getContent = () => {
       if (context.user  && !context.loading) {
         return [
             <Header
               user={context.user}
               signOut={context.signOut}
+              onLogoClick={navigateToHomepage}
               key={'header'}
             />,
             <AddProfileComponent

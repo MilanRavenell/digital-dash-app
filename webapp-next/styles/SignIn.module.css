@@ -29,8 +29,21 @@
     align-items: center;
 }
 
+.logoContainer {
+    height: 15vh;
+    margin-bottom: 5%;
+    cursor: pointer;
+}
+
+.logo {
+    object-fit: contain;
+    height: 0;
+    min-height: 100%;
+}
+
 .title {
     margin-bottom: 1%;
+    /* FONT-WEIGHT: 200; */
 }
 
 .icons {
@@ -39,7 +52,7 @@
     display: flex;
     margin-top: 3%;
     background-color: white;
-    border-radius: 5px;
+    border: 1px solid gray;
 }
 
 .icon {
@@ -50,7 +63,7 @@
 .screenshot {
     width: 80%;
     overflow: hidden;
-    margin-top: 10%;
+    margin-top: 5%;
 }
 
 .privacyPolicy {

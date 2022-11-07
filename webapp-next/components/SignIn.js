@@ -30,6 +30,7 @@ const SignIn = ({
     signUpForEmail,
     removeFromEmail,
     deleteUser,
+    onLogoClick,
 }) => {
     const [submitLoading, setSubmmitLoading] = React.useState(false);
     const [emailToggleLoading, setEmailToggleLoadingLoading] = React.useState(false);
@@ -53,7 +54,7 @@ const SignIn = ({
     const emailSignUpPressed = () => {
         openDialogue(
             '',
-            'Sign up for email list?',
+            'Join email list?',
             emailSignUpConfirmed,
         )
     }
@@ -85,14 +86,12 @@ const SignIn = ({
     const emailSignUpConfirmed = async () => {
         setEmailToggleLoadingLoading(true);
         await signUpForEmail();
-        console.log('lmao')
         setEmailToggleLoadingLoading(false);
     }
 
     const emailRemoveConfirmed = async () => {
         setEmailToggleLoadingLoading(true);
         await removeFromEmail();
-        console.log('lmao')
         setEmailToggleLoadingLoading(false);
     }
 
@@ -146,7 +145,7 @@ const SignIn = ({
     };
 
     const accessCodeHeaderText = (name) => (`Hi ${name}, Orb is still in early development, \
-so not everyone can use it quite yet. Sign up for the email list for a chance to receive an access \
+so not everyone can use it quite yet. Join the email list for a chance to receive an access \
 code to the alpha version of our product. Otherwise, keep an eye out for future emails from us to \
 stay in the loop for updates.`);
 
@@ -155,8 +154,30 @@ stay in the loop for updates.`);
             <div className={styles.content}>
                 <div className={styles.left}>
                     <div className={styles.contentLeft}>
+                        <div 
+                            className={styles.logoContainer}
+                            onClick={onLogoClick}
+                        >
+                            <img
+                                className={styles.logo}
+                                src='/orb_logo.png'
+                            />
+                        </div>
                         <div className={styles.title}>
                             Real-time analytics for all your social media accounts in one place - totally for free!
+                        </div>
+                        <div className={`${styles.screenshot} ${styles.grow}`}>
+                            <img
+                                src={'/orb_home_page_photo1.png'}
+                                alt='screenshot'
+                                style={{
+                                    height: '100%',
+                                    width: '100%',
+                                    objectFit: 'contain',
+                                    border: '1px solid gray',
+                                }}
+                                referrerPolicy="no-referrer"
+                            />
                         </div>
                         <div className={`${styles.icons} ${styles.grow}`}>
                         {
@@ -175,19 +196,6 @@ stay in the loop for updates.`);
                                 </div>
                             ))
                         }
-                        </div>
-                        <div className={`${styles.screenshot} ${styles.grow}`}>
-                            <img
-                                src={'/screenshot.png'}
-                                alt='screenshot'
-                                style={{
-                                    height: '100%',
-                                    width: '100%',
-                                    objectFit: 'contain',
-                                    borderRadius: '15px',
-                                }}
-                                referrerPolicy="no-referrer"
-                            />
                         </div>
                         <div className={styles.privacyPolicy}>
                                 <Button
@@ -237,7 +245,7 @@ stay in the loop for updates.`);
                                                         {
                                                             user.canEmail
                                                                 ? 'Remove me from Email List'
-                                                                : 'Sign Up For Email List'
+                                                                : 'Add me to Email List'
                                                         }
                                                         
                                                     </LoadingButton>

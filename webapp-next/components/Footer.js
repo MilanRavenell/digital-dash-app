@@ -7,7 +7,7 @@ const Footer = ({
 }) => {
     return (
         <div className={styles.container}>
-            <div className={styles.privacyPolicy}>
+            <div className={styles.content}>
                 <Button 
                     onClick={openPrivacyPolicy}
                     sx={{

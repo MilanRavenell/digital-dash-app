@@ -68,9 +68,6 @@ const MyApp = ({ Component, pageProps }) => {
                 if (err === 'The user is not authenticated') {
                     setLoading(false);
                     setAuthUser(nullAuthUser);
-                    if (router.pathname !== '/sign-in') {
-                        router.push('/sign-in');
-                    }
                 } else {
                     console.error(err);
                 }
@@ -80,16 +77,18 @@ const MyApp = ({ Component, pageProps }) => {
     useEffect(() => {
         setLoading(true);
         console.log('found auth user')
-        if (authUser) {
-            if (!user) {
-                setUserCallback(authUser);
-            }
-        }
 
         if (authUser === nullAuthUser) {
             setLoading(false);
             if (router.pathname !== '/sign-in' && router.pathname !== '/homepage') {
-                router.push('/sign-in');
+                router.push('/homepage');
+            }
+            return;
+        }
+
+        if (authUser) {
+            if (!user) {
+                setUserCallback(authUser);
             }
         }
 
@@ -99,6 +98,11 @@ const MyApp = ({ Component, pageProps }) => {
 
     useEffect(() => {
         console.log('updating user')
+        if (router.pathname === '/homepage') {
+            setLoading(false);
+            return;
+        }
+
         if (user) {
             if (!user.submittedAccessCode) {
                 setLoading(false);

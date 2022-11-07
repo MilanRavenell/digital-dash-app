@@ -54,6 +54,10 @@ export default function Home() {
     const openPrivacyPolicy = () => {
         router.push('/privacy-policy');
     }
+
+    const navigateToHomepage = () => {
+        router.push('/homepage');
+    }
     
     return (
         <div className='container'>
@@ -70,6 +74,7 @@ export default function Home() {
                 signUpForEmail={() => {context.setCanEmailCallback(true)}}
                 removeFromEmail={() => {context.setCanEmailCallback(false)}}
                 deleteUser={context.deleteUserCallback}
+                onLogoClick={navigateToHomepage}
             />
         </div>
     )

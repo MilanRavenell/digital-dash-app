@@ -85,12 +85,17 @@ export default function Home() {
     setProfileToRefresh(null);
   }, []);
 
+  const navigateToHomepage = () => {
+    router.push('/homepage');
+  }
+
   const getContent = () => {
     if (context.user  && !context.loading) {
       return [
         <Header
           user={context.user}
           signOut={context.signOut}
+          onLogoClick={navigateToHomepage}
           key={'header'}
         />,
         <AddProfileSelection
