@@ -26,6 +26,7 @@
     align-items: center;
     border-left: 1px solid lightgrey;
     flex: 1;
+    flex-direction: column;
 }
 
 .contentLeft {
@@ -106,6 +107,10 @@
     height: 10vh;
 }
 
+.privacyPolicy {
+    margin-top: 20%;
+}
+
 @media only screen and (max-device-width: 600px) {
     .content {
         flex-direction: column-reverse;
@@ -126,5 +131,9 @@
 
     .contentRight {
         width: 80vw;
+    }
+
+    .privacyPolicy {
+        margin-top: 3%;
     }
 }

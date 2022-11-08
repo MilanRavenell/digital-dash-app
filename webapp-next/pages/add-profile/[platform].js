@@ -144,6 +144,10 @@ const AddProfile = () => {
       router.push('/homepage');
     }
 
+    const navigateToPrivacyPolicy = () => {
+      router.push('/privacy-policy');
+    }
+
     const getContent = () => {
       if (context.user  && !context.loading) {
         return [
@@ -160,6 +164,7 @@ const AddProfile = () => {
                 loginHandlers={platformLoginHandlers[platform]}
                 loginCallbackHandler={platformLoginCallbackHandlers[platform]}
                 handleSubmit={handleSubmit}
+                navigateToPrivacyPolicy={navigateToPrivacyPolicy}
                 cancel={cancel}
                 key={'main'}
             />

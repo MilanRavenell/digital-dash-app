@@ -18,7 +18,8 @@ const AddProfile = ({
     loginHandlers,
     loginCallbackHandler,
     handleSubmit,
-    cancel
+    navigateToPrivacyPolicy,
+    cancel,
 }) => {
     const session = useSession();
     const router = useRouter();
@@ -216,6 +217,14 @@ const AddProfile = ({
                             </div>
                         </div>
                         { getContent() }
+                    </div>
+                    <div className={styles.privacyPolicy}>
+                        <Button
+                            sx={{color: 'gray'}}
+                            onClick={navigateToPrivacyPolicy}
+                        >
+                            Privacy Policy
+                        </Button>
                     </div>
                 </div>
             </div>
