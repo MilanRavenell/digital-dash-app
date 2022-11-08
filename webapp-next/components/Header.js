@@ -29,7 +29,7 @@ const Header = ({
             className={styles.container}
             style={ isHomepage 
                 ? {
-                    height: '9vh !important',
+                    height: '9vh',
                 }
                 : {}
             }
