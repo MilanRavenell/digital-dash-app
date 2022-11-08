@@ -70,7 +70,7 @@ async function igProLoginHandler({ currentProfiles, setVerify, setFail }) {
         if (response.status === 'connected') {
             onSignIn(response.authResponse.accessToken)
         }
-    }, { scope: 'instagram_basic,pages_show_list' })
+    }, { scope: 'instagram_basic,pages_show_list,instagram_manage_insights,pages_read_engagement' })
 }
 
 async function twitterLoginHandler({ router }) {
