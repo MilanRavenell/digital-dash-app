@@ -22,8 +22,6 @@ const Header = ({
         setAnchorEl(null);
     }
 
-    console.log('homepage: ', isHomepage);
-
     return (
         <div 
             className={styles.container}
