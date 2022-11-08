@@ -108,7 +108,7 @@
 }
 
 .privacyPolicy {
-    margin-top: 20%;
+    margin-top: 3%;
 }
 
 @media only screen and (max-device-width: 600px) {
@@ -131,9 +131,5 @@
 
     .contentRight {
         width: 80vw;
-    }
-
-    .privacyPolicy {
-        margin-top: 3%;
     }
 }
