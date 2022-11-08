@@ -7,10 +7,20 @@ const Homepage = () => {
     return (
         <div className={styles.container}>
             <div className={styles.content}>
+                <div className={styles.sectionSmall}>
+                    <div className={styles.contentInner}>
+                        <div className={styles.logoContainer}>
+                            <img 
+                                className={styles.logo}
+                                src='/orb_logo.png'
+                            />
+                        </div>
+                    </div>
+                </div>
                 <div className={styles.section}>
                     <div className={styles.sectionContent}>
                         <div className={styles.contentInner}>
-                            <div className={styles.image_left}>
+                            <div className={`${styles.imageContainer} ${styles.grow}`}>
                                 <img 
                                     className={styles.image}
                                     src='/orb_home_page_photo1.png'
@@ -42,7 +52,7 @@ const Homepage = () => {
                             </div>
                         </div>
                         <div className={styles.contentInner}>
-                            <div className={styles.image_left}>
+                            <div className={`${styles.imageContainer} ${styles.grow}`}>
                                 <img 
                                     className={styles.image}
                                     src='/orb_home_page_photo2.png'
@@ -54,7 +64,7 @@ const Homepage = () => {
                 <div className={styles.section}>
                     <div className={styles.sectionContent}>
                         <div className={styles.contentInner}>
-                            <div className={styles.image_left}>
+                            <div className={`${styles.imageContainer} ${styles.grow}`}>
                                 <img 
                                     className={styles.image}
                                     src='/orb_home_page_photo3.png'

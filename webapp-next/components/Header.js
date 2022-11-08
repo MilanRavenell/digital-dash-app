@@ -6,7 +6,7 @@ import styles from '../styles/Header.module.css';
 
 const Header = ({
     user,
-    isHomepage=false,
+    isHomepage,
     goToAddPlatformSelection,
     onLoginButtonPressed,
     onLogoClick,
@@ -21,6 +21,8 @@ const Header = ({
     const closeSettingsMenu = () => {
         setAnchorEl(null);
     }
+
+    console.log('homepage: ', isHomepage);
 
     return (
         <div 
@@ -48,7 +50,20 @@ const Header = ({
                 <div className={styles.rightContent}>
                     {
                         (() => {
-                            if (!isHomepage && user) {
+                            if (isHomepage) {
+                                return (
+                                    <div className={styles.loginButton}>
+                                        <Button
+                                            onClick={onLoginButtonPressed}
+                                            variant='contained'
+                                        >
+                                            { user ? 'Back to Dashboard' : 'Get Started'}
+                                        </Button>
+                                    </div>
+                                )
+                            }
+
+                            if (user) {
                                 return [
                                     <div className={styles.rightContentName} key={'greeting'}>
                                         Hi, {user.firstName}
@@ -68,16 +83,7 @@ const Header = ({
                                     </Menu>
                                 ];
                             } else {
-                                return (
-                                    <div className={styles.loginButton}>
-                                        <Button
-                                            onClick={onLoginButtonPressed}
-                                            variant='contained'
-                                        >
-                                            { user ? 'Back to Dashboard' : 'Get Started'}
-                                        </Button>
-                                    </div>
-                                )
+                                
                             }
                         })()
                     }

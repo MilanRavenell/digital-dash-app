@@ -18,6 +18,13 @@
     align-items: center;
 }
 
+.sectionSmall {
+    height: 20vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .sectionContent {
     display: flex;
     width: 100%;
@@ -25,6 +32,7 @@
 }
 
 .contentInner {
+    height: 100%;
     width: 50%;
     margin-left: 5%;
     margin-right: 5%;
@@ -33,6 +41,17 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.logoContainer {
+    width: 30%;
+    height: 100%;
+}
+
+.logo {
+    object-fit: contain;
+    height: 0;
+    min-height: 100%;
 }
 
 .text {
@@ -50,7 +69,7 @@
     font-size: 2vh;
 }
 
-.image_left {
+.imageContainer {
     height: 90%;
     display: flex;
     align-items: center;
@@ -64,4 +83,12 @@
     height: 0;
     min-height: 100%;
     border: 1px solid gray;
+}
+
+.grow { 
+    transition: all .2s ease-in-out; 
+}
+    
+.grow:hover { 
+    transform: scale(1.1); 
 }
