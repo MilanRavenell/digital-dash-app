@@ -3,7 +3,9 @@ import Footer from './Footer';
 
 import styles from '../styles/Homepage.module.css';
 
-const Homepage = () => {
+const Homepage = ({
+    navigateToPrivacyPolicy
+}) => {
     return (
         <div className={styles.container}>
             <div className={styles.content}>
@@ -84,7 +86,9 @@ const Homepage = () => {
                     </div>
                 </div>
             </div>
-            <Footer />
+            <Footer 
+                openPrivacyPolicy={navigateToPrivacyPolicy}
+            />
         </div>
     )
 };

@@ -8,7 +8,7 @@ export default function HomePage() {
     const router = useRouter();
     const context = React.useContext(AppContext);
 
-    const goToSignIn = () => {
+    const navigateToSignIn = () => {
         if (context.user) {
             router.push('/');
         }
@@ -17,17 +17,24 @@ export default function HomePage() {
         }
     }
 
+    const navigateToPrivacyPolicy = () => {
+        router.push('/privacy-policy');
+    }
+
     return (
         <div className='container'>
         {
             [
                 <Header
                     key={'header'}
-                    onLoginButtonPressed={goToSignIn}
+                    onLoginButtonPressed={navigateToSignIn}
                     user={context.user}
                     isHomepage={true}
                 />,
-                <Homepage key={'main'}/>,
+                <Homepage
+                    key={'main'}
+                    navigateToPrivacyPolicy={navigateToPrivacyPolicy}
+                />,
             ]
         }
         </div>
