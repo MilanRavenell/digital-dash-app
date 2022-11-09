@@ -12,6 +12,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
+import FollowUs from './FollowUs';
 
 import styles from '../styles/SignIn.module.css';
 
@@ -179,33 +180,39 @@ stay in the loop for updates.`);
                                 referrerPolicy="no-referrer"
                             />
                         </div>
-                        <div className={`${styles.icons} ${styles.grow}`}>
-                        {
-                            platforms.map(platform => (
-                                <div className={styles.icon} key={platform}>
-                                    <img
-                                        src={platformProperties[platform].logoUrl}
-                                        alt='profile pic'
-                                        style={{
-                                            height: '100%',
-                                            width: '100%',
-                                            objectFit: 'contain',
-                                        }}
-                                        referrerPolicy="no-referrer"
-                                    />
-                                </div>
-                            ))
-                        }
+                        <div className={styles.supports}>
+                            <div className={styles.supportsText}>
+                                Supports:
+                            </div>
+                            <div className={`${styles.icons} ${styles.grow}`}>
+                            {
+                                platforms.map(platform => (
+                                    <div className={styles.icon} key={platform}>
+                                        <img
+                                            src={platformProperties[platform].logoUrl}
+                                            alt='profile pic'
+                                            style={{
+                                                height: '100%',
+                                                width: '100%',
+                                                objectFit: 'contain',
+                                            }}
+                                            referrerPolicy="no-referrer"
+                                        />
+                                    </div>
+                                ))
+                            }
+                            </div>
                         </div>
-                        <div className={styles.privacyPolicy}>
-                                <Button
-                                    onClick={openPrivacyPolicy}
-                                    sx={{
-                                        color: 'gray'
-                                    }}
-                                >
-                                    Privacy Policy
-                                </Button>
+                        <div className={styles.bottom}>
+                            <FollowUs/>
+                            <Button
+                                onClick={openPrivacyPolicy}
+                                sx={{
+                                    color: 'gray'
+                                }}
+                            >
+                                Privacy Policy
+                            </Button>
                         </div>
                     </div>
                 </div>

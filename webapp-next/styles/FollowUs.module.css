@@ -1,0 +1,29 @@
+.container {
+    height: 4vh;
+    display: flex;
+}
+
+.text {
+    font-size: 2vh;
+    color: gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logos {
+    height: 100%;
+    display: flex;
+    margin-left: 10px;
+}
+
+.logoContainer {
+    height: 60%;
+}
+
+.logo {
+    object-fit: contain;
+    height: 0;
+    min-height: 100%;
+    margin-right: 10px;
+}
