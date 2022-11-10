@@ -1,13 +1,13 @@
 const { deleteProfile } = require('../shared');
 
 async function removeUser(ctx) {
-    const { username } = ctx.arguments.input;
+    const { owner } = ctx.arguments.input;
 
     try {
         await Promise.all([deleteUserRecord(ctx), deleteProfiles(ctx), deleteUserCognito(ctx)]);
         return { success: true };
     } catch (err) {
-        console.error(`Failed to delete user ${username}`, err);
+        console.error(`Failed to delete user ${owner}`, err);
         return { success: false };
     }
 }
@@ -15,28 +15,27 @@ async function removeUser(ctx) {
 async function deleteUserRecord(ctx) {
     const { ddbClient, envVars } = ctx.resources;
     const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
-    const { username } = ctx.arguments.input;
+    const { owner } = ctx.arguments.input;
 
     await ddbClient.delete({
         TableName: `User-${appsync_api_id}-${env}`,
-        Key: { email: username },
+        Key: { owner },
     }).promise();
 }
 
 async function deleteProfiles(ctx) {
     const { ddbClient, envVars } = ctx.resources;
     const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
-    const { username } = ctx.arguments.input;
+    const { owner } = ctx.arguments.input;
 
     const profiles = (await ddbClient.query({
         TableName: `UserProfile-${appsync_api_id}-${env}`,
-        IndexName: 'ByUserAndPlatform',
-        KeyConditionExpression: '#user = :user',
+        KeyConditionExpression: '#owner = :owner',
         ExpressionAttributeValues: {
-            ':user': username,
+            ':owner': owner,
         },
         ExpressionAttributeNames: {
-            '#user': 'user',
+            '#owner': 'owner',
         },
     }).promise())
         .Items;

@@ -104,8 +104,8 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
                 // If 100 items have been collected and stored in DDB, set posts last populated 
                 if (numItemsInserted > 50) {
                     await ddbClient.update({
-                        TableName: `UserProfile-${appsync_api_id}-${env}`,
-                        Key: { user: profile.user, key: profile.key },
+                        TableName: `Profile-${appsync_api_id}-${env}`,
+                        Key: { key: profile.key },
                         UpdateExpression: 'SET #postsLastPopulated = :postsLastPopulated',
                         ExpressionAttributeNames: { 
                             '#postsLastPopulated': 'postsLastPopulated',

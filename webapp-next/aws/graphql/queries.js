@@ -26,9 +26,28 @@ export const invokeWebScraper = /* GraphQL */ `
     }
   }
 `;
+export const getProfiles = /* GraphQL */ `
+  query GetProfiles($input: GetProfilesInput!) {
+    getProfiles(input: $input) {
+      success
+      profiles {
+        key
+        platform
+        profileName
+        meta
+        profilePicUrl
+        followerCount
+        needsRefresh
+        postsLastPopulated
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
 export const getUser = /* GraphQL */ `
-  query GetUser($email: String!) {
-    getUser(email: $email) {
+  query GetUser($owner: String!) {
+    getUser(owner: $owner) {
       owner
       email
       firstName
@@ -42,14 +61,14 @@ export const getUser = /* GraphQL */ `
 `;
 export const listUsers = /* GraphQL */ `
   query ListUsers(
-    $email: String
+    $owner: String
     $filter: ModelUserFilterInput
     $limit: Int
     $nextToken: String
     $sortDirection: ModelSortDirection
   ) {
     listUsers(
-      email: $email
+      owner: $owner
       filter: $filter
       limit: $limit
       nextToken: $nextToken
@@ -70,43 +89,11 @@ export const listUsers = /* GraphQL */ `
   }
 `;
 export const getUserProfile = /* GraphQL */ `
-  query GetUserProfile($user: String!, $key: String!) {
-    getUserProfile(user: $user, key: $key) {
-      user
+  query GetUserProfile($owner: String!, $key: String!) {
+    getUserProfile(owner: $owner, key: $key) {
       owner
       key
-      platform
-      profileName
-      meta
-      profilePicUrl
-      followerCount
-      needsRefresh
-      postsLastPopulated
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listUserProfiles = /* GraphQL */ `
-  query ListUserProfiles(
-    $user: String
-    $key: ModelStringKeyConditionInput
-    $filter: ModelUserProfileFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listUserProfiles(
-      user: $user
-      key: $key
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        user
-        owner
+      profile {
         key
         platform
         profileName
@@ -115,6 +102,34 @@ export const listUserProfiles = /* GraphQL */ `
         followerCount
         needsRefresh
         postsLastPopulated
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listUserProfiles = /* GraphQL */ `
+  query ListUserProfiles(
+    $owner: String
+    $key: ModelStringKeyConditionInput
+    $filter: ModelUserProfileFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listUserProfiles(
+      owner: $owner
+      key: $key
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        owner
+        key
         createdAt
         updatedAt
       }
@@ -431,41 +446,6 @@ export const listConfigurations = /* GraphQL */ `
       items {
         key
         value
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const userProfilesByUserAndPlatform = /* GraphQL */ `
-  query UserProfilesByUserAndPlatform(
-    $user: String!
-    $platform: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelUserProfileFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    userProfilesByUserAndPlatform(
-      user: $user
-      platform: $platform
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        user
-        owner
-        key
-        platform
-        profileName
-        meta
-        profilePicUrl
-        followerCount
-        needsRefresh
-        postsLastPopulated
         createdAt
         updatedAt
       }

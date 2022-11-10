@@ -29,8 +29,8 @@ const FollowUs = ({
             </div>
             <div className={styles.logos}>
                 {
-                    accounts.map(account => (
-                        <div className={styles.logoContainer}>
+                    accounts.map((account, index) => (
+                        <div className={styles.logoContainer} key={index}>
                             <a
                                 href={account.link}
                                 target='_blank'

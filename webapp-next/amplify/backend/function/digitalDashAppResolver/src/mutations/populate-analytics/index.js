@@ -14,8 +14,8 @@ async function fetchAnalytics(ctx) {
     let profile = null;
     try {
         profile = (await ddbClient.get({
-            TableName: `UserProfile-${appsync_api_id}-${env}`,
-            Key: { user: username, key: profileKey },
+            TableName: `Profile-${appsync_api_id}-${env}`,
+            Key: { key: profileKey },
         }).promise()).Item;
     } catch (err) {
         console.error('Failed to fetch user', err);
@@ -35,8 +35,8 @@ async function fetchAnalytics(ctx) {
         if (!debug_noUploadToDDB) {
             // Set postsLastPopulated for the user to now
             await ddbClient.update({
-                TableName: `UserProfile-${appsync_api_id}-${env}`,
-                Key: { user: username, key: profileKey },
+                TableName: `Profile-${appsync_api_id}-${env}`,
+                Key: { key: profileKey },
                 UpdateExpression: 'SET #postsLastPopulated = :postsLastPopulated',
                 ExpressionAttributeNames: { 
                     '#postsLastPopulated': 'postsLastPopulated',
@@ -87,9 +87,8 @@ async function populateProfile(ctx, profile, accessToken) {
         await Promise.all(Object.entries(profileInfo).map(async ([key, value]) => {
             // Update user profile
             const updateParams = {
-                TableName: `UserProfile-${appsync_api_id}-${env}`,
+                TableName: `Profile-${appsync_api_id}-${env}`,
                 Key: {
-                    user: profile.user,
                     key: profile.key,
                 },
                 UpdateExpression: 'SET #property = :value',

@@ -111,16 +111,20 @@ export const createUserProfile = /* GraphQL */ `
     $condition: ModelUserProfileConditionInput
   ) {
     createUserProfile(input: $input, condition: $condition) {
-      user
       owner
       key
-      platform
-      profileName
-      meta
-      profilePicUrl
-      followerCount
-      needsRefresh
-      postsLastPopulated
+      profile {
+        key
+        platform
+        profileName
+        meta
+        profilePicUrl
+        followerCount
+        needsRefresh
+        postsLastPopulated
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -132,8 +136,56 @@ export const updateUserProfile = /* GraphQL */ `
     $condition: ModelUserProfileConditionInput
   ) {
     updateUserProfile(input: $input, condition: $condition) {
-      user
       owner
+      key
+      profile {
+        key
+        platform
+        profileName
+        meta
+        profilePicUrl
+        followerCount
+        needsRefresh
+        postsLastPopulated
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteUserProfile = /* GraphQL */ `
+  mutation DeleteUserProfile(
+    $input: DeleteUserProfileInput!
+    $condition: ModelUserProfileConditionInput
+  ) {
+    deleteUserProfile(input: $input, condition: $condition) {
+      owner
+      key
+      profile {
+        key
+        platform
+        profileName
+        meta
+        profilePicUrl
+        followerCount
+        needsRefresh
+        postsLastPopulated
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createProfile = /* GraphQL */ `
+  mutation CreateProfile(
+    $input: CreateProfileInput!
+    $condition: ModelProfileConditionInput
+  ) {
+    createProfile(input: $input, condition: $condition) {
       key
       platform
       profileName
@@ -147,14 +199,12 @@ export const updateUserProfile = /* GraphQL */ `
     }
   }
 `;
-export const deleteUserProfile = /* GraphQL */ `
-  mutation DeleteUserProfile(
-    $input: DeleteUserProfileInput!
-    $condition: ModelUserProfileConditionInput
+export const updateProfile = /* GraphQL */ `
+  mutation UpdateProfile(
+    $input: UpdateProfileInput!
+    $condition: ModelProfileConditionInput
   ) {
-    deleteUserProfile(input: $input, condition: $condition) {
-      user
-      owner
+    updateProfile(input: $input, condition: $condition) {
       key
       platform
       profileName

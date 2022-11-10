@@ -4,4 +4,5 @@ module.exports = {
     makeApiRequest: require('./make-api-request'),
     invokeWebScraper: require('./invoke-web-scraper'),
     deleteProfile: require('./delete-profile'),
+    getProfiles: require('./get-profiles'),
 };

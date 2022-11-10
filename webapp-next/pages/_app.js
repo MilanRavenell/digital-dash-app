@@ -2,11 +2,10 @@ import { SessionProvider } from 'next-auth/react';
 import { useState, useCallback, useEffect } from 'react';
 import AppContext from '../components/AppContext';
 import { API } from 'aws-amplify';
-import { listUserProfiles } from '../aws/graphql/queries';
 import Head from 'next/head';
 import Script from 'next/script';
 import { Authenticator } from '@aws-amplify/ui-react';
-import { getUser } from '../aws/graphql/queries';
+import { getUser, getProfiles, listUserProfiles } from '../aws/graphql/queries';
 import { initUser, submitAccessCode, updateUser, removeUser } from '../aws/graphql/mutations';
 import { useRouter } from 'next/router';
 import { Auth, Hub } from 'aws-amplify';
@@ -150,17 +149,17 @@ const MyApp = ({ Component, pageProps }) => {
     }, [userProfiles, numProfileChecks]);
 
     const getUserProfiles = async (user) => {
-        const profiles = (await API.graphql({
-            query: listUserProfiles,
+        const { success, profiles } = (await API.graphql({
+            query: getProfiles,
             variables: {
-              user: user.email,
+                input: { owner: user.owner },
             }
-        })).data.listUserProfiles;
+        })).data.getProfiles;
       
         console.log('profiles')
         console.log(profiles)
 
-        return profiles.items;
+        return profiles
     }
 
     const setUserCallback = useCallback(async (authUser) => {
@@ -169,7 +168,7 @@ const MyApp = ({ Component, pageProps }) => {
         }
 
         try {
-            let ddbUser = (await API.graphql({ query: getUser, variables: { email: authUser.attributes.email }, })).data.getUser;
+            let ddbUser = (await API.graphql({ query: getUser, variables: { owner: authUser.username }, })).data.getUser;
             console.log('ddbuser: ', ddbUser)
 
             // User's first sign in, send to add-platform-selection
@@ -209,7 +208,7 @@ const MyApp = ({ Component, pageProps }) => {
                     query: submitAccessCode,
                     variables: {
                         input: {
-                            username: user.email,
+                            owner: user.owner,
                             accessCode,
                         }
                     }
@@ -238,7 +237,7 @@ const MyApp = ({ Component, pageProps }) => {
                 query: updateUser,
                 variables: {
                     input: {
-                        email: user.email,
+                        owner: user.owner,
                         canEmail,
                     },
                 },
@@ -256,7 +255,7 @@ const MyApp = ({ Component, pageProps }) => {
                 isPositive: true,
             });
         } catch (err) {
-            console.error(`Failed to set canEmail for user ${user.email}`, err);
+            console.error(`Failed to set canEmail for user ${user.owner}`, err);
             setSignInStatusMessage({
                 message: canEmail
                     ? 'Failed to add to email list'
@@ -273,7 +272,6 @@ const MyApp = ({ Component, pageProps }) => {
                 query: removeUser,
                 variables: {
                     input: {
-                        username: user.email,
                         owner: user.owner,
                     },
                 },
@@ -281,7 +279,7 @@ const MyApp = ({ Component, pageProps }) => {
 
             signOut();
         } catch (err) {
-            console.error(`Failed to delete user, ${user.email}`);
+            console.error(`Failed to delete user, ${user.owner}`);
         }
     }, [user]);
 

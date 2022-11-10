@@ -1,6 +1,7 @@
 const moment = require('moment');
 const getGraphData = require('./get-graph-data');
 const getAggregatedStats = require('./get-aggregated-stats');
+const { getProfiles } = require('../../shared');
 
 const platformTableMap = Object.freeze({
     'twitter': 'TwitterPost',
@@ -105,10 +106,18 @@ const postHeaders = [
 ]
 
 async function getData(ctx) {
-    const { username, selectedProfileNames, timezoneOffset=0 } = ctx.arguments.input;
+    const { owner, selectedProfileNames, timezoneOffset=0 } = ctx.arguments.input;
     const { startDate, endDate } = ctx.arguments.input.startDate ? ctx.arguments.input : timeframes(timezoneOffset)[0];
 
-    const profiles = await gertProfiles(ctx, username);
+    const profiles = await getProfiles(ctx, owner);
+
+    if (profiles === null) {
+        return {
+            success: false,
+            data: {}
+        }
+    }
+
     const filteredProfiles = selectedProfileNames
         ? profiles.filter(({ profileName }) => (selectedProfileNames.includes(profileName)))
         : profiles;
@@ -139,7 +148,6 @@ async function getData(ctx) {
     
     return {
         data: {
-            profiles,
             graphs,
             aggregated,
             records,
@@ -148,25 +156,6 @@ async function getData(ctx) {
         },
         success: true,
     };
-}
-
-async function gertProfiles(ctx, username) {
-    const { ddbClient, envVars } = ctx.resources;
-    const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
-
-    try {
-        return (await ddbClient.query({
-            TableName: `UserProfile-${appsync_api_id}-${env}`,
-            KeyConditionExpression: '#user = :user',
-            ExpressionAttributeValues: { ':user': username },
-            ExpressionAttributeNames: { '#user': 'user' }
-        }).promise())
-            .Items;
-    } catch (err) {
-        console.error('Failed to fetch user profiles', err);
-        return [];
-    }
-    
 }
 
 async function getRecords(ctx, profiles, startDate, endDate, timezoneOffset) {

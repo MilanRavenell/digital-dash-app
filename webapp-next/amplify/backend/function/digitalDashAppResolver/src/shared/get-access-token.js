@@ -40,9 +40,8 @@ async function getAccessToken(ctx, profile) {
 
         console.log(`profile ${profile.key} needs refresh`)
         await ddbClient.update({
-            TableName: `UserProfile-${appsync_api_id}-${env}`,
+            TableName: `Profile-${appsync_api_id}-${env}`,
             Key: {
-                user: profile.user,
                 key: `${profile.platform}_${profile.profileName}`,
             },
             UpdateExpression: 'SET #needsRefresh = :needsRefresh',
@@ -94,9 +93,8 @@ async function refreshTwitterTokens(ctx, profile) {
 
     // Update profile with new tokens
     await ddbClient.update({
-        TableName: `UserProfile-${appsync_api_id}-${env}`,
+        TableName: `Profile-${appsync_api_id}-${env}`,
         Key: {
-            user: profile.user,
             key: profile.key,
         },
         UpdateExpression: 'SET #meta = :meta',
@@ -148,9 +146,8 @@ async function refreshYoutubeTokens(ctx, profile) {
 
     // Update profile with new tokens
     await ddbClient.update({
-        TableName: `UserProfile-${appsync_api_id}-${env}`,
+        TableName: `Profile-${appsync_api_id}-${env}`,
         Key: {
-            user: profile.user,
             key: `${profile.platform}_${profile.profileName}`,
         },
         UpdateExpression: 'SET #meta = :meta',

@@ -32,10 +32,10 @@ export default function App() {
   const updatesMadeRef = React.useRef(updatesMade);
 
   React.useEffect(() => {
-    if (context.user) {
+    if (context.user && context.userProfiles) {
       initialize();
     }
-  }, [context.user]);
+  }, [context.user, context.userProfiles]);
 
   React.useEffect(() => {
     selectedProfileNamesRef.current = selectedProfileNames;
@@ -50,7 +50,7 @@ export default function App() {
       setTimeout(() => {
         if (currentUpdatesMade === updatesMadeRef.current) {
           getData(
-            context.user.email,
+            context.user.owner,
             timeframeRef.current,
             selectedProfileNamesRef.current,
           ).then(newData => {
@@ -84,10 +84,10 @@ export default function App() {
   const initialize = async () => {
     console.log('init')
     try {
-      const response = await getData(context.user.email);
+      const response = await getData(context.user.owner);
 
-      if (response && response.success) {
-        setSelectedProfileNames(response.data.profiles.map(profile => profile.profileName ));
+      if (response && response.success ) {
+        setSelectedProfileNames(context.userProfiles.map(profile => profile.profileName ));
         setTimeframe(response.data.timeframes[0]);
         setData(response.data);
       }
@@ -110,7 +110,7 @@ export default function App() {
     }
   }
 
-  const getData = async (username, timeframe, selectedProfileNames) => {
+  const getData = async (owner, timeframe, selectedProfileNames) => {
     const { startDate, endDate } = timeframe ?? {};
     const timezoneOffset = new Date().getTimezoneOffset();
 
@@ -118,12 +118,12 @@ export default function App() {
       const response = (await API.graphql({
         query: getDataQuery,
         variables: {
-          username,
+          owner,
           startDate,
           endDate,
           selectedProfileNames,
           timezoneOffset,
-        }
+        },
       })).data.getData;
 
       console.log('data')

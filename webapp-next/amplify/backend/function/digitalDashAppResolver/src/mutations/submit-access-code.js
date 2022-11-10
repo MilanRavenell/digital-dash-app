@@ -3,7 +3,7 @@ const FAILURE_RESPONSE = { success: false };
 async function submitAccessCode(ctx) {
     const { ddbClient, envVars } = ctx.resources;
     const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
-    const { username, accessCode } = ctx.arguments.input;
+    const { owner, accessCode } = ctx.arguments.input;
 
     try {
         // Verify access code exists
@@ -25,7 +25,7 @@ async function submitAccessCode(ctx) {
             // Update user record to show user submitted access token
             await ddbClient.update({
                 TableName: `User-${appsync_api_id}-${env}`,
-                Key: { email: username, },
+                Key: { owner },
                 UpdateExpression: 'SET #hasAccess = :hasAccess',
                 ExpressionAttributeNames: { 
                     '#hasAccess': 'hasAccess',
@@ -46,7 +46,7 @@ async function submitAccessCode(ctx) {
 
         return FAILURE_RESPONSE;
     } catch (err) {
-        console.error(`Failed to submit access code ${accessCode} for user ${username}`, err);
+        console.error(`Failed to submit access code ${accessCode} for user ${owner}`, err);
         return FAILURE_RESPONSE;
     }
     

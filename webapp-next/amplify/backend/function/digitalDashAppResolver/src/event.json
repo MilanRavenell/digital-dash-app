@@ -1,6 +1,6 @@
 {
-  "typeName": "Mutation",
-  "fieldName": "initUser",
+  "typeName": "Query",
+  "fieldName": "getData",
   "arguments": {
     "input": {
       "platform": "instagram",
@@ -15,7 +15,7 @@
       "email": "ravenellmilan162@gmail.com",
       "firstName": "Cool",
       "lastName": "DOnny",
-      "owner": "a9f97ed9-61ca-4eb0-9d3f-5ecf5e7f0c2b",
+      "owner": "995819c9-1a97-45d4-823c-87af32f8f817",
       "accessCode": "15f3c21b-0dcf-4aed-aa96-9dfedf6a5305"
     },
     "startDate": "2014-09-13T01:12:01.560Z",

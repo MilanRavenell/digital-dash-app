@@ -46,16 +46,20 @@ export const onDeleteUser = /* GraphQL */ `
 export const onCreateUserProfile = /* GraphQL */ `
   subscription OnCreateUserProfile($owner: String) {
     onCreateUserProfile(owner: $owner) {
-      user
       owner
       key
-      platform
-      profileName
-      meta
-      profilePicUrl
-      followerCount
-      needsRefresh
-      postsLastPopulated
+      profile {
+        key
+        platform
+        profileName
+        meta
+        profilePicUrl
+        followerCount
+        needsRefresh
+        postsLastPopulated
+        createdAt
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -64,8 +68,50 @@ export const onCreateUserProfile = /* GraphQL */ `
 export const onUpdateUserProfile = /* GraphQL */ `
   subscription OnUpdateUserProfile($owner: String) {
     onUpdateUserProfile(owner: $owner) {
-      user
       owner
+      key
+      profile {
+        key
+        platform
+        profileName
+        meta
+        profilePicUrl
+        followerCount
+        needsRefresh
+        postsLastPopulated
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteUserProfile = /* GraphQL */ `
+  subscription OnDeleteUserProfile($owner: String) {
+    onDeleteUserProfile(owner: $owner) {
+      owner
+      key
+      profile {
+        key
+        platform
+        profileName
+        meta
+        profilePicUrl
+        followerCount
+        needsRefresh
+        postsLastPopulated
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateProfile = /* GraphQL */ `
+  subscription OnCreateProfile($filter: ModelSubscriptionProfileFilterInput) {
+    onCreateProfile(filter: $filter) {
       key
       platform
       profileName
@@ -79,11 +125,9 @@ export const onUpdateUserProfile = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteUserProfile = /* GraphQL */ `
-  subscription OnDeleteUserProfile($owner: String) {
-    onDeleteUserProfile(owner: $owner) {
-      user
-      owner
+export const onUpdateProfile = /* GraphQL */ `
+  subscription OnUpdateProfile($filter: ModelSubscriptionProfileFilterInput) {
+    onUpdateProfile(filter: $filter) {
       key
       platform
       profileName

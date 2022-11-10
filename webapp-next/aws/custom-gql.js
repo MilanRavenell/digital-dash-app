@@ -1,13 +1,13 @@
 export const getData = /* GraphQL */ `
   query GetData(
-    $username: String!,
+    $owner: String!,
     $selectedProfileNames: [String!],
     $startDate: String,
     $endDate: String,
     $timezoneOffset: Int,
   ) {
     getData(input: {
-      username: $username,
+      owner: $owner,
       selectedProfileNames: $selectedProfileNames,
       startDate: $startDate,
       endDate: $endDate,
@@ -24,13 +24,6 @@ export const getData = /* GraphQL */ `
             field
           }
           platform
-        }
-        profiles {
-          platform
-          profileName
-          user
-          profilePicUrl
-          followerCount
         }
         graphs {
           name

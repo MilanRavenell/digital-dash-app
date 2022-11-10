@@ -7,8 +7,8 @@ type User
     { allow: owner },
 ])
 {
-  owner: String!
-  email: String! @primaryKey
+  owner: String! @primaryKey
+  email: String!
   firstName: String!
   lastName: String!
   hasAccess: Boolean
@@ -22,9 +22,15 @@ type UserProfile
     { allow: private, operations: [read] },
 ])
 {
-  user: String! @primaryKey(sortKeyFields: ["key"]) @index(name: "ByUserAndPlatform", sortKeyFields: ["platform"], queryField: "userProfilesByUserAndPlatform")
-  owner: String!
-  key: String! # <platform>_<profileName>
+  owner: String! @primaryKey(sortKeyFields: ["key"])
+  key: String!
+  profile: Profile @hasOne(fields: ["key"])
+}
+
+type Profile
+@model(mutations: { create: "createProfile", update: "updateProfile" }, queries: null)
+{
+  key: String! @primaryKey # <platform>_<profileName>
   platform: String!
   profileName: String!
   meta: String
@@ -130,7 +136,7 @@ type PostMedia {
 }
 
 input GetDataInput {
-  username: String!
+  owner: String!
   selectedProfileNames: [String!]
   startDate: String
   endDate: String
@@ -187,13 +193,12 @@ type GetDataDataPostHeader {
 union Post = TwitterPost | YoutubePost | InstagramPost | TiktokPost
 
 type getDataData {
-  profiles: [UserProfile!]
   graphs: [GetDataGraph!]
   aggregated: GetDataAggregated!
   timeframes: [GetDataDataTimeframe!]
   metrics: [GetDataDataMetric!]
   records: [Post!]
-  postHeaders: [GetDataDataPostHeader!]!
+  postHeaders: [GetDataDataPostHeader!]
 }
 
 type GetDataResponse {
@@ -217,7 +222,7 @@ type FindProfilesResponse {
 }
 
 input PopulateAnalyticsInput {
-  username: String!
+  owner: String!
   profileKey: String!
 }
 
@@ -227,7 +232,7 @@ type PopulateAnalyticsResponse {
 }
 
 input DeleteProfileInput {
-  username: String!
+  owner: String!
   profileKey: String!
 }
 
@@ -265,7 +270,7 @@ type InitUserResponse {
 }
 
 input SubmitAccessCodeInput {
-  username: String!
+  owner: String!
   accessCode: String!
 }
 
@@ -274,12 +279,20 @@ type SubmitAccessCodeResponse {
 }
 
 input RemoveUserInput {
-  username: String!
   owner: String!
 }
 
 type RemoveUserResponse {
   success: Boolean!
+}
+
+input GetProfilesInput {
+  owner: String!
+}
+
+type GetProfilesResponse{
+  success: Boolean!
+  profiles: [Profile!]!
 }
 
 type Mutation {
@@ -295,4 +308,5 @@ type Query {
   getData(input: GetDataInput!): GetDataResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
   findProfiles(input: FindProfilesInput!): FindProfilesResponse!  @function(name: "digitalDashAppResolver", region: "us-west-2")
   invokeWebScraper(input: InvokeWebScraperInput!): InvokeWebScraperResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
+  getProfiles(input: GetProfilesInput!): GetProfilesResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
 }
