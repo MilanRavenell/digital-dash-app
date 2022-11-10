@@ -62,7 +62,7 @@ async function fetchAnalyticsForIgBasicProfile(ctx, profile) {
 
     let numItemsInserted = 0;
 
-    const items = await Promise.all(mediaObjects.map(async (mediaObject) => {
+    const items = await Promise.all(mediaObjects.slice(0, profile.postsLastPopulated ? 30 : 100).map(async (mediaObject) => {
         // TODO: Process single content page for for items not retrieved in full run
         try {
             const media = (!mediaObject.media_info) ? mediaObject.media : mediaObject.media_info.map((media_info) => ({

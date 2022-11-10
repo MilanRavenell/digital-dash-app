@@ -14,6 +14,7 @@ exports.handler = async (event) => {
     // Get all profiles
     try {
         let nextToken = null;
+        const now = new Date();
 
         do {
             const response = await ddbClient.scan({
@@ -23,6 +24,10 @@ exports.handler = async (event) => {
 
             await Promise.all(response.Items.map(async (profile) => {
                 console.log(`Launching analytics job for user ${profile.user} profile ${profile.profileName}`);
+
+                if (['tiktok', 'instagram-basic'].includes(profile.platform) && now.getUTCHours() % 6 !== 0) {
+                    return;
+                }
 
                 try {
                     await sqsClient.sendMessage({

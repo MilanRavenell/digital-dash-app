@@ -47,7 +47,8 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
 
     let numItemsInserted = 0;
 
-    const items = await Promise.all(allVideos.map(async (video) => {
+    // If this is the first metric fetch, fecth most recent 300. Else, update most recent 30
+    const items = await Promise.all(allVideos.slice(0, profile.postsLastPopulated ? 30 : 100).map(async (video) => {
         try {
             const extraInfo = await invokeWebScraper(ctx, {
                 platform: 'tiktok',

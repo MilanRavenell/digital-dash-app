@@ -203,7 +203,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/update-analytics/prod/1665768896255-2022-10-14T17:34:56.255Z/update-analytics.zip"
+                "S3Key": "serverless/update-analytics/prod/1668043863566-2022-11-10T01:31:03.566Z/update-analytics.zip"
               },
               "Handler": "src/index.handler",
               "Runtime": "nodejs14.x",
@@ -227,14 +227,14 @@
               "UpdateAnalyticsLogGroup"
             ]
           },
-          "UpdateAnalyticsLambdaVersionJs8VEjlR8pzQIDE75CLqaiSb0fzEZ1RmLNntUIY": {
+          "UpdateAnalyticsLambdaVersionZtL5Ev77N7Z58kVYiZgrVW9wxqhQRo2MWDimbvYGU": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UpdateAnalyticsLambdaFunction"
               },
-              "CodeSha256": "7i8xTJPYhuKaQOMy50NrgkCmCGJtklfPCaw4PR7sHaI="
+              "CodeSha256": "sQ+BnTp8PYo4DdlQwkiW45BZU9Rno+ZgAKykN+H7vWk="
             }
           },
           "UpdateanalyticsprodupdateAnalyticsrule1EventBridgeRule": {
@@ -306,7 +306,7 @@
           "UpdateAnalyticsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UpdateAnalyticsLambdaVersionJs8VEjlR8pzQIDE75CLqaiSb0fzEZ1RmLNntUIY"
+              "Ref": "UpdateAnalyticsLambdaVersionZtL5Ev77N7Z58kVYiZgrVW9wxqhQRo2MWDimbvYGU"
             },
             "Export": {
               "Name": "sls-update-analytics-prod-UpdateAnalyticsLambdaFunctionQualifiedArn"
@@ -421,7 +421,7 @@
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "UpdateAnalyticsLambdaVersionJs8VEjlR8pzQIDE75CLqaiSb0fzEZ1RmLNntUIY"
+        "versionLogicalId": "UpdateAnalyticsLambdaVersionZtL5Ev77N7Z58kVYiZgrVW9wxqhQRo2MWDimbvYGU"
       }
     },
     "configValidationMode": "warn",
@@ -443,7 +443,7 @@
     "artifact": "/Users/milanravenell/Documents/digital_dash/services/update-analytics/.serverless/update-analytics.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/update-analytics/prod/1665768896255-2022-10-14T17:34:56.255Z",
+    "artifactDirectoryName": "serverless/update-analytics/prod/1668043863566-2022-11-10T01:31:03.566Z",
     "artifact": "update-analytics.zip"
   }
 }
