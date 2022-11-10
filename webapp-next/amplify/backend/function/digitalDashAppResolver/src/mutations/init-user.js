@@ -21,17 +21,17 @@ async function initUser(ctx) {
         let usersCount = 0;
         let nextToken = null;
         
-        do {
-            const response = await ddbClient.scan({
-                TableName: `User-${appsync_api_id}-${env}`,
-                ExclusiveStartKey: nextToken,
-            }).promise();
+        // do {
+        //     const response = await ddbClient.scan({
+        //         TableName: `User-${appsync_api_id}-${env}`,
+        //         ExclusiveStartKey: nextToken,
+        //     }).promise();
 
-            usersCount += response.Count;
-            nextToken = response.LastEvaluatedKey;
-        } while (nextToken)
+        //     usersCount += response.Count;
+        //     nextToken = response.LastEvaluatedKey;
+        // } while (nextToken)
 
-        user.hasAccess = (usersCount < MAX_USERS);
+        // user.hasAccess = (usersCount < MAX_USERS);
 
         await ddbClient.put({
             TableName: `User-${appsync_api_id}-${env}`,

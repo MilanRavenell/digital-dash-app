@@ -26,12 +26,12 @@ async function submitAccessCode(ctx) {
             await ddbClient.update({
                 TableName: `User-${appsync_api_id}-${env}`,
                 Key: { email: username, },
-                UpdateExpression: 'SET #submittedAccessCode = :submittedAccessCode',
+                UpdateExpression: 'SET #hasAccess = :hasAccess',
                 ExpressionAttributeNames: { 
-                    '#submittedAccessCode': 'submittedAccessCode',
+                    '#hasAccess': 'hasAccess',
                 },
                 ExpressionAttributeValues: {
-                    ':submittedAccessCode': true,
+                    ':hasAccess': true,
                 },
             }).promise();
 
@@ -46,7 +46,7 @@ async function submitAccessCode(ctx) {
 
         return FAILURE_RESPONSE;
     } catch (err) {
-        console.error(`Failed submit access code ${accessCode} for user ${username}`, err);
+        console.error(`Failed to submit access code ${accessCode} for user ${username}`, err);
         return FAILURE_RESPONSE;
     }
     
