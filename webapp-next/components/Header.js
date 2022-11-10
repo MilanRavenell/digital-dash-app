@@ -11,6 +11,7 @@ const Header = ({
     onLoginButtonPressed,
     onLogoClick,
     signOut,
+    deleteAccount,
 }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -27,7 +28,8 @@ const Header = ({
             className={styles.container}
             style={ isHomepage 
                 ? {
-                    height: '9vh',
+                    height: '20vh',
+                    maxHeight: '80px',
                 }
                 : {}
             }
@@ -78,6 +80,7 @@ const Header = ({
                                         key={'menu'}>
                                         {goToAddPlatformSelection && <MenuItem onClick={goToAddPlatformSelection}>Add/Remove Accounts</MenuItem>}
                                         <MenuItem onClick={signOut}>Sign Out</MenuItem>
+                                        <MenuItem onClick={deleteAccount}>Delete Account</MenuItem>
                                     </Menu>
                                 ];
                             } else {

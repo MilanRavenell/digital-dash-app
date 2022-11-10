@@ -32,7 +32,7 @@ export const initUser = /* GraphQL */ `
         email
         firstName
         lastName
-        submittedAccessCode
+        hasAccess
         canEmail
         createdAt
         updatedAt
@@ -64,7 +64,7 @@ export const createUser = /* GraphQL */ `
       email
       firstName
       lastName
-      submittedAccessCode
+      hasAccess
       canEmail
       createdAt
       updatedAt
@@ -81,7 +81,7 @@ export const updateUser = /* GraphQL */ `
       email
       firstName
       lastName
-      submittedAccessCode
+      hasAccess
       canEmail
       createdAt
       updatedAt
@@ -98,7 +98,7 @@ export const deleteUser = /* GraphQL */ `
       email
       firstName
       lastName
-      submittedAccessCode
+      hasAccess
       canEmail
       createdAt
       updatedAt

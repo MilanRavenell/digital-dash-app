@@ -33,7 +33,7 @@ export const getUser = /* GraphQL */ `
       email
       firstName
       lastName
-      submittedAccessCode
+      hasAccess
       canEmail
       createdAt
       updatedAt
@@ -60,7 +60,7 @@ export const listUsers = /* GraphQL */ `
         email
         firstName
         lastName
-        submittedAccessCode
+        hasAccess
         canEmail
         createdAt
         updatedAt

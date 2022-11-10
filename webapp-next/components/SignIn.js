@@ -146,9 +146,9 @@ const SignIn = ({
     };
 
     const accessCodeHeaderText = (name) => (`Hi ${name}, Orb is still in early development, \
-so not everyone can use it quite yet. Join the email list for a chance to receive an access \
-code to the alpha version of our product. Otherwise, keep an eye out for future emails from us to \
-stay in the loop for updates.`);
+so not everyone can use it quite yet. We're working hard to expand access as soon as possible, \
+join the email list to be one of the first to know when capacity exapnds and stay in the loop for \
+future updates.`);
 
     return (
         <div className={styles.container}>

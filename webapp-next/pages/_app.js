@@ -7,7 +7,7 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { Authenticator } from '@aws-amplify/ui-react';
 import { getUser } from '../aws/graphql/queries';
-import { createUser, submitAccessCode, updateUser, removeUser } from '../aws/graphql/mutations';
+import { initUser, submitAccessCode, updateUser, removeUser } from '../aws/graphql/mutations';
 import { useRouter } from 'next/router';
 import { Auth, Hub } from 'aws-amplify';
 import axios from 'axios';
@@ -97,21 +97,18 @@ const MyApp = ({ Component, pageProps }) => {
     }, [authUser]);
 
     useEffect(() => {
-        console.log('updating user')
-        if (router.pathname === '/homepage') {
-            setLoading(false);
-            return;
-        }
+        console.log('updating user', user)
 
         if (user) {
-            if (!user.submittedAccessCode) {
+            if (!user.hasAccess) {
                 setLoading(false);
                 if (router.pathname !== '/sign-in' && router.pathname !== '/homepage') {
                     router.push('/sign-in');
                 }
                 return;
             }
-
+            
+            console.log('Navigating to sign in');
             if (router.pathname === '/sign-in') {
                 router.push('/');
             }
@@ -122,6 +119,7 @@ const MyApp = ({ Component, pageProps }) => {
                     
                     // If the user has no profiles, send them to add-profile-selection
                     if (profiles.length <= 0 && router.pathname !== '/homepage') {
+                        console.log('Navigating to add profile');
                         router.push({
                             pathname: `/add-profile-selection`,
                             query: { f: 1 },
@@ -132,6 +130,7 @@ const MyApp = ({ Component, pageProps }) => {
                 })
                 .catch((err) => {
                     console.error('Failed to get user profiles', err);
+                    setLoading(false);
                 });
         }
     }, [user]);
@@ -169,34 +168,38 @@ const MyApp = ({ Component, pageProps }) => {
             return;
         }
 
-        let ddbUser = (await API.graphql({ query: getUser, variables: { email: authUser.attributes.email }, })).data.getUser;
-        console.log('ddbuser: ', ddbUser)
+        try {
+            let ddbUser = (await API.graphql({ query: getUser, variables: { email: authUser.attributes.email }, })).data.getUser;
+            console.log('ddbuser: ', ddbUser)
 
-        // User's first sign in, send to add-platform-selection
-        if (ddbUser === null) {
-            ddbUser = {
-                email: authUser.attributes.email,
-                firstName: authUser.attributes.given_name,
-                lastName: authUser.attributes.family_name,
-                owner: authUser.username,
+            // User's first sign in, send to add-platform-selection
+            if (ddbUser === null) {
+                const { success, user: responseUser } = (await API.graphql({
+                    query: initUser,
+                    variables: {
+                        input: {
+                            email: authUser.attributes.email,
+                            firstName: authUser.attributes.given_name,
+                            lastName: authUser.attributes.family_name,
+                            owner: authUser.username,
+                        } 
+                    }
+                })).data.initUser;
+                console.log(responseUser)
+
+                if (success) {
+                    ddbUser = responseUser;
+                } else {
+                    throw new Error('Failed to create new ddb user, see cloudwatch for more information');
+                }
+                
             }
 
-            const { success } = await API.graphql({ query: createUser, variables: { input: ddbUser }});
-
-            if (success) {
-                setUser(ddbUser);
-            } else {
-                console.error('Failed to create new ddb user')
-            }
-            
-        } else {
-            ddbUser = {
-                ...ddbUser,
-                owner: authUser.username,
-            };
+            setUser(ddbUser);
+        } catch (err) {
+            console.error('Failed to initialize user from DDB', err);
         }
-
-        setUser(ddbUser);
+        
     }, [user]);
 
     const submitAccessCodeCallback = useCallback(async (accessCode) => {
@@ -240,11 +243,6 @@ const MyApp = ({ Component, pageProps }) => {
                     },
                 },
             });
-    
-            if (canEmail) {
-                // send email
-                await axios.get(`/api/send-request-access-code-sqs?email=${user.email}&firstName=${user.firstName}`);
-            }
     
             setUser((prevUser) => ({
                 ...prevUser,

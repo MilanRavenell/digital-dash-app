@@ -95,6 +95,7 @@ export default function Home() {
         <Header
           user={context.user}
           signOut={context.signOut}
+          deleteAccount={context.deleteUserCallback}
           onLogoClick={navigateToHomepage}
           key={'header'}
         />,

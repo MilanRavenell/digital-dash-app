@@ -11,7 +11,7 @@ type User
   email: String! @primaryKey
   firstName: String!
   lastName: String!
-  submittedAccessCode: Boolean
+  hasAccess: Boolean
   canEmail: Boolean
 }
 

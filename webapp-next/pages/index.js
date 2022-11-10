@@ -186,6 +186,7 @@ export default function App() {
             goToAddPlatformSelection={goToAddPlatformSelection}
             onLogoClick={navigateToHomepage}
             signOut={context.signOut}
+            deleteAccount={context.deleteUserCallback}
             key={'header'}
           />,
           <MainContentContainer
