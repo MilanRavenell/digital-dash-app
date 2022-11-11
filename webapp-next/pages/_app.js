@@ -116,11 +116,11 @@ const MyApp = ({ Component, pageProps }) => {
                 .then((profiles) => {
                     setUserProfiles(profiles);
                     
-                    // If the user has no profiles, send them to add-profile-selection
+                    // If the user has no profiles, send them to add-profile
                     if (profiles.length <= 0 && router.pathname !== '/homepage') {
                         console.log('Navigating to add profile');
                         router.push({
-                            pathname: `/add-profile-selection`,
+                            pathname: `/add-profile`,
                             query: { f: 1 },
                         });
                     }

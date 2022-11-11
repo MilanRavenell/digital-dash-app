@@ -155,7 +155,7 @@ export default function App() {
   }, [context, selectedProfileNames, timeframe, setTimeframe, setData, data]);
 
   const goToAddPlatformSelection = React.useCallback(() => {
-    router.push(`/add-profile-selection`);
+    router.push(`/add-profile`);
   }, []);
 
   const goToPrivacyPolicy = React.useCallback(() => {

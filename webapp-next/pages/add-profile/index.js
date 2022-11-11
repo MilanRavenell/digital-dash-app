@@ -1,13 +1,13 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import AddProfileSelection from '../components/AddProfileSelection';
+import AddProfileSelection from '../../components/AddProfileSelection';
 import "@aws-amplify/ui-react/styles.css";
 import { API } from 'aws-amplify';
-import { removeProfile } from '../aws/graphql/mutations';
-import AppContext from '../components/AppContext';
+import { removeProfile } from '../../aws/graphql/mutations';
+import AppContext from '../../components/AppContext';
 import axios from "axios";
-import Header from '../components/Header';
-import Loading from '../components/Loading';
+import Header from '../../components/Header';
+import Loading from '../../components/Loading';
 
 export default function Home() {
   const router = useRouter();
@@ -17,19 +17,6 @@ export default function Home() {
   const platformList = ['twitter', 'youtube', 'instagram'];
 
   const isFirstLogin = (router.query.f === '1');
-
-  React.useEffect(() => {
-    if (router.query.profiles !== undefined && context.userProfiles) {
-      if (router.query.profiles === JSON.stringify(context.userProfiles)) {
-        //  Clear query parameters from the URL
-        router.push('/add-profile-selection');
-        return;
-      }
-
-      const profiles = JSON.parse(router.query.profiles);
-      context.setUserProfiles(profiles);
-    }
-  });
 
   const handleProfileDelete = React.useCallback(async (user, profiles, profileIndex) => {
     try {

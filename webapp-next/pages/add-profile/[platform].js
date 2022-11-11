@@ -52,7 +52,7 @@ const AddProfile = () => {
             );
         } else {
             //  Clear query parameters from the URL
-            router.push('/add-profile-selection')
+            router.push('/add-profile')
         }
     }
   })
@@ -78,12 +78,12 @@ const AddProfile = () => {
     }
 
     router.push({
-        pathname: `/add-profile-selection`,
+        pathname: `/add-profile`,
     });
   }, [context]);
 
     const cancel = () => {
-        router.push(`/add-profile-selection`);
+        router.push(`/add-profile`);
     };
 
     const navigateToHomepage = () => {
