@@ -12,6 +12,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import FollowUs from './FollowUs';
 
 import styles from '../styles/SignIn.module.css';
@@ -39,6 +41,7 @@ const SignIn = ({
     const [textFieldValue, setTextFieldValue] = React.useState('');
 
     const [dialogueOpen, setDialogueOpen] = React.useState(false);
+    const [dialogueTitle, setDialogueTitle] = React.useState(null);
     const [dialogueDescription, setDialogueDescription] = React.useState(null);
     const [dialogueOnClick, setDialogueOnClick] = React.useState(null);
 
@@ -70,16 +73,16 @@ const SignIn = ({
 
     const signOutPressed = () => {
         openDialogue(
-            '',
-            'Sign out?',
+            'Sign Out',
+            'Are you sure you want to sign out?',
             signOut,
         )
     }
 
     const deleteUserPressed = () => {
         openDialogue(
-            '',
-            'Delete account?',
+            'Delete Account',
+            'Are you sure you want to delete your account?',
             deleteUserConfirmed,
         )
     }
@@ -104,6 +107,7 @@ const SignIn = ({
 
     const closeDialogue = () => {
         setDialogueOpen(false);
+        setDialogueTitle(null);
         setDialogueDescription(null);
         setDialogueOnClick(null);
     }
@@ -118,6 +122,7 @@ const SignIn = ({
             await onClick();
         };
 
+        setDialogueTitle(title);
         setDialogueDescription(description);
         setDialogueOnClick(()=>confirm);
         setDialogueOpen(true);
@@ -344,8 +349,13 @@ future updates.`);
                     aria-describedby="alert-dialog-description"
                 >
                     <DialogTitle id="alert-dialog-title">
-                        { dialogueDescription }
+                        { dialogueTitle }
                     </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="alert-dialog-description">
+                            { dialogueDescription }
+                        </DialogContentText>
+                    </DialogContent>
                     <DialogActions>
                         <Button onClick={closeDialogue}>Cancel</Button>
                         <Button onClick={dialogueOnClick} autoFocus>
