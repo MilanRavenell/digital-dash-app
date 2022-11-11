@@ -1,4 +1,4 @@
-const { deleteProfile } = require('../shared');
+const { removeProfile } = require('../shared');
 
 async function removeUser(ctx) {
     const { owner } = ctx.arguments.input;
@@ -41,7 +41,7 @@ async function deleteProfiles(ctx) {
         .Items;
 
     await Promise.all(profiles.map(async (profile) => {
-        await deleteProfile(profile);
+        await removeProfile(profile);
     }));
 }
 

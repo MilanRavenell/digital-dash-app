@@ -18,7 +18,7 @@
       "function": {
         "digitalDashAppResolver": {
           "deploymentBucketName": "amplify-amplify36cf6a1d3b6e4-staging-162021-deployment",
-          "s3Key": "amplify-builds/digitalDashAppResolver-75395573486868315365-build.zip",
+          "s3Key": "amplify-builds/digitalDashAppResolver-322b717a3264744d7035-build.zip",
           "googOauthClientId": "581336452597-6c80lf8ijdvhlmi00odvrqsj1iah9lad.apps.googleusercontent.com",
           "googOauthClientSecret": "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",
           "twitterApiSecret": "FaIS5ICp0qvbrRO30zSvngjZLyVU8VEY4V0lsklrsvu0CkK384",
@@ -28,6 +28,12 @@
           "twitterApiKey": "dTAwRDBqOFl3ZmpkOGw4RmpIT1c6MTpjaQ",
           "userPoolId": "us-west-2_FgSEWYy2P"
         }
+      },
+      "api": {
+        "digitaldashappwebapp": {}
+      },
+      "storage": {
+        "imagestorage": {}
       }
     }
   },
@@ -50,7 +56,7 @@
       "function": {
         "digitalDashAppResolver": {
           "deploymentBucketName": "amplify-digitaldashappwebapp-prod-224358-deployment",
-          "s3Key": "amplify-builds/digitalDashAppResolver-68686e4d6c4b53735254-build.zip",
+          "s3Key": "amplify-builds/digitalDashAppResolver-75395573486868315365-build.zip",
           "googOauthClientId": "97892154036-pqkjljs24ffsin8s0srqrcu1btpjung8.apps.googleusercontent.com",
           "googOauthClientSecret": "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",
           "twitterApiSecret": "jIVGcIVRWGoI1in9fJlHOXCgK4KcLmCi2629WpZLxFqLJKrSSK",
@@ -60,6 +66,12 @@
           "twitterApiKey": "aTV3WEVuRlhnNTN6MlMwTmF1UGE6MTpjaQ",
           "userPoolId": "us-west-2_SqcEmDHka"
         }
+      },
+      "api": {
+        "digitaldashappwebapp": {}
+      },
+      "storage": {
+        "imagestorage": {}
       }
     }
   }

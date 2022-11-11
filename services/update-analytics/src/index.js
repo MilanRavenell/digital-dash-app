@@ -18,12 +18,12 @@ exports.handler = async (event) => {
 
         do {
             const response = await ddbClient.scan({
-                TableName: `UserProfile-${appsync_api_id}-${env}`,
+                TableName: `Profile-${appsync_api_id}-${env}`,
                 ExclusiveStartKey: nextToken,
             }).promise();
 
             await Promise.all(response.Items.map(async (profile) => {
-                console.log(`Launching analytics job for user ${profile.user} profile ${profile.profileName}`);
+                console.log(`Launching analytics job for profile ${profile.key}`);
 
                 if (['tiktok', 'instagram-basic'].includes(profile.platform) && now.getUTCHours() % 6 !== 0) {
                     return;
@@ -37,7 +37,6 @@ exports.handler = async (event) => {
                             fieldName: 'populateAnalytics',
                             arguments:{
                                 input: {
-                                    username: profile.user,
                                     profileKey: profile.key,
                                 }
                             }

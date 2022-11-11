@@ -2,8 +2,11 @@
 // this is an auto generated file. This will be overwritten
 
 export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser($owner: String) {
-    onCreateUser(owner: $owner) {
+  subscription OnCreateUser(
+    $filter: ModelSubscriptionUserFilterInput
+    $owner: String
+  ) {
+    onCreateUser(filter: $filter, owner: $owner) {
       owner
       email
       firstName
@@ -16,8 +19,11 @@ export const onCreateUser = /* GraphQL */ `
   }
 `;
 export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser($owner: String) {
-    onUpdateUser(owner: $owner) {
+  subscription OnUpdateUser(
+    $filter: ModelSubscriptionUserFilterInput
+    $owner: String
+  ) {
+    onUpdateUser(filter: $filter, owner: $owner) {
       owner
       email
       firstName
@@ -30,8 +36,11 @@ export const onUpdateUser = /* GraphQL */ `
   }
 `;
 export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser($owner: String) {
-    onDeleteUser(owner: $owner) {
+  subscription OnDeleteUser(
+    $filter: ModelSubscriptionUserFilterInput
+    $owner: String
+  ) {
+    onDeleteUser(filter: $filter, owner: $owner) {
       owner
       email
       firstName
@@ -44,8 +53,11 @@ export const onDeleteUser = /* GraphQL */ `
   }
 `;
 export const onCreateUserProfile = /* GraphQL */ `
-  subscription OnCreateUserProfile($owner: String) {
-    onCreateUserProfile(owner: $owner) {
+  subscription OnCreateUserProfile(
+    $filter: ModelSubscriptionUserProfileFilterInput
+    $owner: String
+  ) {
+    onCreateUserProfile(filter: $filter, owner: $owner) {
       owner
       key
       profile {
@@ -66,8 +78,11 @@ export const onCreateUserProfile = /* GraphQL */ `
   }
 `;
 export const onUpdateUserProfile = /* GraphQL */ `
-  subscription OnUpdateUserProfile($owner: String) {
-    onUpdateUserProfile(owner: $owner) {
+  subscription OnUpdateUserProfile(
+    $filter: ModelSubscriptionUserProfileFilterInput
+    $owner: String
+  ) {
+    onUpdateUserProfile(filter: $filter, owner: $owner) {
       owner
       key
       profile {
@@ -88,8 +103,11 @@ export const onUpdateUserProfile = /* GraphQL */ `
   }
 `;
 export const onDeleteUserProfile = /* GraphQL */ `
-  subscription OnDeleteUserProfile($owner: String) {
-    onDeleteUserProfile(owner: $owner) {
+  subscription OnDeleteUserProfile(
+    $filter: ModelSubscriptionUserProfileFilterInput
+    $owner: String
+  ) {
+    onDeleteUserProfile(filter: $filter, owner: $owner) {
       owner
       key
       profile {

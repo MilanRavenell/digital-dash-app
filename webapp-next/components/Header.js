@@ -78,7 +78,7 @@ const Header = ({
                                         open={anchorEl !== null}
                                         onClose={closeSettingsMenu}
                                         key={'menu'}>
-                                        {goToAddPlatformSelection && <MenuItem onClick={goToAddPlatformSelection}>Add/Remove Accounts</MenuItem>}
+                                        {goToAddPlatformSelection && <MenuItem onClick={goToAddPlatformSelection}>Add/Remove Profiles</MenuItem>}
                                         <MenuItem onClick={signOut}>Sign Out</MenuItem>
                                         <MenuItem onClick={deleteAccount}>Delete Account</MenuItem>
                                     </Menu>

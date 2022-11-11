@@ -11,7 +11,7 @@ async function getProfiles(ctx, owner) {
         }).promise())
             .Items;
 
-        return await Promise.all(profileKeys.map(async ({ key }) => {
+        return (await Promise.all(profileKeys.map(async ({ key }) => {
             try {
                 return (await ddbClient.get({
                     TableName: `Profile-${appsync_api_id}-${env}`,
@@ -23,7 +23,8 @@ async function getProfiles(ctx, owner) {
                 return null;
             }
             
-        }));
+        })))
+            .filter(profile => (profile !== null && profile !== undefined));
     } catch (err) {
         console.error('Failed to fetch user profiles', err);
         return null;

@@ -142,7 +142,7 @@ export const getData = /* GraphQL */ `
 export const populateAnalytics = /* GraphQL */ `
   mutation PopulateAnalytics($username: String!, $profileKey: String!) {
     populateAnalytics(input: {
-      username: $username,
+      owner: $owner,
       profileKey: $profileKey,
     }) {
       success
@@ -152,9 +152,9 @@ export const populateAnalytics = /* GraphQL */ `
 `;
 
 export const deleteProfile = /* GraphQL */ `
-  mutation DeleteProfile($username: String!, $profileKey: String!) {
+  mutation DeleteProfile($owner: String!, $profileKey: String!) {
     deleteProfile(input: {
-      username: $username,
+      owner: $owner,
       profileKey: $profileKey,
     }) {
       success

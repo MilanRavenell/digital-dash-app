@@ -8,7 +8,7 @@ const { getProfileInfo, getAccessToken } = require('../../shared');
 async function fetchAnalytics(ctx) {
     const { ddbClient, envVars } = ctx.resources;
     const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
-    const { username, profileKey, debug_noUploadToDDB } = ctx.arguments.input;
+    const { profileKey, debug_noUploadToDDB } = ctx.arguments.input;
 
     // Do not fetch posts if it's been less then an hour since posts were last fetched
     let profile = null;
@@ -54,7 +54,7 @@ async function fetchAnalytics(ctx) {
             success: true,
         }
     } catch (err) {
-        console.error(`Failed to fetch analytics for user ${username}`);
+        console.error(`Failed to fetch analytics for profile ${profileKey}`);
         if (err.name === 'AxiosError' && err.response && err.response.data) {
             console.error('Error data: ', err.response.data)
         } else {

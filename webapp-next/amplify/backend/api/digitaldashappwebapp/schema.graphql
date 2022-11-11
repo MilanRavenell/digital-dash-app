@@ -222,7 +222,6 @@ type FindProfilesResponse {
 }
 
 input PopulateAnalyticsInput {
-  owner: String!
   profileKey: String!
 }
 
@@ -231,12 +230,12 @@ type PopulateAnalyticsResponse {
   success: Boolean!
 }
 
-input DeleteProfileInput {
+input RemoveProfileInput {
   owner: String!
   profileKey: String!
 }
 
-type DeleteProfileResponse {
+type RemoveProfileResponse {
   success: Boolean!
 }
 
@@ -295,13 +294,24 @@ type GetProfilesResponse{
   profiles: [Profile!]!
 }
 
+input UpdateProfilesInput {
+  owner: String!
+  profiles: String!
+}
+
+type UpdateProfilesResponse {
+  success: Boolean!
+  profiles: [Profile!]!
+}
+
 type Mutation {
   populateAnalytics(input: PopulateAnalyticsInput!): PopulateAnalyticsResponse! @function(name: "digitalDashAppResolver", region: "us-west-2")
-  deleteProfile(input: DeleteProfileInput!): DeleteProfileResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
+  removeProfile(input: RemoveProfileInput!): RemoveProfileResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
   triggerSqs(input: TriggerSqsInput!): TriggerSqsResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
   initUser(input: InitUserInput!): InitUserResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
   submitAccessCode(input: SubmitAccessCodeInput!): SubmitAccessCodeResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
   removeUser(input: RemoveUserInput!): RemoveUserResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
+  updateProfiles(input: UpdateProfilesInput!): UpdateProfilesResponse! @function(name: "digitalDashAppResolver", region: "us-west-2") @auth(rules: [{ allow: private }])
 }
 
 type Query {

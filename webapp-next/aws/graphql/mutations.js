@@ -9,9 +9,9 @@ export const populateAnalytics = /* GraphQL */ `
     }
   }
 `;
-export const deleteProfile = /* GraphQL */ `
-  mutation DeleteProfile($input: DeleteProfileInput!) {
-    deleteProfile(input: $input) {
+export const removeProfile = /* GraphQL */ `
+  mutation RemoveProfile($input: RemoveProfileInput!) {
+    removeProfile(input: $input) {
       success
     }
   }
@@ -51,6 +51,25 @@ export const removeUser = /* GraphQL */ `
   mutation RemoveUser($input: RemoveUserInput!) {
     removeUser(input: $input) {
       success
+    }
+  }
+`;
+export const updateProfiles = /* GraphQL */ `
+  mutation UpdateProfiles($input: UpdateProfilesInput!) {
+    updateProfiles(input: $input) {
+      success
+      profiles {
+        key
+        platform
+        profileName
+        meta
+        profilePicUrl
+        followerCount
+        needsRefresh
+        postsLastPopulated
+        createdAt
+        updatedAt
+      }
     }
   }
 `;
