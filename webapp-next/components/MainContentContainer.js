@@ -188,8 +188,7 @@ const MainContentContainer = ({
                                     .postHeaders
                                     .find(header => (
                                         header.platform ===
-                                        data
-                                            .profiles
+                                        profiles
                                             .find(profile => (
                                                 profile.profileName === state.popUpPost.profileName
                                             ))
