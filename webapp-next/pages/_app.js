@@ -106,25 +106,24 @@ const MyApp = ({ Component, pageProps }) => {
                 }
                 return;
             }
-            
-            console.log('Navigating to sign in');
-            if (router.pathname === '/sign-in') {
-                router.push('/');
-            }
 
             getUserProfiles(user)
                 .then((profiles) => {
                     setUserProfiles(profiles);
                     
                     // If the user has no profiles, send them to add-profile
-                    if (profiles.length <= 0 && router.pathname !== '/homepage') {
-                        console.log('Navigating to add profile');
-                        router.push({
-                            pathname: `/add-profile`,
-                            query: { f: 1 },
-                        });
+                    if (router.pathname === '/sign-in') {
+                        if (profiles.length <= 0) {
+                            console.log('Navigating to add profile');
+                            router.push({
+                                pathname: `/add-profile`,
+                                query: { f: 1 },
+                            });
+                        } else {
+                            router.push('/');
+                        }
                     }
-
+                    
                     setLoading(false);
                 })
                 .catch((err) => {
