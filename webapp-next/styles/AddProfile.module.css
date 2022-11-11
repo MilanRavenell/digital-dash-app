@@ -111,6 +111,17 @@
     margin-top: 3%;
 }
 
+.googleButtonContainer {
+    height: 5vh;
+}
+
+.googleButton {
+    object-fit: contain;
+    height: 0;
+    min-height: 100%;
+    cursor: pointer;
+}
+
 @media only screen and (max-device-width: 600px) {
     .content {
         flex-direction: column-reverse;

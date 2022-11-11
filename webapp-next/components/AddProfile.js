@@ -77,11 +77,20 @@ const AddProfile = ({
     const platformButtons = () => {
         switch(platform) {
             case 'twitter':
-            case 'youtube':
             default:
                 return (
                     <div>
                         <Button onClick={() => { login(0); }}>Register {platform} Account</Button>
+                    </div>
+                );
+            case 'youtube':
+                return (
+                    <div className={styles.googleButtonContainer}>
+                        <img
+                            className={styles.googleButton}
+                            onClick={() => { login(0); }}
+                            src={'/google_signin_buttons/web/2x/btn_google_signin_light_normal_web@2x.png'}
+                        />
                     </div>
                 );
             case 'instagram':

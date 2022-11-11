@@ -41,8 +41,8 @@ const AddPlatformInstructions = ({
             </div>
             <div className={styles.body}>
                 <ol>
-                    <li>On this page, click "Register Youtube Account"</li>
-                    <li>Choose the gmail associated with the Youtube account you want to add</li>
+                    <li>On this page, click "Sign in with Google"</li>
+                    <li>Choose the google associated with the Youtube account you want to add</li>
                     <li>Approve access</li>
                     <li>Confirm</li>
                 </ol>
