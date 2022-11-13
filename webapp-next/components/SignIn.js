@@ -18,11 +18,10 @@ import FollowUs from './FollowUs';
 
 import styles from '../styles/SignIn.module.css';
 
-const platforms = ['twitter', 'youtube', 'instagram']
-
 const SignIn = ({
     screen,
     user,
+    platforms,
     loading,
     statusMessage,
     submitAccessCodeCallback,

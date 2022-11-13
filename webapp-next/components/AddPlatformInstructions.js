@@ -52,7 +52,7 @@ const AddPlatformInstructions = ({
 
     const instagram = (
         <div className={styles.container}>
-            {/* <div className={styles.instructionsHeader}>
+            <div className={styles.instructionsHeader}>
                 {`How to add an Instagram account`}
             </div>
             <div className={styles.body}>
@@ -62,14 +62,14 @@ const AddPlatformInstructions = ({
                     <li>Click "Confirm"</li>
                     <li>Confirm</li>
                 </ol>
-            </div> */}
+            </div>
             <div className={styles.instructionsHeader}>
-                {`How to add an Instagram account`}
-                {/* <InfoOutlined
+                {`How to add an Instagram Professional account`}
+                <InfoOutlined
                     sx={{ color: 'blue' }}
                     onMouseEnter={handlePopoverOpen}
                     onMouseLeave={handlePopoverClose}
-                /> */}
+                />
             </div>
             <div className={styles.body}>
                 <ol>
@@ -85,7 +85,7 @@ const AddPlatformInstructions = ({
                     </li>
                     <li>Navigate to <a href={'https://https://www.facebook.com/'} target='_blank' rel='noreferrer'>facebook.com</a></li>
                     <li>Ensure you are logged into the facebook account associated with your Facebook Page and Instagram account</li>
-                    <li>On this page, click "Register Instagram Account"</li>
+                    <li>On this page, click "Register Instagram Pro Account"</li>
                     <li>Approve access for all accounts you would like to add</li>
                     <li>Confirm</li>
                 </ol>
