@@ -58,6 +58,8 @@ const MyApp = ({ Component, pageProps }) => {
     const [signInStatusMessage, setSignInStatusMessage] = useState(null);
     const windowDimensions = useWindowDimension();
 
+    const urlsNoRedirect = ['/sign-in', '/homepage', '/privacy-policy']
+
     useEffect(() => {
         Auth.currentAuthenticatedUser()
             .then((response) => {
@@ -79,7 +81,7 @@ const MyApp = ({ Component, pageProps }) => {
 
         if (authUser === nullAuthUser) {
             setLoading(false);
-            if (router.pathname !== '/sign-in' && router.pathname !== '/homepage') {
+            if (!urlsNoRedirect.includes(router.pathname)) {
                 router.push('/homepage');
             }
             return;
@@ -101,7 +103,7 @@ const MyApp = ({ Component, pageProps }) => {
         if (user) {
             if (!user.hasAccess) {
                 setLoading(false);
-                if (router.pathname !== '/sign-in' && router.pathname !== '/homepage') {
+                if (!urlsNoRedirect.includes(router.pathname)) {
                     router.push('/sign-in');
                 }
                 return;
