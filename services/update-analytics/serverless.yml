@@ -14,7 +14,7 @@ provider:
         - Effect: Allow
           Action:
             - dynamodb:Scan
-          Resource: arn:aws:dynamodb:us-west-2:125288872271:table/UserProfile-${self:custom.appsync_api_id.${opt:stage, self:provider.stage}}-${self:provider.stage}
+          Resource: arn:aws:dynamodb:us-west-2:125288872271:table/Profile-${self:custom.appsync_api_id.${opt:stage, self:provider.stage}}-${self:provider.stage}
   environment:
     ENV: ${self:provider.stage}
     APPSYNC_API_ID: ${self:custom.appsync_api_id.${opt:stage, self:provider.stage}}

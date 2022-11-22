@@ -7,6 +7,13 @@ import moment from 'moment';
 
 import styles from '../styles/PostsContainerPostsView.module.css';
 
+const platformTableMap = Object.freeze({
+    'TwitterPost': 'twitter',
+    'YoutubePost': 'youtube',
+    'InstagramPost': 'instagram-pro',
+    'TiktokPost': 'tiktok',
+});
+
 const PostsContainerPostsView = ({
     posts,
     headers,
@@ -127,8 +134,8 @@ const PostsContainerPostsView = ({
                                 <div className={styles.post}>
                                     {
                                         totalHeaders.map(({ field, displayName }, keyIndex) => {
-                                            const profile = profiles.find((profile => (profile.profileName === post.profileName)));
-                                            const platform = profile.platform;
+                                            const platform = platformTableMap[post.__typename];
+                                            const profilePic = profiles.find((profile => (profile.profileName === post.profileName))).profilePicUrl;
                                             return (
                                                 <div className={getStyle(displayName, false)} key={keyIndex}>
                                                     {
@@ -153,7 +160,7 @@ const PostsContainerPostsView = ({
                                                                     return (
                                                                         <div className={styles.profPic}>
                                                                             <img
-                                                                                src={profile.profilePicUrl}
+                                                                                src={profilePic}
                                                                                 alt={'profile pic'}
                                                                                 style={{
                                                                                     height: '100%',

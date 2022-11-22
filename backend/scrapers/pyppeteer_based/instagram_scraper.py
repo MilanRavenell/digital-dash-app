@@ -112,7 +112,7 @@ class InstagramScraper(ContentDataScraper):
                 if self.task == 'process_single_content' and 'query_hash' in request.url:
                     self.done_sending_requests = True
 
-                if not self.task == 'process_single_content' and '?username=' in request.url:
+                if not self.task == 'process_single_content' and '?query_hash=' in request.url:
                     self.num_user_requests_sent += 1
                     if (self.num_user_requests_sent > 1):
                         self.done_sending_requests = True
@@ -146,7 +146,7 @@ class InstagramScraper(ContentDataScraper):
 
         if request.resourceType == 'xhr':
             if not self.task == 'process_single_content'\
-                and '?username=' not in request.url:
+                and '?query_hash=' not in request.url:
                 return True
 
             if self.task == 'process_single_content'\

@@ -64,6 +64,7 @@ export default function Home() {
             <SignIn
                 screen={screen}
                 user={context.user}
+                platforms={context.platforms}
                 loading={context.loading}
                 statusMessage={context.signInStatusMessage}
                 submitAccessCodeCallback={context.submitAccessCodeCallback}

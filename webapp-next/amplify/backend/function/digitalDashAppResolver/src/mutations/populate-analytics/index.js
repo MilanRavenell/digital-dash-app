@@ -10,7 +10,6 @@ async function fetchAnalytics(ctx) {
     const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
     const { profileKey, debug_noUploadToDDB } = ctx.arguments.input;
 
-    // Do not fetch posts if it's been less then an hour since posts were last fetched
     let profile = null;
     try {
         profile = (await ddbClient.get({

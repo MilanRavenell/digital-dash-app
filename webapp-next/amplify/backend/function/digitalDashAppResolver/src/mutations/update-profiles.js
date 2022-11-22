@@ -59,31 +59,6 @@ async function updateProfileRecord(ctx, profile) {
     const { ddbClient, envVars } = ctx.resources;
     const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
 
-    const response = await ddbClient.get({
-        TableName: `Profile-${appsync_api_id}-${env}`,
-        Key: {
-            key: profile.key,
-        },
-    }).promise();
-
-    if (response.Item) {
-        await ddbClient.update({
-            TableName: `Profile-${appsync_api_id}-${env}`,
-            Key: { key: profile.key },
-            UpdateExpression: `SET #meta = :meta, #needsRefresh = :false`,
-            ExpressionAttributeNames: {
-                '#meta': 'meta',
-                '#needsRefresh': 'needsRefresh',
-            },
-            ExpressionAttributeValues: {
-                ':meta': profile.meta,
-                ':false': false,
-            },
-        }).promise();
-
-        return;
-    }
-
     const now = new Date().toISOString();
     await ddbClient.put({
         TableName: `Profile-${appsync_api_id}-${env}`,
@@ -96,7 +71,7 @@ async function updateProfileRecord(ctx, profile) {
     }).promise();
 
     // Trigger populate analytics sqs
-    if (!triggerSqs(
+    if (!(await triggerSqs(
         ctx,
         `https://sqs.us-west-2.amazonaws.com/125288872271/update-analytics-queue-${env}`,
         JSON.stringify({
@@ -108,7 +83,7 @@ async function updateProfileRecord(ctx, profile) {
                 }
             }
         }),
-    )) {
+    ))) {
         throw new Error('Failed to trigger sqs');
     }
 }
