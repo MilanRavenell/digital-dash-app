@@ -55,7 +55,7 @@ const AddPlatformInstructions = ({
             <div className={styles.instructionsHeader}>
                 {`How to add an Instagram account`}
             </div>
-            <div className={styles.body}>
+            {/* <div className={styles.body}>
                 <ol>
                     <li>On this page, click "Register Instagram Account"</li>
                     <li>Enter the handle of the account you want to add</li>
@@ -70,7 +70,7 @@ const AddPlatformInstructions = ({
                     onMouseEnter={handlePopoverOpen}
                     onMouseLeave={handlePopoverClose}
                 />
-            </div>
+            </div> */}
             <div className={styles.body}>
                 <ol>
                     <li>Have an Instagram Professional Account
@@ -85,7 +85,7 @@ const AddPlatformInstructions = ({
                     </li>
                     <li>Navigate to <a href={'https://https://www.facebook.com/'} target='_blank' rel='noreferrer'>facebook.com</a></li>
                     <li>Ensure you are logged into the facebook account associated with your Facebook Page and Instagram account</li>
-                    <li>On this page, click "Register Instagram Pro Account"</li>
+                    <li>On this page, click "Register Instagram Account"</li>
                     <li>Approve access for all accounts you would like to add</li>
                     <li>Confirm</li>
                 </ol>
@@ -129,6 +129,9 @@ const AddPlatformInstructions = ({
                     <li>Click "Register Tiktok Account"</li>
                     <li>Confirm</li>
                 </ol>
+                <ul>
+                <li>Note: We can only collect data from posts made within a month before the account is registered</li>
+                </ul>
             </div>
         </div>
     );
