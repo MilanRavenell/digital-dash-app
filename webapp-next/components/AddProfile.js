@@ -28,6 +28,8 @@ const AddProfile = ({
     const [profiles, setProfiles] = React.useState([]);
     const [textFieldValue, setTextFieldValue] = React.useState('');
     const [didFail, setDidFail] = React.useState(false);
+    const [googleButtonHover, setGoogleButtonHover] = React.useState(false);
+    const [googleButtonMouseDown, setGoogleButtonMouseDown] = React.useState(false);
 
     const handleTextFieldChange = (event) => {
         setTextFieldValue(event.target.value);
@@ -85,11 +87,27 @@ const AddProfile = ({
                 );
             case 'youtube':
                 return (
-                    <div className={styles.googleButtonContainer}>
+                    <div
+                        className={styles.googleButtonContainer}
+                        onMouseEnter={() => {setGoogleButtonHover(true)}}
+                        onMouseLeave={() => {setGoogleButtonHover(false)}}
+                        onMouseDown={() => {setGoogleButtonMouseDown(true)}}
+                        onMouseUp={() => {setGoogleButtonMouseDown(false)}}
+                    >
                         <img
                             className={styles.googleButton}
                             onClick={() => { login(0); }}
-                            src={'/google_signin_buttons/web/2x/btn_google_signin_light_normal_web@2x.png'}
+                            src={(() => {
+                                if (googleButtonMouseDown) {
+                                    return '/google_signin_buttons/web/2x/btn_google_signin_light_pressed_web@2x.png';
+                                }
+
+                                if (googleButtonHover) {
+                                    return '/google_signin_buttons/web/2x/btn_google_signin_light_focus_web@2x.png';
+                                }
+
+                                return '/google_signin_buttons/web/2x/btn_google_signin_light_normal_web@2x.png';
+                            })()}
                         />
                     </div>
                 );
