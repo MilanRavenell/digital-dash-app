@@ -289,9 +289,9 @@ class ContentDataScraper:
         page_html = await page.evaluate('document.documentElement.outerHTML')
         if ('To protect users from unusual network activity, we use Captcha to verify that you are not a robot.' in page_html):
             print('Caught by CAPTCHA')
-        if ('TTGCaptcha' in page_html):
+        elif ('TTGCaptcha' in page_html):
             print('Caught by CAPTCHA')
-        if ('The link you followed may be broken, or the page may have been removed.' in page_html):
+        elif ('The link you followed may be broken, or the page may have been removed.' in page_html):
             print('IG page not found')
         else:
             print(page_html)
