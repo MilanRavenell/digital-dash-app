@@ -12,6 +12,7 @@ class TikTokScraper(ContentDataScraper):
         self.page_test_el = '//strong[@data-e2e="like-count"]' if task == 'process_single_content' else '//div[@data-e2e="user-avatar"]'
         self.response_handler_data = None
         self.finished = False
+        self.first_page_only = True
 
     def get_url(self):
         if self.task == 'process_single_content':
@@ -52,7 +53,7 @@ class TikTokScraper(ContentDataScraper):
             return content
         else:
             content =  await self.page.Jx('//div[@data-e2e="user-post-item"]')
-            if len(content) < 30:
+            if len(content) < 30 or self.first_page_only:
                 self.finished = True
             return content
 
@@ -101,14 +102,17 @@ class TikTokScraper(ContentDataScraper):
         return self.finished
 
     async def request_handler(self, request):
-        if self.task == 'get_profile_info' or self.task == 'process_single_content':
+        if self.first_page_only or self.task == 'get_profile_info' or self.task == 'process_single_content':
             if request.url == self.get_url():
                 await request.continue_()
+
+                self.num_requests += 1
             else:
                 await request.abort()
-        
         else:
             await request.continue_()
+
+            self.num_requests += 1
 
     ########################## TikTok Methods ##############################
     async def __process_video_html(self, video):
