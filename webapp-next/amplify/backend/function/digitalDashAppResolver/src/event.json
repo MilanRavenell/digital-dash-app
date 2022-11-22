@@ -1,6 +1,6 @@
 {
-  "typeName": "Mutation",
-  "fieldName": "removeProfile",
+  "typeName": "Query",
+  "fieldName": "getData",
   "arguments": {
     "input": {
       "platform": "instagram",
@@ -15,7 +15,7 @@
       "email": "ravenellmilan162@gmail.com",
       "firstName": "Cool",
       "lastName": "DOnny",
-      "owner": "995819c9-1a97-45d4-823c-87af32f8f817",
+      "owner": "8358c3bc-cacf-4d31-b319-bcebf080c074",
       "accessCode": "15f3c21b-0dcf-4aed-aa96-9dfedf6a5305",
       "profiles": [
         {
