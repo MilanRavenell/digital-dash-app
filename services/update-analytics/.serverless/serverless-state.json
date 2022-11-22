@@ -6,7 +6,7 @@
     },
     "provider": {
       "name": "aws",
-      "stage": "staging",
+      "stage": "prod",
       "region": "us-west-2",
       "profile": "milan",
       "iam": {
@@ -17,21 +17,21 @@
               "Action": [
                 "sqs:SendMessage"
               ],
-              "Resource": "arn:aws:sqs:us-west-2:125288872271:update-analytics-queue-staging"
+              "Resource": "arn:aws:sqs:us-west-2:125288872271:update-analytics-queue-prod"
             },
             {
               "Effect": "Allow",
               "Action": [
                 "dynamodb:Scan"
               ],
-              "Resource": "arn:aws:dynamodb:us-west-2:125288872271:table/UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging"
+              "Resource": "arn:aws:dynamodb:us-west-2:125288872271:table/Profile-b7rvoho6bjf3xcicxkq6ivubgy-prod"
             }
           ]
         }
       },
       "environment": {
-        "ENV": "staging",
-        "APPSYNC_API_ID": "7hdw3dtfmbhhbmqwm7qi7fgbki"
+        "ENV": "prod",
+        "APPSYNC_API_ID": "b7rvoho6bjf3xcicxkq6ivubgy"
       },
       "versionFunctions": true,
       "compiledCloudFormationTemplate": {
@@ -110,7 +110,7 @@
           "UpdateAnalyticsLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/update-analytics-staging-updateAnalytics"
+              "LogGroupName": "/aws/lambda/update-analytics-prod-updateAnalytics"
             }
           },
           "IamRoleLambdaExecution": {
@@ -139,7 +139,7 @@
                       "-",
                       [
                         "update-analytics",
-                        "staging",
+                        "prod",
                         "lambda"
                       ]
                     ]
@@ -155,7 +155,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/update-analytics-staging*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/update-analytics-prod*:*"
                           }
                         ]
                       },
@@ -166,7 +166,7 @@
                         ],
                         "Resource": [
                           {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/update-analytics-staging*:*:*"
+                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/update-analytics-prod*:*:*"
                           }
                         ]
                       },
@@ -186,7 +186,7 @@
                   "-",
                   [
                     "update-analytics",
-                    "staging",
+                    "prod",
                     {
                       "Ref": "AWS::Region"
                     },
@@ -203,17 +203,17 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/update-analytics/staging/1668117161962-2022-11-10T21:52:41.962Z/update-analytics.zip"
+                "S3Key": "serverless/update-analytics/prod/1669145299475-2022-11-22T19:28:19.475Z/update-analytics.zip"
               },
               "Handler": "src/index.handler",
               "Runtime": "nodejs14.x",
-              "FunctionName": "update-analytics-staging-updateAnalytics",
+              "FunctionName": "update-analytics-prod-updateAnalytics",
               "MemorySize": 1024,
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "ENV": "staging",
-                  "APPSYNC_API_ID": "7hdw3dtfmbhhbmqwm7qi7fgbki"
+                  "ENV": "prod",
+                  "APPSYNC_API_ID": "b7rvoho6bjf3xcicxkq6ivubgy"
                 }
               },
               "Role": {
@@ -227,7 +227,7 @@
               "UpdateAnalyticsLogGroup"
             ]
           },
-          "UpdateAnalyticsLambdaVersion3ZAk7MnSbVrSKXBCa2PbQelY1YdKFFsPYM4q3DK7o": {
+          "UpdateAnalyticsLambdaVersionW0sg48B57KZ1emBsBC9IwAYPKCUQqow1W2YkcpOegr4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
@@ -237,10 +237,10 @@
               "CodeSha256": "2UTotTGP5PZI+ScseKyaihrHwYOXOGuTGhhiin6bQyM="
             }
           },
-          "UpdateanalyticsstagingupdateAnalyticsrule1EventBridgeRule": {
+          "UpdateanalyticsprodupdateAnalyticsrule1EventBridgeRule": {
             "Type": "AWS::Events::Rule",
             "Properties": {
-              "Name": "update-analytics-staging-updateAnalytics-rule-1",
+              "Name": "update-analytics-prod-updateAnalytics-rule-1",
               "ScheduleExpression": "cron(0 * * * ? *)",
               "State": "ENABLED",
               "Targets": [
@@ -251,7 +251,7 @@
                       "Arn"
                     ]
                   },
-                  "Id": "update-analytics-staging-updateAnalytics-rule-1-target"
+                  "Id": "update-analytics-prod-updateAnalytics-rule-1-target"
                 }
               ]
             }
@@ -284,7 +284,7 @@
                         "/",
                         [
                           "rule",
-                          "update-analytics-staging-updateAnalytics-rule-1"
+                          "update-analytics-prod-updateAnalytics-rule-1"
                         ]
                       ]
                     }
@@ -300,16 +300,16 @@
               "Ref": "ServerlessDeploymentBucket"
             },
             "Export": {
-              "Name": "sls-update-analytics-staging-ServerlessDeploymentBucketName"
+              "Name": "sls-update-analytics-prod-ServerlessDeploymentBucketName"
             }
           },
           "UpdateAnalyticsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UpdateAnalyticsLambdaVersion3ZAk7MnSbVrSKXBCa2PbQelY1YdKFFsPYM4q3DK7o"
+              "Ref": "UpdateAnalyticsLambdaVersionW0sg48B57KZ1emBsBC9IwAYPKCUQqow1W2YkcpOegr4"
             },
             "Export": {
-              "Name": "sls-update-analytics-staging-UpdateAnalyticsLambdaFunctionQualifiedArn"
+              "Name": "sls-update-analytics-prod-UpdateAnalyticsLambdaFunctionQualifiedArn"
             }
           }
         }
@@ -415,13 +415,13 @@
             }
           }
         ],
-        "name": "update-analytics-staging-updateAnalytics",
+        "name": "update-analytics-prod-updateAnalytics",
         "package": {},
         "memory": 1024,
         "timeout": 6,
         "runtime": "nodejs14.x",
         "vpc": {},
-        "versionLogicalId": "UpdateAnalyticsLambdaVersion3ZAk7MnSbVrSKXBCa2PbQelY1YdKFFsPYM4q3DK7o"
+        "versionLogicalId": "UpdateAnalyticsLambdaVersionW0sg48B57KZ1emBsBC9IwAYPKCUQqow1W2YkcpOegr4"
       }
     },
     "configValidationMode": "warn",
@@ -443,7 +443,7 @@
     "artifact": "/Users/milanravenell/Documents/digital_dash/services/update-analytics/.serverless/update-analytics.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/update-analytics/staging/1668117161962-2022-11-10T21:52:41.962Z",
+    "artifactDirectoryName": "serverless/update-analytics/prod/1669145299475-2022-11-22T19:28:19.475Z",
     "artifact": "update-analytics.zip"
   }
 }

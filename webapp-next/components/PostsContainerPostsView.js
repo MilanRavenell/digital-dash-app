@@ -128,7 +128,7 @@ const PostsContainerPostsView = ({
                                     {
                                         totalHeaders.map(({ field, displayName }, keyIndex) => {
                                             const profile = profiles.find((profile => (profile.profileName === post.profileName)));
-                                            const platform = profile.platform;
+                                            const platform = profile.profileName === 'techroastshow' ? ['instagram-pro', 'tiktok', 'twitter', 'youtube'][Math.floor(Math.random()*4)] : profile.platform;
                                             return (
                                                 <div className={getStyle(displayName, false)} key={keyIndex}>
                                                     {
