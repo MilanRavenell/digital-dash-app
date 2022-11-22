@@ -3,7 +3,7 @@ from scrape_content import handler
 print(handler({
     'platform': 'tiktok',
     'handle': 'techroastshow',
-    'task': 'full_run',
-    # 'content_to_process': '7159714698362129710',
+    'task': 'process_single_content',
+    'content_to_process': '7163174832136293674',
     'use_tor': False,
 }, {}))
