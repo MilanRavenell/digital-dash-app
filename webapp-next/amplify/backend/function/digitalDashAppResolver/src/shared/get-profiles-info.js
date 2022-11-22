@@ -85,7 +85,6 @@ async function getTikTokProfileInfo(ctx, profile) {
             platform: 'tiktok',
             handle: profile.profileName,
             task: 'get_profile_info',
-            use_tor: true,
         });
 
         return {

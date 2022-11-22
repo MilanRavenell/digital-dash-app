@@ -23,7 +23,6 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
         platform: 'tiktok',
         handle: profile.profileName,
         task: 'full_run',
-        use_tor: true,
     });
     console.log('scraped videos: ', scrapedVideos)
 
@@ -55,7 +54,6 @@ async function fetchAnalyticsForTiktokProfile(ctx, profile) {
                 handle: profile.profileName,
                 task: 'process_single_content',
                 content_to_process: video.id,
-                use_tor: true,
             });
 
             if (extraInfo.errorMessage) {
