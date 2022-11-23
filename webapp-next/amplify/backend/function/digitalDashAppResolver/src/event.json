@@ -1,6 +1,6 @@
 {
   "typeName": "Mutation",
-  "fieldName": "initUser",
+  "fieldName": "submitAccessCode",
   "arguments": {
     "input": {
       "platform": "instagram",
@@ -16,7 +16,7 @@
       "firstName": "Cool",
       "lastName": "DOnny",
       "owner": "8358c3bc-cacf-4d31-b319-bcebf080c074sssss",
-      "accessCode": "15f3c21b-0dcf-4aed-aa96-9dfedf6a5305",
+      "accessCode": "be766b7f-f519-4a34-9dd0-e3803c84a8a2",
       "profiles": [
         {
           "key": "twitter_orb_analytics",

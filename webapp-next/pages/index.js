@@ -54,7 +54,7 @@ export default function App() {
             timeframeRef.current,
             selectedProfileNamesRef.current,
           ).then(newData => {
-            if (newData.success) {
+            if (newData && newData.success) {
               setData(newData.data);
             }
           });

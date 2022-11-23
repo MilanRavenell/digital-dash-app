@@ -65,7 +65,7 @@ const ProfilePicker = ({
         <div className={styles.containerExpanded}>
             <div className={styles.header}>
                 <div className={styles.headerText}>
-                    Profiles
+                    { `Profiles(${profiles.length})` }
                 </div>
                 {
                     !editMode && (
