@@ -115,7 +115,12 @@ const AddProfileSelection = ({
                                 }
                             </div>
                             <div className={styles.button}>
-                                <Button onClick={handleContinueClick}>{isFirstLogin ? 'Continue to Dashboard' : 'Back to Dashboard'}</Button>
+                                <Button
+                                    onClick={handleContinueClick}
+                                    variant='contained'
+                                >
+                                    {isFirstLogin ? 'Continue to Dashboard' : 'Back to Dashboard'}
+                                </Button>
                             </div>
                         </div>
                     </div>
