@@ -36,10 +36,10 @@ async function submitAccessCode(ctx) {
             }).promise();
 
             // Delete code from table
-            await ddbClient.delete({
-                TableName: `Configuration-${appsync_api_id}-${env}`,
-                Key: { key: 'AccessCode', value: accessCode },
-            }).promise();
+            // await ddbClient.delete({
+            //     TableName: `Configuration-${appsync_api_id}-${env}`,
+            //     Key: { key: 'AccessCode', value: accessCode },
+            // }).promise();
 
             return { success: true }
         }

@@ -1,7 +1,7 @@
 const MAX_USERS = 100;
 
 async function initUser(ctx) {
-    const { ddbClient, envVars } = ctx.resources;
+    const { ddbClient, sesClient, envVars } = ctx.resources;
     const { ENV: env, APPSYNC_API_ID: appsync_api_id } = envVars;
     const { email, firstName, lastName, owner } = ctx.arguments.input;
 
@@ -18,8 +18,8 @@ async function initUser(ctx) {
             __typename: 'User'
         };
 
-        let usersCount = 0;
-        let nextToken = null;
+        // let usersCount = 0;
+        // let nextToken = null;
         
         // do {
         //     const response = await ddbClient.scan({
@@ -36,6 +36,28 @@ async function initUser(ctx) {
         await ddbClient.put({
             TableName: `User-${appsync_api_id}-${env}`,
             Item: user,
+        }).promise();
+
+        // email me that new user has signed up
+        await sesClient.sendEmail({
+            Destination: {
+                ToAddresses: [
+                    'orbrealtimeanalytics@gmail.com',
+                ]
+            },
+            Message: {
+                Body: {
+                    Text: {
+                        Charset: "UTF-8",
+                        Data: `User ${firstName} ${lastName} just signed up with email ${email}`,
+                    },
+                },
+                Subject: {
+                    Charset: 'UTF-8',
+                    Data: 'NEW USER BLESS UP',
+                },
+            },
+            Source: 'orbrealtimeanalytics@gmail.com',
         }).promise();
 
         return {
