@@ -108,19 +108,19 @@ const MyApp = ({ Component, pageProps }) => {
             }
 
             getUserProfiles(user)
-                .then((profiles) => {
+                .then(async (profiles) => {
                     setUserProfiles(profiles);
                     
                     // If the user has no profiles, send them to add-profile
                     if (router.pathname === '/sign-in') {
                         if (profiles.length <= 0) {
                             console.log('Navigating to add profile');
-                            router.push({
+                            await router.push({
                                 pathname: `/add-profile`,
                                 query: { f: 1 },
                             });
                         } else {
-                            router.push('/');
+                            await router.push('/');
                         }
                     }
                     
@@ -218,8 +218,9 @@ const MyApp = ({ Component, pageProps }) => {
                 if (response?.data?.submitAccessCode?.success) {
                     setUser({
                         ...user,
-                        submittedAccessCode: true,
+                        hasAccess: true,
                     });
+                    setLoading(true);
                 } else {
                     setInvalidAccessCode(true);
                 }
