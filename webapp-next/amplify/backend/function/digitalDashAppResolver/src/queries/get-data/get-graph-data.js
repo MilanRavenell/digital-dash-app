@@ -206,7 +206,7 @@ async function getFollowerHistory(ctx, profiles, start, end, timezoneOffset) {
                             ':end': endUTC.toISOString(),
                         },
                         LastEvaluatedKey: nextToken,
-                        ScanIndexForward: true,
+                        ScanIndexForward: false,
                     }).promise();
 
                     followerHistory.push(...response.Items.map(item => ({
