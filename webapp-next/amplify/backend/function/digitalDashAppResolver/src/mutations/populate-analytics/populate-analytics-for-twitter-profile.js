@@ -40,7 +40,7 @@ async function fetchAnalyticsForTwitterProfile(ctx, profile, accessToken) {
         if (response.meta !== undefined) {
             nextToken = response.meta.next_token;
         }
-    } while (nextToken !== undefined)
+    } while (nextToken !== undefined && tweets.length < 300);
 
     const tweetsDict = tweets.reduce((acc, tweet) => {
         acc[tweet.id] = tweet;
