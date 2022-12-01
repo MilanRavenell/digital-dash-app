@@ -24,9 +24,12 @@ functions:
     handler: src/index.handler
     events:
       - eventBridge:
-          schedule: cron(0 * * * ? *)
+          schedule: ${self:custom.schedule.${opt:stage, self:provider.stage}}
 custom:
   appsync_api_id:
     staging: 7hdw3dtfmbhhbmqwm7qi7fgbki
     prod: b7rvoho6bjf3xcicxkq6ivubgy
+  schedule:
+    staging: cron(0 12 * * ? *)
+    prod: cron(0 * * * ? *)
   

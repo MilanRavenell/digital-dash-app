@@ -24,7 +24,7 @@
               "Action": [
                 "dynamodb:Scan"
               ],
-              "Resource": "arn:aws:dynamodb:us-west-2:125288872271:table/UserProfile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging"
+              "Resource": "arn:aws:dynamodb:us-west-2:125288872271:table/Profile-7hdw3dtfmbhhbmqwm7qi7fgbki-staging"
             }
           ]
         }
@@ -203,7 +203,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/update-analytics/staging/1668117161962-2022-11-10T21:52:41.962Z/update-analytics.zip"
+                "S3Key": "serverless/update-analytics/staging/1669854471281-2022-12-01T00:27:51.281Z/update-analytics.zip"
               },
               "Handler": "src/index.handler",
               "Runtime": "nodejs14.x",
@@ -241,7 +241,7 @@
             "Type": "AWS::Events::Rule",
             "Properties": {
               "Name": "update-analytics-staging-updateAnalytics-rule-1",
-              "ScheduleExpression": "cron(0 * * * ? *)",
+              "ScheduleExpression": "cron(0 12 * * ? *)",
               "State": "ENABLED",
               "Targets": [
                 {
@@ -402,6 +402,10 @@
       "appsync_api_id": {
         "staging": "7hdw3dtfmbhhbmqwm7qi7fgbki",
         "prod": "b7rvoho6bjf3xcicxkq6ivubgy"
+      },
+      "schedule": {
+        "staging": "cron(0 12 * * ? *)",
+        "prod": "cron(0 * * * ? *)"
       }
     },
     "pluginsData": {},
@@ -411,7 +415,7 @@
         "events": [
           {
             "eventBridge": {
-              "schedule": "cron(0 * * * ? *)"
+              "schedule": "cron(0 12 * * ? *)"
             }
           }
         ],
@@ -443,7 +447,7 @@
     "artifact": "/Users/milanravenell/Documents/digital_dash/services/update-analytics/.serverless/update-analytics.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/update-analytics/staging/1668117161962-2022-11-10T21:52:41.962Z",
+    "artifactDirectoryName": "serverless/update-analytics/staging/1669854471281-2022-12-01T00:27:51.281Z",
     "artifact": "update-analytics.zip"
   }
 }

@@ -177,7 +177,7 @@
             "Type": "AWS::Lambda::Function",
             "Properties": {
               "Code": {
-                "ImageUri": "125288872271.dkr.ecr.us-west-2.amazonaws.com/serverless-web-scraper-service-prod@sha256:c84a07b93ffb69bcf7e02316f5de5cf06c8f84e60545ed028ea96700bd096dfa"
+                "ImageUri": "125288872271.dkr.ecr.us-west-2.amazonaws.com/serverless-web-scraper-service-prod@sha256:7326a4f84c559a6157d753cf041c6a55a74252add6100c01ef41a7ebaee07026"
               },
               "PackageType": "Image",
               "FunctionName": "web-scraper-service-prod-scrapeContent",
@@ -194,14 +194,14 @@
               "ScrapeContentLogGroup"
             ]
           },
-          "ScrapeContentLambdaVersionydqZJNj9PozijBnwbZTsV97FsoUwAlNSa6Fyq9Lkbd8": {
+          "ScrapeContentLambdaVersionIHXq57cyAxlEbZaPL7UU1ERzZsgb0NcM0SHAUq5Jwuc": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ScrapeContentLambdaFunction"
               },
-              "CodeSha256": "c84a07b93ffb69bcf7e02316f5de5cf06c8f84e60545ed028ea96700bd096dfa"
+              "CodeSha256": "7326a4f84c559a6157d753cf041c6a55a74252add6100c01ef41a7ebaee07026"
             }
           },
           "ApiGatewayRestApi": {
@@ -313,7 +313,7 @@
               "ScrapeContentLambdaPermissionApiGateway"
             ]
           },
-          "ApiGatewayDeployment1669151738016": {
+          "ApiGatewayDeployment1669850916396": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -376,7 +376,7 @@
           "ScrapeContentLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ScrapeContentLambdaVersionydqZJNj9PozijBnwbZTsV97FsoUwAlNSa6Fyq9Lkbd8"
+              "Ref": "ScrapeContentLambdaVersionIHXq57cyAxlEbZaPL7UU1ERzZsgb0NcM0SHAUq5Jwuc"
             },
             "Export": {
               "Name": "sls-web-scraper-service-prod-ScrapeContentLambdaFunctionQualifiedArn"
@@ -531,7 +531,7 @@
         "memory": 1024,
         "timeout": 6,
         "vpc": {},
-        "versionLogicalId": "ScrapeContentLambdaVersionydqZJNj9PozijBnwbZTsV97FsoUwAlNSa6Fyq9Lkbd8"
+        "versionLogicalId": "ScrapeContentLambdaVersionIHXq57cyAxlEbZaPL7UU1ERzZsgb0NcM0SHAUq5Jwuc"
       }
     },
     "configValidationMode": "warn",
@@ -549,7 +549,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/web-scraper-service/prod/1669151739754-2022-11-22T21:15:39.754Z",
+    "artifactDirectoryName": "serverless/web-scraper-service/prod/1669850918087-2022-11-30T23:28:38.087Z",
     "artifact": ""
   }
 }
