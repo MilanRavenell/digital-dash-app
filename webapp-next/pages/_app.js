@@ -311,7 +311,7 @@ const MyApp = ({ Component, pageProps }) => {
             windowDimensions,
             isMobile: windowDimensions ? windowDimensions.width < 800 : false,
             signInStatusMessage,
-            platforms: ['twitter', 'youtube', 'instagram', /*'tiktok'*/],
+            platforms: ['twitter', 'youtube', 'instagram', 'tiktok'],
             setUserProfiles,
             setSignInStatusMessage,
             setUserCallback,
